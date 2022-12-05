@@ -325,7 +325,6 @@ export default {
                         scoreLeaderboard: snapshot.child('scoreLeaderboard').val(),
                         guessedLeaderboard: snapshot.child('guessedLeaderboard').val(),
                     };
-
                     dispatch('startGameMultiplayer', gameParams);
                 });
             }
