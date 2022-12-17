@@ -32,6 +32,24 @@
             </v-card>
             <v-card class="text-center ml-3 px-6" max-width="400">
                 <p class="text-h2 pt-3">
+                    {{(stats.avgTimePerGame / 60).toFixed(2)}}min
+                </p>
+
+                <p class="text-h6 mt-n4">
+                    average game duration
+                </p>
+            </v-card>
+            <v-card class="text-center ml-3 px-6" max-width="400">
+                <p class="text-h2 pt-3">
+                    {{(stats.longestGame / 60).toFixed(2)}}min
+                </p>
+
+                <p class="text-h6 mt-n4">
+                    longest game
+                </p>
+            </v-card>
+            <v-card class="text-center ml-3 px-6" max-width="400">
+                <p class="text-h2 pt-3">
                     {{stats.wonGames.won}}/{{stats.wonGames.total}}
                 </p>
 
@@ -57,6 +75,8 @@ export default {
                 perfectScores: this.getPerfectScore(),
                 avgTimePerRound: this.getAvgTimePerRound(),
                 wonGames: this.getWonGames(),
+                avgTimePerGame: this.getAvgTimePerGame(),
+                longestGame: this.getLongestGame(),
             };
         },
         rounds() {
@@ -127,7 +147,50 @@ export default {
                 won: gamesWon,
                 total: gamesTotal,
             };
-        }
+        },
+        getAvgTimePerGame() {
+            if(!this.history.length) return 0;
+            return this.history.reduce(
+                (acc, {playerName, rounds}) => {
+                    if(playerName) {
+                        let timePassed = 0;
+                        for(const round of rounds) {
+                            if(!round.players[playerName]) continue;
+                            timePassed += round.players[playerName].timePassed;
+                        }
+                        return acc + Math.floor(timePassed / 1000);
+                    } else {
+                        return acc + rounds.reduce((acc, { timePassed }) => {
+                            if (!timePassed) return acc;
+                            return acc + Math.floor(timePassed / 1000);
+                        }, 0);
+                    }
+                },
+                0
+            ) / this.history.length;
+        },
+        getLongestGame() {
+            if(!this.history.length) return 0;
+            // get the longest game
+            return this.history.reduce(
+                (acc, {playerName, rounds}) => {
+                    if(playerName) {
+                        let timePassed = 0;
+                        for(const round of rounds) {
+                            if(!round.players[playerName]) continue;
+                            timePassed += round.players[playerName].timePassed;
+                        }
+                        return Math.max(acc, Math.floor(timePassed / 1000));
+                    } else {
+                        return Math.max(acc, rounds.reduce((acc, { timePassed }) => {
+                            if (!timePassed) return acc;
+                            return acc + Math.floor(timePassed / 1000);
+                        }, 0));
+                    }
+                },
+                0
+            );
+        },
     },
 };
 </script>
