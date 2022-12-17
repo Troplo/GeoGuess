@@ -44,7 +44,7 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex';
-import { download, getCountdownText } from "../../utils";
+import { getCountdownText } from "../../utils";
 export default {
     name: 'HistoryTable',
     computed: {
