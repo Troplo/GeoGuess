@@ -591,12 +591,14 @@ export default {
                 // If the player is a host a new position will be generated when all players have voted.
                 await this.$refs.mapContainer.goToNextRound(false, false);
                 await this.$refs.header.startTimer();
+                await new Audio(require('../assets/reroll.mp3')).play();
                 this.reRollVoted = false;
                 this.votedCount = 0;
             } else {
                 // When the player is not a host, the new round is loaded from the snapshot.
                 await this.loadStreetViewFromHost(snapshot);
                 await this.$refs.header.startTimer();
+                await new Audio(require('../assets/reroll.mp3')).play();
                 this.reRollVoted = false;
                 this.votedCount = 0;
             }
