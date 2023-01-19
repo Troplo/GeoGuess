@@ -155,6 +155,17 @@
                                 hide-details
                                 :disabled="gameSettings.scoreLeaderboard"
                             />
+                            <v-checkbox
+                                :input-value="gameSettings.allowReRoll"
+                                @change="
+                                    (allowReRoll) =>
+                                        setGameSettings({ allowReRoll })
+                                "
+                                :label="
+                                    $t('CardRoomSettings.allowReRoll')
+                                "
+                                hide-details
+                            />
                         </v-col>
                         <v-col>
                             <v-text-field

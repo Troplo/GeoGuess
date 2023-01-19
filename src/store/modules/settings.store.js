@@ -23,7 +23,8 @@ export class GameSettings {
         _nbRound = 5,
         _scoreLeaderboard = true,
         _guessedLeaderboard = true,
-    ) {
+        _allowReRoll = true,
+) {
         this.allPanorama = _allPanorama;
         this.time = _timeLimitation;
         this.modeSelected = _mode;
@@ -38,6 +39,7 @@ export class GameSettings {
         this.nbRoundSelected = _nbRound;
         this.scoreLeaderboard = _scoreLeaderboard;
         this.guessedLeaderboard = _guessedLeaderboard;
+        this.allowReRoll = _allowReRoll;
     }
 }
 
@@ -324,6 +326,7 @@ export default {
                         nbRoundSelected: snapshot.child('nbRoundSelected').val(),
                         scoreLeaderboard: snapshot.child('scoreLeaderboard').val(),
                         guessedLeaderboard: snapshot.child('guessedLeaderboard').val(),
+                        allowReRoll: snapshot.child('allowReRoll').val(),
                     };
                     dispatch('startGameMultiplayer', gameParams);
                 });

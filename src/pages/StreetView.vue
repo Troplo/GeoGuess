@@ -12,6 +12,12 @@
                 :mode="mode"
                 :guess-string="guessString"
                 :leaderboard-shown="leaderboardShown"
+                :multiplayer="multiplayer"
+                :re-roll-game="reRollGame"
+                :re-roll-voted="reRollVoted"
+                :player-count="playerCount"
+                :voted-count="votedCount"
+                :allow-re-roll="allowReRoll"
             />
 
             <div id="game-interface">
@@ -233,6 +239,11 @@ export default {
             default: true,
             type: Boolean,
         },
+        allowReRoll: {
+            type: Boolean,
+            required: false,
+            default: true,
+        }
     },
     data() {
         return {
@@ -267,8 +278,16 @@ export default {
             timeCountdown: 0,
 
             streetViewService: null,
+
+            // leaderboard
             leaderboard: [],
-            leaderboardShown: this.guessedLeaderboard || this.scoreLeaderboard
+            leaderboardShown: this.guessedLeaderboard || this.scoreLeaderboard,
+
+            // re-roll
+            reRollVoted: false,
+            lngLat: null,
+            playerCount: 0,
+            votedCount: 0
         };
     },
     computed: {
@@ -338,10 +357,39 @@ export default {
 
             this.room.child('active').set(true);
             this.room.on('value', (snapshot) => {
+                // Check for re-roll updates.
+                const reRoll = snapshot.child('reRoll').val();
+                // Generate the lat and lng to test whether the game needs to be refreshed from the host.
+                const randomLat = snapshot
+                    .child(
+                        'streetView/round' +
+                        this.round +
+                        '/latitude'
+                    )
+                    .val();
+                const randomLng = snapshot
+                    .child(
+                        'streetView/round' +
+                        this.round +
+                        '/longitude'
+                    )
+                    .val();
+                const lngLat = `${randomLng},${randomLat}`;
+                // Update counts for UI.
+                this.playerCount = snapshot.child('size').val();
+                if (reRoll && this.allowReRoll) {
+                    this.votedCount = Object.keys(reRoll).length;
+
+                    // Check if the length of the voted players are equal to the number of players to assume a re-roll.
+                    if (Object.keys(reRoll).length === this.playerCount && this.playerNumber === 1) {
+                        this.room.child('reRoll').remove();
+                        this.reRollGame(snapshot);
+                    }
+                }
                 // Check if the room is already removed
                 if (snapshot.hasChild('active')) {
                     // Leaderboard
-                    if(this.scoreLeaderboard) {
+                    if (this.scoreLeaderboard) {
                         this.leaderboard = Object.entries(snapshot.val().playerName).map((player) => {
                             return {
                                 scoreHeader: this.leaderboard.find((entity) => entity.id === player[0])?.scoreHeader || 0,
@@ -351,14 +399,14 @@ export default {
                                 guessed: !!snapshot.val()?.guess?.[player[0]],
                             };
                         });
-                    } else if(this.guessedLeaderboard) {
-                      this.leaderboard = Object.entries(snapshot.val().playerName).map((player) => {
-                        return {
-                          name: player[1],
-                          guessed: !!snapshot.val()?.guess?.[player[0]],
-                          id: player[0],
-                        };
-                      });
+                    } else if (this.guessedLeaderboard) {
+                        this.leaderboard = Object.entries(snapshot.val().playerName).map((player) => {
+                            return {
+                                name: player[1],
+                                guessed: !!snapshot.val()?.guess?.[player[0]],
+                                id: player[0],
+                            };
+                        });
                     }
 
 
@@ -378,15 +426,15 @@ export default {
                             let randomLat = snapshot
                                 .child(
                                     'streetView/round' +
-                                        this.round +
-                                        '/latitude'
+                                    this.round +
+                                    '/latitude'
                                 )
                                 .val();
                             let randomLng = snapshot
                                 .child(
                                     'streetView/round' +
-                                        this.round +
-                                        '/longitude'
+                                    this.round +
+                                    '/longitude'
                                 )
                                 .val();
 
@@ -403,8 +451,8 @@ export default {
                             this.randomFeatureProperties = snapshot
                                 .child(
                                     'streetView/round' +
-                                        this.round +
-                                        '/roundInfo'
+                                    this.round +
+                                    '/roundInfo'
                                 )
                                 .val();
                             this.randomLatLng = new google.maps.LatLng(
@@ -412,52 +460,62 @@ export default {
                                 randomLng
                             );
                             this.resetLocation();
+                            if (this.playerNumber !== 1) {
+                                this.loadStreetViewFromHost(snapshot);
+                            }
+
+                            // Reset re-roll values for next round
+                            this.room.child('reRoll').remove();
+                            this.votedCount = 0;
+                            this.reRollVoted = false;
+                        } else if (this.lngLat !== lngLat && this.playerNumber !== 1) {
+                            // If the Longitude and Latitude have been changed during a round, we can assume a re-roll has been taken place.
+                            this.reRollGame(snapshot);
                         }
-                    }
-
-                    // Enable guess button when every players are put into the current round's node
-                    if (
-                        snapshot.child('round' + this.round).numChildren() ===
+                        // Enable guess button when every players are put into the current round's node
+                        if (
+                            snapshot.child('round' + this.round).numChildren() ===
                             snapshot.child('size').val() &&
-                        !this.isReady
-                    ) {
-                        // Close the dialog when everyone is ready
-                        this.dialogMessage = false;
-                        this.dialogText = '';
+                            !this.isReady
+                        ) {
+                            // Close the dialog when everyone is ready
+                            this.dialogMessage = false;
+                            this.dialogText = '';
 
-                        this.isReady = true;
-                        this.$refs.mapContainer.startNextRound();
+                            this.isReady = true;
+                            this.$refs.mapContainer.startNextRound();
 
-                        // Countdown timer starts
-                        this.timeLimitation = snapshot
-                            .child('timeLimitation')
-                            .val();
+                            // Countdown timer starts
+                            this.timeLimitation = snapshot
+                                .child('timeLimitation')
+                                .val();
 
-                        if (this.timeLimitation != 0) {
-                            if (!this.hasTimerStarted) {
-                                this.initTimer(this.timeLimitation);
-                                this.hasTimerStarted = true;
+                            if (this.timeLimitation != 0) {
+                                if (!this.hasTimerStarted) {
+                                    this.initTimer(this.timeLimitation);
+                                    this.hasTimerStarted = true;
+                                }
                             }
                         }
-                    }
 
-                    // Delete the room when everyone finished the game
-                    if (
-                        snapshot.child('isGameDone').numChildren() ==
-                        snapshot.child('size').val()
-                    ) {
-                        this.room.child('active').remove();
-                        this.room.off();
-                        this.room.remove();
+                        // Delete the room when everyone finished the game
+                        if (
+                            snapshot.child('isGameDone').numChildren() ==
+                            snapshot.child('size').val()
+                        ) {
+                            this.room.child('active').remove();
+                            this.room.off();
+                            this.room.remove();
+                        }
+                    } else {
+                        // Force the players to exit the game when 'Active' is removed
+                        this.exitGame();
                     }
-                } else {
-                    // Force the players to exit the game when 'Active' is removed
-                    this.exitGame();
                 }
             });
-        }
 
-        this.$refs.header.startTimer();
+            this.$refs.header.startTimer();
+        }
     },
     beforeDestroy() {
         if (document.querySelector('.widget-scene')) {
@@ -482,6 +540,67 @@ export default {
     },
     methods: {
         ...mapActions(['loadAreas']),
+        async loadStreetViewFromHost(snapshot) {
+            let randomLat = snapshot
+                .child(
+                    'streetView/round' +
+                    this.round +
+                    '/latitude'
+                )
+                .val();
+            let randomLng = snapshot
+                .child(
+                    'streetView/round' +
+                    this.round +
+                    '/longitude'
+                )
+                .val();
+
+            this.area = snapshot
+                .child(
+                    'streetView/round' + this.round + '/area'
+                )
+                .val();
+            this.isVisibleDialog = snapshot
+                .child(
+                    'streetView/round' + this.round + '/warning'
+                )
+                .val();
+            this.randomFeatureProperties = snapshot
+                .child(
+                    'streetView/round' +
+                    this.round +
+                    '/roundInfo'
+                )
+                .val();
+            this.lngLat = `${randomLng},${randomLat}`;
+            this.randomLatLng = new google.maps.LatLng(
+                randomLat,
+                randomLng
+            );
+
+            this.resetLocation();
+        },
+        async reRollGame(snapshot = null) {
+            if(!this.allowReRoll) return;
+            if(this.multiplayer && !snapshot) {
+                // This casts the player's vote to re-roll the round.
+                this.room.child('reRoll/player' + this.playerNumber).set(true);
+                this.reRollVoted = true;
+            } else if(this.playerNumber === 1 || !this.multiplayer) {
+                // If the player is a host a new position will be generated when all players have voted.
+                await this.$refs.mapContainer.goToNextRound(false, false);
+                await this.$refs.header.startTimer();
+                this.reRollVoted = false;
+                this.votedCount = 0;
+            } else {
+                // When the player is not a host, the new round is loaded from the snapshot.
+                await this.loadStreetViewFromHost(snapshot);
+                await this.$refs.header.startTimer();
+                this.reRollVoted = false;
+                this.votedCount = 0;
+            }
+        },
         async loadStreetView() {
             let {panorama, roundInfo, warning, area} = await this.streetViewService.getStreetView(this.round);
             this.randomLatLng = panorama.location.latLng;
@@ -658,7 +777,7 @@ export default {
               player[1].scoreHeader = player[1].score;
             }
         },
-        async goToNextRound(playAgain = false) {
+        async goToNextRound(playAgain = false, incrementRound = true) {
             if (playAgain) {
                 this.round = 0;
                 this.scoreHeader = 0;
@@ -681,8 +800,8 @@ export default {
                 this.isReady = false; // Turn off the flag so the click event can be added in the next round
             }
 
-            // Update the round
-            this.round += 1;
+            // Update the round, if the round is regenerated we do not increment it.
+            if(incrementRound) this.round += 1;
 
             if (this.playerNumber == 1 || !this.multiplayer) {
                 await this.loadStreetView();

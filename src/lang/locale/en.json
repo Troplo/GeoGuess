@@ -92,7 +92,9 @@
     "round": "ROUND",
     "distance": "DISTANCE",
     "kmaway": "{value} km away",
-    "score": "SCORE"
+    "score": "SCORE",
+    "reRoll": "Regenerate round",
+    "reRollMultiplayer": "Vote to regenerate round ({count}/{total})"
   },
   "next": "NEXT",
   "cancel": "CANCEL",
@@ -180,7 +182,8 @@
     "selectAreas": "Select Areas",
     "moreSettings": "More settings",
     "optimiseStreetView": "StreetView Optimize (only official)",
-    "nbRound": "Number of rounds"
+    "nbRound": "Number of rounds",
+    "allowReRoll": "Allow vote to regenerate round"
   },
   "CardRoomDifficulty": {
     "title": "Set a difficulty level.",
