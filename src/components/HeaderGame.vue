@@ -18,6 +18,21 @@
                 </span>
             </div>
             <div class="flex-grow-1" />
+            <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                    <span v-on="on" v-bind="attrs">
+                        <v-btn icon @click="reRollGame()" :disabled="reRollVoted">
+                            <v-icon v-if="!reRollVoted">mdi-dice-multiple</v-icon>
+                            <v-icon v-else>mdi-check</v-icon>
+                        </v-btn>
+                    </span>
+                </template>
+                <span v-if="!multiplayer">{{ $t('HeaderGame.reRoll') }}</span>
+                <span v-else>{{ $t('HeaderGame.reRollMultiplayer', {
+                    count: votedCount,
+                    total: playerCount
+                })}}</span>
+            </v-tooltip>
             <div class="round-score-container">
                 <span class="sub-text">{{ $t('HeaderGame.round') }}: </span>
                 <span id="roundLabel" class="main-text">
@@ -55,6 +70,11 @@ export default {
         'remainingTime',
         'roomName',
         'nbRound',
+        'multiplayer',
+        'reRollGame',
+        'reRollVoted',
+        'playerCount',
+        'votedCount'
     ],
     data() {
         return {

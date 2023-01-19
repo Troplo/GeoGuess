@@ -542,7 +542,7 @@ export default {
             this.$refs.map.startNextRound();
             this.startTime = new Date();
         },
-        goToNextRound(isPlayAgain = false) {
+        goToNextRound(isPlayAgain = false, incrementRound = true) {
             if (isPlayAgain) {
                 this.dialogSummary = false;
                 this.isSummaryButtonVisible = false;
@@ -567,7 +567,7 @@ export default {
             this.$refs.map.centerOnBbox();
 
             // Replace the streetview with the next one
-            this.$emit('goToNextRound', isPlayAgain);
+            this.$emit('goToNextRound', isPlayAgain, incrementRound);
         },
         finishGame() {
             this.dialogSummary = false;

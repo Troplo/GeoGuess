@@ -21,6 +21,7 @@ export class GameSettings {
         _areaParams = null,
         _optimiseStreetView = true,
         _nbRound = 5,
+        _allowReRoll = true,
     ) {
         this.allPanorama = _allPanorama;
         this.time = _timeLimitation;
@@ -34,6 +35,7 @@ export class GameSettings {
         this.areaParams = _areaParams;
         this.optimiseStreetView = _optimiseStreetView;
         this.nbRoundSelected = _nbRound;
+        this.allowReRoll = _allowReRoll;
     }
 }
 
@@ -318,6 +320,7 @@ export default {
                         areaParams: snapshot.child('areaParams').val(),
                         optimiseStreetView: snapshot.child('optimiseStreetView').val(),
                         nbRoundSelected: snapshot.child('nbRoundSelected').val(),
+                        allowReRoll: snapshot.child('allowReRoll').val(),
                     };
 
                     dispatch('startGameMultiplayer', gameParams);

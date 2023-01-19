@@ -88,7 +88,9 @@
     "round": "ROUND",
     "distance": "DISTANCE",
     "kmaway": "{value} km away",
-    "score": "SCORE"
+    "score": "SCORE",
+    "reRoll": "Regenerate/skip round",
+    "reRollMultiplayer": "Vote to regenerate/skip round ({count}/{total})"
   },
   "next": "NEXT",
   "cancel": "CANCEL",

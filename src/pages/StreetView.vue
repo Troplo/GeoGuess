@@ -10,6 +10,11 @@
                 :nb-round="nbRound"
                 :remaining-time="remainingTime"
                 :mode="mode"
+                :multiplayer="multiplayer"
+                :re-roll-game="reRollGame"
+                :re-roll-voted="reRollVoted"
+                :player-count="playerCount"
+                :voted-count="votedCount"
             />
 
             <div id="game-interface">
@@ -243,6 +248,11 @@ export default {
             timeCountdown: 0,
 
             streetViewService: null,
+
+            reRollVoted: false,
+            lngLat: null,
+            playerCount: 0,
+            votedCount: 0
         };
     },
     computed: mapGetters(['areasJson']),
@@ -293,6 +303,35 @@ export default {
 
             this.room.child('active').set(true);
             this.room.on('value', (snapshot) => {
+                // Check for re-roll updates.
+                const reRoll = snapshot.child('reRoll').val();
+                // Generate the lat and lng to test whether the game needs to be refreshed from the host.
+                const randomLat = snapshot
+                    .child(
+                        'streetView/round' +
+                        this.round +
+                        '/latitude'
+                    )
+                    .val();
+                const randomLng = snapshot
+                    .child(
+                        'streetView/round' +
+                        this.round +
+                        '/longitude'
+                    )
+                    .val();
+                const lngLat = `${randomLng},${randomLat}`;
+                // Update counts for UI.
+                this.playerCount = snapshot.child('size').val();
+                if (reRoll) {
+                    this.votedCount = Object.keys(reRoll).length;
+
+                    // Check if the length of the voted players are equal to the number of players to assume a re-roll.
+                    if (Object.keys(reRoll).length === this.playerCount && this.playerNumber === 1) {
+                        this.room.child('reRoll').remove();
+                        this.reRollGame(snapshot);
+                    }
+                }
                 // Check if the room is already removed
                 if (snapshot.hasChild('active')) {
                     // Put the player into the current round node if the player is not put yet
@@ -307,47 +346,18 @@ export default {
                             .set(0);
 
                         // Other players load the streetview the first player loaded earlier
-                        if (this.playerNumber != 1) {
-                            let randomLat = snapshot
-                                .child(
-                                    'streetView/round' +
-                                        this.round +
-                                        '/latitude'
-                                )
-                                .val();
-                            let randomLng = snapshot
-                                .child(
-                                    'streetView/round' +
-                                        this.round +
-                                        '/longitude'
-                                )
-                                .val();
-                          
-                            this.area = snapshot
-                                .child(
-                                    'streetView/round' + this.round + '/area'
-                                )
-                                .val();
-                            this.isVisibleDialog = snapshot
-                                .child(
-                                    'streetView/round' + this.round + '/warning'
-                                )
-                                .val();
-                            this.randomFeatureProperties = snapshot
-                                .child(
-                                    'streetView/round' +
-                                        this.round +
-                                        '/roundInfo'
-                                )
-                                .val();
-                            this.randomLatLng = new google.maps.LatLng(
-                                randomLat,
-                                randomLng
-                            );
-                            this.resetLocation();
+                        if (this.playerNumber !== 1) {
+                            this.loadStreetViewFromHost(snapshot);
                         }
-                    }
 
+                        // Reset re-roll values for next round
+                        this.room.child('reRoll').remove();
+                        this.votedCount = 0;
+                        this.reRollVoted = false;
+                    } else if(this.lngLat !== lngLat && this.playerNumber !== 1) {
+                        // If the Longitude and Latitude have been changed during a round, we can assume a re-roll has been taken place.
+                        this.reRollGame(snapshot);
+                    }
                     // Enable guess button when every players are put into the current round's node
                     if (
                         snapshot.child('round' + this.round).numChildren() ===
@@ -415,6 +425,66 @@ export default {
     },
     methods: {
         ...mapActions(['loadAreas']),
+        async loadStreetViewFromHost(snapshot) {
+            let randomLat = snapshot
+                .child(
+                    'streetView/round' +
+                    this.round +
+                    '/latitude'
+                )
+                .val();
+            let randomLng = snapshot
+                .child(
+                    'streetView/round' +
+                    this.round +
+                    '/longitude'
+                )
+                .val();
+
+            this.area = snapshot
+                .child(
+                    'streetView/round' + this.round + '/area'
+                )
+                .val();
+            this.isVisibleDialog = snapshot
+                .child(
+                    'streetView/round' + this.round + '/warning'
+                )
+                .val();
+            this.randomFeatureProperties = snapshot
+                .child(
+                    'streetView/round' +
+                    this.round +
+                    '/roundInfo'
+                )
+                .val();
+            this.lngLat = `${randomLng},${randomLat}`;
+            this.randomLatLng = new google.maps.LatLng(
+                randomLat,
+                randomLng
+            );
+
+            this.resetLocation();
+        },
+        async reRollGame(snapshot = null) {
+            if(this.multiplayer && !snapshot) {
+                // This casts the player's vote to re-roll the round.
+                this.room.child('reRoll/player' + this.playerNumber).set(true);
+                this.reRollVoted = true;
+            } else if(this.playerNumber === 1) {
+                // If the player is a host a new position will be generated when all players have voted.
+                await this.$refs.mapContainer.goToNextRound(false, false);
+                await this.$refs.header.startTimer();
+                this.reRollVoted = false;
+                this.votedCount = 0;
+            } else {
+                // When the player is not a host, the new round is loaded from the snapshot.
+                await this.loadStreetViewFromHost(snapshot);
+                await this.$refs.header.startTimer();
+                this.reRollVoted = false;
+                this.votedCount = 0;
+            }
+        },
         async loadStreetView() {
             let {panorama, roundInfo, warning, area} = await this.streetViewService.getStreetView(this.round);
             this.randomLatLng = panorama.location.latLng;
@@ -586,7 +656,7 @@ export default {
             this.overlay = true;
             this.$refs.header.stopTimer();
         },
-        async goToNextRound(playAgain = false) {
+        async goToNextRound(playAgain = false, incrementRound = true) {
             if (playAgain) {
                 this.round = 0;
                 this.scoreHeader = 0;
@@ -609,8 +679,8 @@ export default {
                 this.isReady = false; // Turn off the flag so the click event can be added in the next round
             }
 
-            // Update the round
-            this.round += 1;
+            // Update the round, if the round is regenerated we do not increment it.
+            if(incrementRound) this.round += 1;
 
             if (this.playerNumber == 1 || !this.multiplayer) {
                 await this.loadStreetView();
