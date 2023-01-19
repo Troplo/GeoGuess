@@ -176,7 +176,8 @@
     "selectAreas": "Select Areas",
     "moreSettings": "More settings",
     "optimiseStreetView": "StreetView Optimize (only official)",
-    "nbRound": "Number of rounds"
+    "nbRound": "Number of rounds",
+    "allowReRoll": "Allow vote to regenerate round"
   },
   "CardRoomDifficulty": {
     "title": "Set a difficulty level.",

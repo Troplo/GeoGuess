@@ -15,6 +15,7 @@
                 :re-roll-voted="reRollVoted"
                 :player-count="playerCount"
                 :voted-count="votedCount"
+                :allow-re-roll="allowReRoll"
             />
 
             <div id="game-interface">
@@ -214,6 +215,11 @@ export default {
             required: false,
             default: 5,
         },
+        allowReRoll: {
+            type: Boolean,
+            required: false,
+            default: true,
+        }
     },
     data() {
         return {
@@ -323,7 +329,7 @@ export default {
                 const lngLat = `${randomLng},${randomLat}`;
                 // Update counts for UI.
                 this.playerCount = snapshot.child('size').val();
-                if (reRoll) {
+                if (reRoll && this.allowReRoll) {
                     this.votedCount = Object.keys(reRoll).length;
 
                     // Check if the length of the voted players are equal to the number of players to assume a re-roll.
@@ -467,11 +473,12 @@ export default {
             this.resetLocation();
         },
         async reRollGame(snapshot = null) {
+            if(!this.allowReRoll) return;
             if(this.multiplayer && !snapshot) {
                 // This casts the player's vote to re-roll the round.
                 this.room.child('reRoll/player' + this.playerNumber).set(true);
                 this.reRollVoted = true;
-            } else if(this.playerNumber === 1) {
+            } else if(this.playerNumber === 1 || !this.multiplayer) {
                 // If the player is a host a new position will be generated when all players have voted.
                 await this.$refs.mapContainer.goToNextRound(false, false);
                 await this.$refs.header.startTimer();

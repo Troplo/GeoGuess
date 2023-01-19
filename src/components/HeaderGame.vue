@@ -18,7 +18,7 @@
                 </span>
             </div>
             <div class="flex-grow-1" />
-            <v-tooltip bottom>
+            <v-tooltip bottom v-if="allowReRoll">
                 <template v-slot:activator="{ on, attrs }">
                     <span v-on="on" v-bind="attrs">
                         <v-btn icon @click="reRollGame()" :disabled="reRollVoted">
@@ -74,7 +74,8 @@ export default {
         'reRollGame',
         'reRollVoted',
         'playerCount',
-        'votedCount'
+        'votedCount',
+        'allowReRoll',
     ],
     data() {
         return {
