@@ -2,7 +2,10 @@
     <div>
         <v-app-bar class="header" height="100">
             <router-link to="/">
-                <img class="header__logo" src="@/assets/geoguessLogo.png" />
+                <img
+                    class="header__logo mt-1"
+                    src="@/assets/geoguessLogo.png"
+                />
                 <img
                     class="header__logo-min"
                     src="@/../public/img/icons/android-icon-72x72.png"
@@ -51,9 +54,58 @@
                     </v-menu>
                     <v-btn icon @click="changeTheme(!darkTheme)">
                         <v-icon size="30">
-                            {{ darkTheme ? 'mdi-white-balance-sunny' : 'mdi-weather-night' }} }}
+                            {{
+                                darkTheme
+                                    ? 'mdi-white-balance-sunny'
+                                    : 'mdi-weather-night'
+                            }}
+                            }}
                         </v-icon>
                     </v-btn>
+                    <v-progress-circular v-if="loading"></v-progress-circular>
+                    <template v-else>
+                        <template v-if="user">
+                            <v-menu offset-y>
+                                <template v-slot:activator="{ on }">
+                                    <v-btn text link icon>
+                                        <v-avatar v-on="on">
+                                            <v-img
+                                                :src="user.avatar"
+                                                :alt="user.username"
+                                            />
+                                        </v-avatar>
+                                    </v-btn>
+                                </template>
+                                <v-list>
+                                    <v-list-item :disabled="true">
+                                        {{ user.username }}
+                                    </v-list-item>
+                                    <v-list-item @click="logout">
+                                        <v-list-item-title>
+                                            <v-icon
+                                                class="header__nav__btns__user__icon"
+                                            >
+                                                mdi-logout
+                                            </v-icon>
+                                            {{ $t('Home.logoutBtn') }}
+                                        </v-list-item-title>
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
+                        </template>
+                        <template v-else>
+                            <v-btn
+                                id="loginBtn"
+                                text
+                                link
+                                :href="
+                                    'http://localhost:3000/oauth/' + clientId
+                                "
+                            >
+                                {{ $t('Home.loginBtn') }}
+                            </v-btn>
+                        </template>
+                    </template>
                 </div>
             </nav>
             <v-dialog v-model="aboutDialog">
@@ -96,18 +148,27 @@ export default {
         };
     },
     computed: {
+        clientId() {
+            return process.env.VUE_APP_TPU_CLIENT_ID;
+        },
         ...mapState({
             streamerMode: (state) => state.homeStore.streamerMode,
+            loading: (state) => state.authStore.loading,
+            user: (state) => state.authStore.user,
         }),
         demoMode() {
             return !!process.env.VUE_APP_DEMO_MODE;
         },
         darkTheme() {
-          return this.$vuetify.theme.dark;
-        }
+            return this.$vuetify.theme.dark;
+        },
     },
     methods: {
         ...mapActions(['setStreamerMode']),
+        logout() {
+            this.$store.dispatch('authStore/logout');
+            this.$store.dispatch('loadHistory');
+        },
         changeStreamerMode(streamerMode) {
             this.setStreamerMode(streamerMode);
         },
@@ -121,9 +182,9 @@ export default {
             localStorage.setItem('language', language);
         },
         changeTheme(dark) {
-          this.$vuetify.theme.dark = dark;
-          localStorage.setItem('darkTheme', dark);
-        }
+            this.$vuetify.theme.dark = dark;
+            localStorage.setItem('darkTheme', dark);
+        },
     },
 };
 </script>
@@ -135,19 +196,19 @@ export default {
     .header__nav,
     .header__nav__btns {
         display: flex;
-        align-items: center;        
+        align-items: center;
         & > div {
             margin: 0 1.5rem;
         }
     }
-    .theme--light .header__nav__btns .v-btn{
+    .theme--light .header__nav__btns .v-btn {
         color: rgba(0, 0, 0, 0.87);
         margin: 0.25rem;
     }
-    .theme--dark .header__nav__btns .v-btn{
+    .theme--dark .header__nav__btns .v-btn {
         color: rgba(196, 110, 110, 0.87);
         margin: 0.25rem;
-     }
+    }
     .v-btn {
         a {
             text-decoration: none;
@@ -163,7 +224,7 @@ export default {
         display: none;
     }
     .header__nav-icon {
-       display: none;
+        display: none;
     }
 }
 

@@ -1,5 +1,6 @@
 <template>
     <v-app>
+        <DialogSaveSync></DialogSaveSync>
         <router-view />
         <v-alert
             v-model="updateAvailable"
@@ -12,10 +13,12 @@
         >
             <v-row align="center">
                 <v-col class="grow">
-                    {{$t('AlertUpdate.label')}}
+                    {{ $t('AlertUpdate.label') }}
                 </v-col>
                 <v-col class="shrink">
-                    <v-btn @click="refreshApp">{{$t('AlertUpdate.btn')}}</v-btn>
+                    <v-btn @click="refreshApp">{{
+                        $t('AlertUpdate.btn')
+                    }}</v-btn>
                 </v-col>
             </v-row>
         </v-alert>
@@ -23,19 +26,23 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+import DialogSaveSync from '@/components/DialogSaveSync.vue';
+
 export default {
     name: 'App',
+    components: { DialogSaveSync },
     data() {
         return {
             refreshing: false,
             registration: null,
-            updateAvailable: false
+            updateAvailable: false,
         };
     },
     created() {
         // Listen for our custom event from the SW registration
         document.addEventListener('swUpdated', this.setUpdate, { once: true });
-        if(navigator.serviceWorker)
+        if (navigator.serviceWorker)
             navigator.serviceWorker.addEventListener('controllerchange', () => {
                 // Prevent multiple refreshes
                 if (this.refreshing) return;
@@ -43,25 +50,30 @@ export default {
 
                 window.location.reload();
             });
+        this.handleCloudSync();
     },
-    methods:{
+    methods: {
+        ...mapActions('authStore', ['login']),
+        ...mapActions(['loadHistory']),
         setUpdate(event) {
             this.registration = event.detail;
             this.updateAvailable = true;
         },
-
         refreshApp() {
             this.updateAvailable = false;
-            if (!this.registration || !this.registration.waiting)
-                return;
+            if (!this.registration || !this.registration.waiting) return;
             this.registration.waiting.postMessage({ type: 'SKIP_WAITING' });
         },
-    }
+        async handleCloudSync() {
+            await this.login();
+            await this.loadHistory();
+        },
+    },
 };
 </script>
 
 <style lang="scss" scoped>
-#alertUpdate{
+#alertUpdate {
     position: fixed;
     bottom: 2%;
     right: 5%;
@@ -71,6 +83,6 @@ export default {
 
 <style>
 .gm-style {
-  background-color: var(--v-gmapBg-base) !important;
+    background-color: var(--v-gmapBg-base) !important;
 }
 </style>

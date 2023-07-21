@@ -41,3 +41,10 @@ export const SETTINGS_RESET = 'SETTINGS_RESET';
 // Alert
 //
 export const ALERT_SET_ALERT = 'ALERT_SET_ALERT';
+
+//
+// User
+//
+export const AUTH_SET_USER = 'AUTH_SET_USER';
+export const AUTH_SET_LOADING = 'AUTH_SET_LOADING';
+export const AUTH_SET_SAVE_SYNC_DIALOG = 'AUTH_SET_SAVE_SYNC_DIALOG';

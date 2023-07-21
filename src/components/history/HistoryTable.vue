@@ -30,6 +30,17 @@
             <v-tooltip top>
                 <template v-slot:activator="{ on, attrs }">
                     <div v-bind="attrs" v-on="on">
+                        <v-btn icon @click="cloudConflict(true)">
+                            <v-icon> mdi-sync </v-icon>
+                        </v-btn>
+                    </div>
+                </template>
+                <span>{{ $t('History.forceCloudConflict') }}</span>
+            </v-tooltip>
+
+            <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                    <div v-bind="attrs" v-on="on">
                         <v-file-input
                             hide-input
                             accept="application/json"
@@ -139,7 +150,7 @@ export default {
             history: (state) => state.homeStore.history,
         }),
         headers() {
-            return[
+            return [
                 {
                     text: this.$t('History.date'),
                     value: 'dateString',
@@ -244,6 +255,7 @@ export default {
     },
     methods: {
         ...mapActions(['loadHistory']),
+        ...mapActions('authStore', ['cloudConflict']),
         roundsPlayer(rounds, name) {
             return rounds.map((r) => r.players[name]);
         },

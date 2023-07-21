@@ -3,7 +3,9 @@
     "placeVisited": "0 visited places | 1 visited place | {count} visited places",
     "historyBtn": "HISTORY",
     "medalsBtn": "MEDALS",
+    "loginBtn": "LOGIN",
     "about": "ABOUT",
+    "logoutBtn": "Logout",
     "createMap": "Create Map",
     "searchBar": {
       "customLoaded": "Custom map has been loaded",
@@ -128,6 +130,7 @@
     "search": "Search",
     "exportGeoSave": "Export GeoSave",
     "importGeoSave": "Import GeoSave",
+    "forceCloudConflict": "Force Cloud Conflict",
     "exportCSV": "Export CSV",
     "total": "Total",
     "nbRound": "Nb Rounds",
