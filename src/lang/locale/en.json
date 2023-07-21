@@ -130,7 +130,18 @@
     "importGeoSave": "Import GeoSave",
     "exportCSV": "Export CSV",
     "total": "Total",
-    "nbRound": "Nb Rounds"
+    "nbRound": "Nb Rounds",
+    "Stats": {
+      "title": "Stats",
+      "hours": "hours spent in GeoGuess",
+      "perfect5000": "perfect 5000 point rounds",
+      "averageTime": "average time to guess",
+      "averageGame": "average game duration",
+      "longestGame": "longest game",
+      "wonMultiplayer": "won multiplayer games",
+      "averageScore": "average score per round",
+      "averageScoreGame": "average score per game"
+    }
   },
   "DialogRoom": {
     "singlePlayer": "Single Player",

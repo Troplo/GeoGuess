@@ -1,60 +1,78 @@
 <template>
     <div id="stats">
         <h2>
-            Stats
+            {{$t('History.Stats.title')}}
         </h2>
         <v-layout wrap class="mt-2">
-            <v-card class="text-center px-6" max-width="400">
+            <v-card class="text-center px-6 mr-3 my-2" max-width="400">
                 <p class="text-h2 pt-3">
                     {{ (stats.totalGameTime / 3600).toFixed(2) }}
                 </p>
                 <p class="text-h6 mt-n4">
-                    hours spent in GeoGuess
+                    {{$t('History.Stats.hours')}}
                 </p>
             </v-card>
-            <v-card class="text-center ml-3 px-6" max-width="400">
+            <v-card class="text-center mr-3 px-6 my-2" max-width="400">
                 <p class="text-h2 pt-3">
                     {{ stats.perfectScores }}/{{ rounds.length }}
                 </p>
 
                 <p class="text-h6 mt-n4">
-                    perfect 5000 point rounds
+                    {{$t('History.Stats.perfect5000')}}
                 </p>
             </v-card>
-            <v-card class="text-center ml-3 px-6" max-width="400">
+            <v-card class="text-center mr-3 px-6 my-2" max-width="400">
                 <p class="text-h2 pt-3">
                     {{(stats.avgTimePerRound / 60).toFixed(2)}}min
                 </p>
 
                 <p class="text-h6 mt-n4">
-                    average time to guess
+                    {{$t('History.Stats.averageTime')}}
                 </p>
             </v-card>
-            <v-card class="text-center ml-3 px-6" max-width="400">
+            <v-card class="text-center mr-3 px-6 my-2" max-width="400">
                 <p class="text-h2 pt-3">
                     {{(stats.avgTimePerGame / 60).toFixed(2)}}min
                 </p>
 
                 <p class="text-h6 mt-n4">
-                    average game duration
+                    {{$t('History.Stats.averageGame')}}
                 </p>
             </v-card>
-            <v-card class="text-center ml-3 px-6" max-width="400">
+            <v-card class="text-center mr-3 px-6 my-2" max-width="400">
                 <p class="text-h2 pt-3">
                     {{(stats.longestGame / 60).toFixed(2)}}min
                 </p>
 
                 <p class="text-h6 mt-n4">
-                    longest game
+                    {{$t('History.Stats.longestGame')}}
                 </p>
             </v-card>
-            <v-card class="text-center ml-3 px-6" max-width="400">
+            <v-card class="text-center mr-3 px-6 my-2" max-width="400">
                 <p class="text-h2 pt-3">
                     {{stats.wonGames.won}}/{{stats.wonGames.total}}
                 </p>
 
                 <p class="text-h6 mt-n4">
-                    won multiplayer games
+                    {{$t('History.Stats.wonMultiplayer')}}
+                </p>
+            </v-card>
+            <v-card class="text-center mr-3 px-6 my-2" max-width="400">
+                <p class="text-h2 pt-3">
+                    {{stats.averageScore}}
+                </p>
+
+                <p class="text-h6 mt-n4">
+                    {{$t('History.Stats.averageScore')}}
+                </p>
+            </v-card>
+            <v-card class="text-center mr-3 px-6 my-2" max-width="400">
+                <p class="text-h2 pt-3">
+                    {{stats.averageScoreGame}}
+                </p>
+
+                <p class="text-h6 mt-n4">
+                    {{$t('History.Stats.averageScoreGame')}}
                 </p>
             </v-card>
         </v-layout>
@@ -77,6 +95,8 @@ export default {
                 wonGames: this.getWonGames(),
                 avgTimePerGame: this.getAvgTimePerGame(),
                 longestGame: this.getLongestGame(),
+                averageScore: Math.round(this.getAverageScore()).toLocaleString(),
+                averageScoreGame: Math.round(this.getAverageScoreGame()).toLocaleString(),
             };
         },
         rounds() {
@@ -190,6 +210,20 @@ export default {
                 },
                 0
             );
+        },
+        getAverageScore() {
+            if(!this.rounds.length) return 0;
+            return (this.rounds.reduce((acc, { points }) => {
+                if(!points) return acc;
+                return acc + points;
+            }, 0) / this.rounds.length).toFixed(2);
+        },
+        getAverageScoreGame() {
+            if(!this.history.length) return 0;
+            return (this.history.reduce((acc, { points }) => {
+                if(!points) return acc;
+                return acc + points;
+            }, 0) / this.history.length).toFixed(2);
         },
     },
 };
