@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axi = axios.create({
-    baseURL: 'http://localhost:3000/api/v3',
+    baseURL: 'https://privateuploader.com/api/v3',
 });
 
 axi.interceptors.request.use((config) => {

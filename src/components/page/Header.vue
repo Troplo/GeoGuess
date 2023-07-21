@@ -99,7 +99,8 @@
                                 text
                                 link
                                 :href="
-                                    'http://localhost:3000/oauth/' + clientId
+                                    'https://privateuploader.com/oauth/' +
+                                    clientId
                                 "
                             >
                                 {{ $t('Home.loginBtn') }}

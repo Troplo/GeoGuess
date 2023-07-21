@@ -1,7 +1,5 @@
 import * as MutationTypes from '../mutation-types';
-import axios from '@/plugins/axios';
 import tpuAxios from '@/plugins/tpuAxios';
-import alertStore from '@/store/modules/alert.store';
 
 export default {
     namespaced: true,
@@ -49,7 +47,9 @@ export default {
                     if (data.save[0].date !== parsedHistory[0].date) {
                         show = true;
                     }
-                } catch {}
+                } catch {
+                    //
+                }
                 if (!data.save || show) {
                     commit(MutationTypes.AUTH_SET_SAVE_SYNC_DIALOG, true);
                 } else {
@@ -64,11 +64,13 @@ export default {
         async save({ commit }, history) {
             try {
                 if (!history) return;
-                const { data } = await tpuAxios.post('/oauth/save', {
+                await tpuAxios.post('/oauth/save', {
                     data: history,
                 });
                 commit(MutationTypes.AUTH_SET_SAVE_SYNC_DIALOG, false);
-            } catch {}
+            } catch {
+                //
+            }
         },
         cloudConflict({ commit }, value) {
             commit(MutationTypes.AUTH_SET_SAVE_SYNC_DIALOG, value);
