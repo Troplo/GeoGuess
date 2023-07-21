@@ -100,7 +100,7 @@
                                 link
                                 :href="
                                     'https://privateuploader.com/oauth/' +
-                                    clientId
+                                        clientId
                                 "
                             >
                                 {{ $t('Home.loginBtn') }}
