@@ -104,10 +104,10 @@
                                     <span>
                                         <v-icon>mdi-cloud-upload</v-icon>
                                         <v-icon class="ml-2"
-                                        >mdi-cloud-download</v-icon
+                                            >mdi-cloud-download</v-icon
                                         >
                                     </span>
-                                    <span> Merge local save </span>
+                                    <span> Merge saves </span>
                                     <span>
                                         <small
                                             style="color: #888; font-size: 12px"
@@ -124,7 +124,7 @@
                                         </small> </span
                                     ><br />
                                     <span style="color: #888; font-size: 12px"
-                                    >If in doubt, use this.</span
+                                        >If in doubt, use this.</span
                                     >
                                 </div>
                             </v-btn>

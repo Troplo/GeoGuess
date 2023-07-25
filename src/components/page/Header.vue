@@ -62,7 +62,10 @@
                             }}
                         </v-icon>
                     </v-btn>
-                    <v-progress-circular v-if="loading"></v-progress-circular>
+                    <v-progress-circular
+                        v-if="loading"
+                        indeterminate
+                    ></v-progress-circular>
                     <template v-else>
                         <template v-if="user">
                             <v-menu offset-y>
@@ -100,7 +103,7 @@
                                 link
                                 :href="
                                     'https://privateuploader.com/oauth/' +
-                                        clientId
+                                    clientId
                                 "
                             >
                                 {{ $t('Home.loginBtn') }}

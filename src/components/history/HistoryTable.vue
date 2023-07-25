@@ -27,7 +27,7 @@
             </v-card>
         </v-dialog>
         <div class="history-table__btns">
-            <v-tooltip top>
+            <v-tooltip top v-if="!saving">
                 <template v-slot:activator="{ on, attrs }">
                     <div v-bind="attrs" v-on="on">
                         <v-btn icon @click="cloudConflict(true)">
@@ -36,6 +36,21 @@
                     </div>
                 </template>
                 <span>{{ $t('History.forceCloudConflict') }}</span>
+            </v-tooltip>
+            <v-tooltip top v-else>
+                <template v-slot:activator="{ on, attrs }">
+                    <div v-bind="attrs" v-on="on">
+                        <v-btn icon disabled>
+                            <v-progress-circular
+                                size="20"
+                                width="2"
+                                color="white"
+                                indeterminate
+                            ></v-progress-circular>
+                        </v-btn>
+                    </div>
+                </template>
+                <span>{{ $t('History.syncing') }}</span>
             </v-tooltip>
 
             <v-tooltip top>
@@ -148,6 +163,7 @@ export default {
     computed: {
         ...mapState({
             history: (state) => state.homeStore.history,
+            saving: (state) => state.authStore.saving,
         }),
         headers() {
             return [

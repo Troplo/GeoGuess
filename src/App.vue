@@ -2,6 +2,26 @@
     <v-app>
         <DialogSaveSync></DialogSaveSync>
         <router-view />
+        <v-snackbar
+            :value="syncError"
+            top
+            right
+            color="rounded-xl red accent-2"
+            :timeout="saving ? -1 : 6000"
+        >
+            {{ $t('SyncError.label') }}
+            <template v-slot:action="{ attrs }">
+                <v-btn
+                    color="white"
+                    text
+                    v-bind="attrs"
+                    @click="save(history)"
+                    :loading="saving"
+                >
+                    {{ $t('SyncError.btn') }}
+                </v-btn>
+            </template>
+        </v-snackbar>
         <v-alert
             v-model="updateAvailable"
             id="alertUpdate"
@@ -26,7 +46,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import DialogSaveSync from '@/components/DialogSaveSync.vue';
 
 export default {
@@ -52,9 +72,17 @@ export default {
             });
         this.handleCloudSync();
     },
+    computed: {
+        ...mapState({
+            syncError: (state) => state.authStore.syncError,
+            history: (state) => state.homeStore.history,
+            saving: (state) => state.authStore.saving,
+        }),
+    },
     methods: {
         ...mapActions('authStore', ['login']),
         ...mapActions(['loadHistory']),
+        ...mapActions('authStore', ['save']),
         setUpdate(event) {
             this.registration = event.detail;
             this.updateAvailable = true;

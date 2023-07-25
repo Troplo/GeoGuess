@@ -131,6 +131,7 @@
     "exportGeoSave": "Export GeoSave",
     "importGeoSave": "Import GeoSave",
     "forceCloudConflict": "Force Cloud Conflict",
+    "syncing": "Uploading and syncing save...",
     "exportCSV": "Export CSV",
     "total": "Total",
     "nbRound": "Nb Rounds",
@@ -235,5 +236,9 @@
   "AlertUpdate": {
     "label": "A new version is available. Click on the button to obtain it.",
     "btn": "Update"
+  },
+  "SyncError": {
+    "label": "There was an issue saving your game to TroploServices. Please try again later.",
+    "btn": "Retry"
   }
 }
