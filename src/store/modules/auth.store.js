@@ -28,7 +28,7 @@ export default {
         },
     },
     actions: {
-        async login({ commit }, tkn) {
+        async login({ commit, dispatch }, tkn) {
             try {
                 const token = tkn || localStorage.getItem('token');
                 if (!token) {
@@ -76,6 +76,12 @@ export default {
                             new Date(b.date || 0).getTime()
                     );
                     localStorage.setItem('history', JSON.stringify(merged));
+                    if (
+                        merged.length !== data.save.length ||
+                        merged.length !== parsedHistory.length
+                    ) {
+                        dispatch('save', merged);
+                    }
                 } else {
                     localStorage.setItem('history', JSON.stringify(data.save));
                 }
@@ -97,7 +103,10 @@ export default {
                 commit(MutationTypes.AUTH_SET_SYNC_ERROR, false);
             } catch {
                 commit(MutationTypes.AUTH_SET_SAVING, false);
-                commit(MutationTypes.AUTH_SET_SYNC_ERROR, true);
+
+                if (localStorage.getItem('token')) {
+                    commit(MutationTypes.AUTH_SET_SYNC_ERROR, true);
+                }
             }
         },
         cloudConflict({ commit }, value) {
