@@ -8,8 +8,8 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
-import firebase from 'firebase/app';
-import 'firebase/database';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/database';
 
 const firebaseConfig = {
     apiKey: Cypress.env('VUE_APP_FIREBASE_API_KEY'),
@@ -92,10 +92,10 @@ Cypress.Commands.add('startGame', (time, mode, place, multiplayer) => {
         cy.get('.time-picker .v-slider--horizontal').click('center');
         cy.get('.time-input__second input')
             .should('have.value', '00')
-                .type('{backspace}{backspace}' + time);
-            cy.get('.time-input__minute input')
-                .should('have.value', 5)
-                .type('{backspace}0{enter}');
+            .type('{backspace}{backspace}' + time);
+        cy.get('.time-input__minute input')
+            .should('have.value', 5)
+            .type('{backspace}0{enter}');
     }
     card.get('#btnNextSettings:not([disabled="disabled"])')
         .contains('NEXT')
