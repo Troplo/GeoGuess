@@ -3,8 +3,8 @@
         id="container-map"
         :class="[
             ($viewport.width >= 450 && (activeMap || pinActive)) ||
-            isMakeGuessButtonClicked ||
-            isNextButtonVisible
+                isMakeGuessButtonClicked ||
+                isNextButtonVisible
                 ? 'container-map--active'
                 : '',
             printMapFull ? 'container-map--full' : '',
@@ -13,13 +13,13 @@
         v-on="
             $viewport.width >= 450 // Only on tablet and desktop Issue #104
                 ? {
-                      mouseover: () => {
-                          activeMap = true;
-                      },
-                      mouseleave: () => {
-                          activeMap = false;
-                      },
-                  }
+                    mouseover: () => {
+                        activeMap = true;
+                    },
+                    mouseleave: () => {
+                        activeMap = false;
+                    },
+                }
                 : {}
         "
     >
@@ -70,8 +70,8 @@
         <v-btn
             v-if="
                 $viewport.width < 450 &&
-                !isGuessButtonClicked &&
-                isMakeGuessButtonClicked
+                    !isGuessButtonClicked &&
+                    isMakeGuessButtonClicked
             "
             id="hide-map-button"
             fab
@@ -109,15 +109,15 @@
         <button
             v-if="
                 !isNextButtonVisible &&
-                !isSummaryButtonVisible &&
-                ($viewport.width > 450 || isMakeGuessButtonClicked)
+                    !isSummaryButtonVisible &&
+                    ($viewport.width > 450 || isMakeGuessButtonClicked)
             "
             id="guess-button"
             :disabled="
                 randomLatLng == null ||
-                selectedPos == null ||
-                isGuessButtonClicked ||
-                (!!this.room && !isReady)
+                    selectedPos == null ||
+                    isGuessButtonClicked ||
+                    (!!this.room && !isReady)
             "
             @click="selectLocation"
         >
@@ -145,9 +145,9 @@
         <button
             v-if="
                 $viewport.width < 450 &&
-                !isGuessButtonClicked &&
-                !isMakeGuessButtonClicked &&
-                !isNextButtonVisible
+                    !isGuessButtonClicked &&
+                    !isMakeGuessButtonClicked &&
+                    !isNextButtonVisible
             "
             id="make-guess-button"
             class="primary"
