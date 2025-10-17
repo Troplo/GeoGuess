@@ -1,4 +1,4 @@
-import MapAreas from '@/components/map/MapAreas';
+import MapAreas from '@/components/map/MapAreas.vue';
 import { createLocalVue, mount } from '@vue/test-utils';
 import appInit from '../../testutils/appInit';
 import Vuex from 'vuex';
@@ -9,14 +9,14 @@ const args = appInit(createLocalVue());
 global.google = {
     maps: {
         ...createGoogleMapsMock(),
-        InfoWindow: jest.fn().mockImplementation(function () {
+        InfoWindow: vi.fn().mockImplementation(function () {
             return {
-                open: jest.fn(),
+                open: vi.fn(),
             };
         }),
-        Polyline: jest.fn().mockImplementation(function () {
+        Polyline: vi.fn().mockImplementation(function () {
             return {
-                setMap: jest.fn(),
+                setMap: vi.fn(),
             };
         }),
     },
@@ -29,7 +29,7 @@ describe('MapAreas.vue', () => {
                 areaStore: {
                     getters: areaStore.getters,
                     actions: {
-                        loadAreas: jest.fn(),
+                        loadAreas: vi.fn(),
                     },
                 },
             },

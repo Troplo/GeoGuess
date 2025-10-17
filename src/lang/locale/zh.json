@@ -75,6 +75,10 @@
     "infoWindow": {
       "Distance": "距离",
       "Points": "分数"
+    },
+    "leaderboard": {
+      "notGuessed": "Not Guessed",
+      "guessed": "Guessed"
     }
   },
   "Header": {
@@ -100,7 +104,7 @@
     "file": "文件",
     "edit": "编辑地图",
     "fileLabel": "选择GeoJSON文件",
-    "OK": "OK",
+    "OK": "确定",
     "download": "下载GeoJSON",
     "Clean": "清除",
     "save": "保存",
@@ -165,6 +169,8 @@
     "allowMove": "允许移动",
     "allowZoom": "允许放大",
     "allowPan": "允许环顾四周",
+    "guessedLeaderboard": "Display whether players have guessed",
+    "scoreLeaderboard": "Display score leaderboard",
     "countDownLabel": "倒计时 (秒)",
     "scoreModeLabel": "得分公式",
     "scoreModes": {
@@ -206,7 +212,7 @@
     "message": "如果你想为这个项目做出贡献，使它变得更好，我们非常欢迎你的帮助：翻译🔠，制作地图🌍，代码💻，想法💡，测试👀。",
     "btn": "加入我们"
   },
-  "OK": "OK",
+  "OK": "确定",
   "yes": "是",
   "no": "否",
   "AlertUpdate": {

@@ -1,0 +1,222 @@
+{
+  "Home": {
+    "placeVisited": "0 barılǵan orın |1 barılǵan orın | {count} barılǵan orın",
+    "historyBtn": "Tariyx",
+    "medalsBtn": "MEDALLAR",
+    "about": "JOBA HAQQINDA",
+    "createMap": "Kartanı jaratıw",
+    "searchBar": {
+      "customLoaded": "Custom map has been loaded",
+      "enterCity": "Qala, shtat hám mámleketti kirgiziń"
+    },
+    "aboutDescriptions": {
+      "1": "Geoguess is a free and lazy geoguess game with no ads.                  Players compete how close the player can guess random locations in five rounds.                 You can share the score with other people via social media like Facebook or Twitter.                 You can play multiplayer games with your friends up to five friends.                  The first player creates a room and decides the room size. Other players type the same room name as the first player created and the game will start.",
+      "2": "This game was forked from "
+    },
+    "customMap": "CUSTOMS MAP",
+    "customMapDescriptions": {
+      "1": "You can limit random locations to cities, states, or countries with the search bar.",
+      "2": "In the multiplayer, the first player fixes the location.",
+      "3": "Furthermore, you can make your custom map with ",
+      "4": "fayl.",
+      "5": "Insert the content of the GeoJson map with the button :",
+      "6": "Customs Map selection : "
+    },
+    "limitation": "SHEKLEWLER",
+    "limitationDescription": "Currently I set quotas per day so the cost to run this game can't get too high.             If the map doesn't load, it means the quota has been exceeded on the day.             It will reset at midnight Pacific Time. Sorry for the inconvenience.             This game is open source so you can build your own game server and play this game unlimitedly.",
+    "play": "Oynaw",
+    "streamerModeActivate": "Streamer mode activate",
+    "streamerModeDetails": "Bólme siltemeleri hám atları jasırılǵan",
+    "mapSavedAlert": {
+      "title": "Karta saqlandı 🎉",
+      "subtitle": "Siz buni kartalardıń diziminen tabasiz"
+    },
+    "HomeCard": {
+      "edit": "Ózgeris kirgiziw",
+      "delete": "Óshiriw",
+      "medal": {
+        "platinum": "Platina",
+        "gold": "Altın",
+        "silver": "Gúmis",
+        "bronze": "Bronza"
+      }
+    },
+    "HomeCardMode": {
+      "map": "Karta",
+      "area": "Maydan"
+    },
+    "Sections": {
+      "areasTitle": "Maydanlar",
+      "mapsTitle": "Kartalar",
+      "pleaseSelectLabel": "You seems lost, please select a type or you can ",
+      "barrelRoll": "do a barrel roll"
+    }
+  },
+  "StreetView": {
+    "nearby": {
+      "title": "Nearby Position",
+      "message": "Unfortunately, we were unable to find a random position in the defined location. However, we have found one nearby 😉"
+    },
+    "waitForOtherPlayers": "Waiting for other players...",
+    "redirectToHomePage": "Redirecting to Home Page...",
+    "exitGame": "You are forced to exit the game. Redirecting to home page after 5 seconds...",
+    "waitForOtherPlayersToFinish": "Waiting for other players to finish the game...",
+    "confirmExit": "Are you sure to leave the current game? This will abort the game!",
+    "countdownAlert": "Countdown started : {count} second remaining | Countdown started : {count} seconds remaining"
+  },
+  "Maps": {
+    "makeGuess": "MAKE GUESS",
+    "guess": "TABIW",
+    "nextRound": "NEXT ROUND",
+    "viewSummary": "VIEW SUMMARY",
+    "exit": "Shıǵıw",
+    "reset": "QAYTA ORNATÍW",
+    "playAgain": "QAYTA OYNATÍW",
+    "infoWindow": {
+      "Distance": "Aralıq",
+      "Points": "Points"
+    },
+    "leaderboard": {
+      "notGuessed": "Not Guessed",
+      "guessed": "Guessed"
+    }
+  },
+  "Header": {
+    "language": "Til",
+    "about": "Joba haqqında",
+    "limitation": "Sheklewler",
+    "contact": "Baylanıs"
+  },
+  "HeaderGame": {
+    "room": "BÓLME",
+    "round": "ROUND",
+    "distance": "ARALIQ",
+    "kmaway": "{value} km uzaqlıqta",
+    "score": "SCORE"
+  },
+  "next": "KEYINGISI",
+  "cancel": "BIYKARLAW",
+  "DialogCustomMap": {
+    "title": "Custom Map",
+    "invalid": "Invalid GeoJSON",
+    "text": "Tekst",
+    "url": "Silteme",
+    "file": "Fayl",
+    "edit": "Kartaǵa ózgeris kirgiziw",
+    "fileLabel": "GeoJSON fayldı tańlaw",
+    "OK": "MAQUL",
+    "download": "GeoJSONdi júklep alıw",
+    "Clean": "Tazalaw",
+    "save": "saqlaw",
+    "inputName": {
+      "label": "Karta ataması",
+      "placeholder": "Meniń súyikli ornm"
+    }
+  },
+  "History": {
+    "title": "Tariyx",
+    "date": "Sáne",
+    "mode": "Rejim",
+    "mapName": "Karta ataması",
+    "time": "Waqıt",
+    "distance": "Aralıq",
+    "points": "Points",
+    "rank": "Rank",
+    "actions": "Háreketler",
+    "search": "Izlew",
+    "exportGeoSave": "GeoSaveti eksport qılıw",
+    "importGeoSave": "GeoSaveti import qılıw",
+    "exportCSV": "CSVdi export qılıw",
+    "total": "Jámi",
+    "nbRound": "Nb Rounds"
+  },
+  "DialogRoom": {
+    "singlePlayer": "Single Player",
+    "withFriends": "Doslar menen",
+    "invalidRoomName": "Invalid name. Please try another.",
+    "inProgress": "The first player is creating the room right now. Please wait and try again.",
+    "roomIsFull": "This room is already full. Please try another.",
+    "alreadyStarted": "This room has already started.  Please try another."
+  },
+  "CardRoomName": {
+    "title": "Type a room name to create a new room or join a existing room"
+  },
+  "CardRoomPlayerName": {
+    "title": "Bólme:",
+    "input": "Oyınshınıń atın jazıń.",
+    "anonymousPlayerName": "Anomim 🕵",
+    "players": "1 player | {count} players"
+  },
+  "CardRoomSize": {
+    "title": "Bólme kólemin ornatıw."
+  },
+  "CardRoomTime": {
+    "title": "Set a time limit.",
+    "infinite": "Sheksizlik"
+  },
+  "CardRoomMap": {
+    "title": "Define your map",
+    "loadBtn": "Load MAP",
+    "reset": "Qayta ornatıw",
+    "cantPlayGeoJson": "Invalid GeoJSON, you need to have more than 5 positions."
+  },
+  "CardRoomSettings": {
+    "title": "Oyın sazlawları",
+    "modeLabel": "Oyın rejimin tańlań",
+    "includePhotopheres": "Include Photospheres",
+    "timeAttackLabel": "TimeAttack",
+    "timeattackInfos": "In TimeAttack mode, only the player who guesses the country first gets the point. Be quick and win!",
+    "allowMove": "Allow Move",
+    "allowZoom": "Allow Zoom",
+    "allowPan": "Allow Pan",
+    "guessedLeaderboard": "Display whether players have guessed",
+    "scoreLeaderboard": "Display score leaderboard",
+    "countDownLabel": "CountDown (seconds)",
+    "scoreModeLabel": "Ball formulası",
+    "scoreModes": {
+      "normal": "ádettegi",
+      "time": "waqıt"
+    },
+    "selectAreas": "Maydanlardı tańlań",
+    "moreSettings": "Kóbirek sazlawlar",
+    "optimiseStreetView": "StreetView Optimize (only official)",
+    "nbRound": "Raundlar sanı"
+  },
+  "CardRoomDifficulty": {
+    "title": "Qıyınshılıq dárejesin ornatıń.",
+    "easy": "ańsat (dúnya)",
+    "medium": "ortasha (mámleket)",
+    "hard": "qıyın (qala)"
+  },
+  "DialogSummary": {
+    "summaryMsgSinglePoints": "Siziń esabıńızda <strong>{points}</strong> ball! ",
+    "summaryMsgSingleDistance": "Siz <strong>{distance}</strong> km qashıqlıqtasız!",
+    "summaryMsgMultiPoints": "<strong>{playerName}</strong> ball <strong>{points}</strong>! ",
+    "summaryMsgMultiDistance": "(<strong>{distance}</strong> km qashıqlıq)",
+    "viewDetails": "Detallardı kóriw"
+  },
+  "Footer": {
+    "under": "astında",
+    "privacyPolicy": "Qupiyalıq siyasatı"
+  },
+  "urlCopied": "Silteme kóshirip alındı",
+  "DetailsMap": {
+    "moreInfo": "Kóbirek maǵlıwmat"
+  },
+  "modes": {
+    "classic": "Klassikalıq",
+    "country": "Mámleketti tańlań",
+    "custom_area": "Tańlań"
+  },
+  "Demo": {
+    "message": "Eger siz proektti qollap-quwatlaw hám onı rawajlandırıwdı qáleseńiz, siziń járdemińizden quwanamız: Awdarma 🔠, Karta 🌍, Kod 💻, Pikir💡, Beta test 👀.",
+    "btn": "Bizlerge qosılıń"
+  },
+  "OK": "MAQUL",
+  "yes": "awa",
+  "no": "yaq",
+  "AlertUpdate": {
+    "label": "Jańa versiyası bar. Oǵan iye bolıw ushın túymeni basıń.",
+    "btn": "Jańalaw"
+  }
+}

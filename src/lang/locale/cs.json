@@ -1,10 +1,10 @@
 {
   "Home": {
-    "placeVisited": "0 visited places | 1 visited place | {count} visited places",
+    "placeVisited": "0 navštívených míst | 1 navštívené místo | {count} navštívených míst",
     "historyBtn": "HISTORIE",
     "medalsBtn": "MEDALS",
     "about": "O HŘE",
-    "createMap": "Create Map",
+    "createMap": "Vytvořit mapu",
     "searchBar": {
       "customLoaded": "Vlastní mapa byla úspěšně načtena",
       "enterCity": "Napiš název města, regionu nebo státu (anglicky)"
@@ -28,12 +28,12 @@
     "streamerModeActivate": "Streamer mode activate",
     "streamerModeDetails": "URLs and room names are hidden",
     "mapSavedAlert": {
-      "title": "Map saved 🎉",
-      "subtitle": "You will find it in your map lists"
+      "title": "Mapa uložena 🎉",
+      "subtitle": "Najdete to v seznamu map"
     },
     "HomeCard": {
-      "edit": "Edit",
-      "delete": "Delete",
+      "edit": "Upravit",
+      "delete": "Smazat",
       "medal": {
         "platinum": "Platinum",
         "gold": "Gold",
@@ -75,6 +75,10 @@
     "infoWindow": {
       "Distance": "Vzdálenost",
       "Points": "Skóre"
+    },
+    "leaderboard": {
+      "notGuessed": "Not Guessed",
+      "guessed": "Guessed"
     }
   },
   "Header": {
@@ -102,18 +106,18 @@
     "fileLabel": "Zvol GeoJSON soubor",
     "OK": "OK",
     "download": "Stáhni GeoJSON",
-    "Clean": "Clean",
-    "save": "save",
+    "Clean": "Smazat",
+    "save": "uložit",
     "inputName": {
-      "label": "Map Name",
-      "placeholder": "My favorite place"
+      "label": "Název mapy",
+      "placeholder": "Oblíbené místo"
     }
   },
   "History": {
     "title": "Historie",
     "date": "Datum",
     "mode": "Typ hry",
-    "mapName": "Map Name",
+    "mapName": "Název mapy",
     "time": "Časový limit",
     "distance": "Vzdálenost",
     "points": "Skóre",
@@ -132,7 +136,7 @@
     "invalidRoomName": "Nevhodné jméno. Zkus se prosím pojmenovat jinak.",
     "inProgress": "První hráč právě nastavuje hru. Vydrž prosím a za chvíli to zkus znovu.",
     "roomIsFull": "Tato místnost je již plná. Zkus to prosím znovu později.",
-    "alreadyStarted": "This room has already started.  Please try another."
+    "alreadyStarted": "Tato hra již začala, zkuste jinou."
   },
   "CardRoomName": {
     "title": "Napiš název herní mistnosti, aby jsi ji vytvořil nebo se do ní připojil"
@@ -151,10 +155,10 @@
     "infinite": "Bez omezení"
   },
   "CardRoomMap": {
-    "title": "Define your map",
-    "loadBtn": "Load MAP",
-    "reset": "Reset",
-    "cantPlayGeoJson": "Invalid GeoJSON, you need to have more than 5 positions."
+    "title": "Definujte svou mapu",
+    "loadBtn": "Načíst mapu",
+    "reset": "Resetovat",
+    "cantPlayGeoJson": "Neplatný GeoJSON, musíte mít více než 5 pozic."
   },
   "CardRoomSettings": {
     "title": "Nastavení hry",
@@ -165,6 +169,8 @@
     "allowMove": "Povolit Pohyb",
     "allowZoom": "Povolit Zoom (přiblížení)",
     "allowPan": "Povolit Otáčení",
+    "guessedLeaderboard": "Display whether players have guessed",
+    "scoreLeaderboard": "Display score leaderboard",
     "countDownLabel": "CountDown (seconds)",
     "scoreModeLabel": "Score formula",
     "scoreModes": {
@@ -174,7 +180,7 @@
     "selectAreas": "Select Areas",
     "moreSettings": "More settings",
     "optimiseStreetView": "StreetView Optimize (only official)",
-    "nbRound": "Number of rounds"
+    "nbRound": "Počet kol"
   },
   "CardRoomDifficulty": {
     "title": "Zvol obtížnost hry (ovlivňuje bodování).",
@@ -210,7 +216,7 @@
   "yes": "Ano",
   "no": "Ne",
   "AlertUpdate": {
-    "label": "A new version is available. Click on the button to obtain it.",
-    "btn": "Update"
+    "label": "Nová verze je dostupná, klikněte na tlačítko pro její získání.",
+    "btn": "Aktualizovat"
   }
 }

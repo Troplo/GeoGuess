@@ -1,10 +1,9 @@
 import bbox from '@turf/bbox';
 import firebase from 'firebase/app';
 import 'firebase/database';
-import { GAME_MODE, SCORE_MODE } from '../../constants';
-import i18n from '../../lang';
+import { GAME_MODE, SCORE_MODE } from '@/constants';
 import router from '../../router';
-import { getMaxDistanceBbox } from '../../utils';
+import { getMaxDistanceBbox } from '@/utils';
 import * as MutationTypes from '../mutation-types';
 
 export class GameSettings {
@@ -60,7 +59,9 @@ export default {
         // SETTINGS
         gameSettings: new GameSettings(),
         players: [],
-        name: localStorage.getItem('playerName')?.slice(0, 20) || i18n.t("CardRoomPlayerName.anonymousPlayerName"),
+        name:
+            localStorage.getItem('playerName')?.slice(0, 20) ||
+            'CardRoomPlayerName.anonymousPlayerName',
         invalidName: false,
     }),
     mutations: {
@@ -75,9 +76,7 @@ export default {
 
             state.room.once('value', (snapshot) => {
                 if (snapshot.child('started').val()) {
-                    state.roomErrorMessage = i18n.t(
-                        'DialogRoom.alreadyStarted'
-                    );
+                    state.roomErrorMessage = 'DialogRoom.alreadyStarted';
                     state.room.off();
                     return;
                 }
@@ -88,12 +87,11 @@ export default {
                 const playerNumber = numberOfPlayers + 1;
 
                 state.playerNumber = playerNumber;
-                const name = state.name === '' ? i18n.t(
-                                'CardRoomPlayerName.anonymousPlayerName'
-                            ) + playerNumber : state.name;
-
-                state.room.child('playerName/player'+playerNumber).onDisconnect().remove();
-
+                const name =
+                    state.name === ''
+                        ? 'CardRoomPlayerName.anonymousPlayerName' +
+                          playerNumber
+                        : state.name;
 
                 if (numberOfPlayers === 0) {
                     // Put the tentative player's name into the room node
@@ -118,15 +116,12 @@ export default {
                     // Put other player's tentative name
                     state.room
                         .child('playerName/player' + playerNumber)
-                        .set(
-                            name,
-                            (error) => {
-                                if (!error) {
-                                    state.loadRoom = false;
-                                    state.currentComponent = 'playerName';
-                                }
+                        .set(name, (error) => {
+                            if (!error) {
+                                state.loadRoom = false;
+                                state.currentComponent = 'playerName';
                             }
-                        );
+                        });
                 }
             });
         },
@@ -146,10 +141,10 @@ export default {
                 ...settings,
             };
         },
-        [MutationTypes.SETTINGS_SET_DIFFICULTY](state, difficulty){
+        [MutationTypes.SETTINGS_SET_DIFFICULTY](state, difficulty) {
             state.difficulty = difficulty;
         },
-        [MutationTypes.SETTINGS_SET_BBOX](state, bbox){
+        [MutationTypes.SETTINGS_SET_BBOX](state, bbox) {
             state.bboxObj = bbox;
         },
         [MutationTypes.SETTINGS_SET_OPEN_DIALOG_ROOM](state, open) {
@@ -224,7 +219,7 @@ export default {
             if (roomName == '') {
                 commit(
                     MutationTypes.SETTINGS_SET_ROOM_ERROR,
-                    i18n.t('DialogRoom.invalidRoomName')
+                    'DialogRoom.invalidRoomName'
                 );
             } else {
                 commit(MutationTypes.SETTINGS_SET_ROOM, roomName);
@@ -264,7 +259,9 @@ export default {
                         difficulty,
                         placeGeoJson: rootState.homeStore.map.geojson,
                         bboxObj: bboxObj,
-                        ...(rootState.homeStore.map ? {mapDetails: rootState.homeStore.map.details} : undefined)
+                        ...(rootState.homeStore.map
+                            ? { mapDetails: rootState.homeStore.map.details }
+                            : undefined),
                     },
                 });
                 dispatch('closeDialogRoom');
@@ -289,7 +286,10 @@ export default {
         },
         setPlayerName({ commit }, playerName) {
             localStorage.setItem('playerName', playerName.slice(0, 20));
-            commit(MutationTypes.SETTINGS_SET_PLAYER_NAME, playerName.slice(0, 20));
+            commit(
+                MutationTypes.SETTINGS_SET_PLAYER_NAME,
+                playerName.slice(0, 20)
+            );
         },
         startGame({ state, dispatch, rootState }) {
             let gameParams = {};
@@ -322,11 +322,18 @@ export default {
                         allPanorama: snapshot.child('allPanorama').val(),
                         scoreMode: snapshot.child('scoreMode').val(),
                         areaParams: snapshot.child('areaParams').val(),
-                        optimiseStreetView: snapshot.child('optimiseStreetView').val(),
-                        nbRoundSelected: snapshot.child('nbRoundSelected').val(),
-                        scoreLeaderboard: snapshot.child('scoreLeaderboard').val(),
-                        guessedLeaderboard: snapshot.child('guessedLeaderboard').val(),
-                        allowReRoll: snapshot.child('allowReRoll').val(),
+                        optimiseStreetView: snapshot
+                            .child('optimiseStreetView')
+                            .val(),
+                        nbRoundSelected: snapshot
+                            .child('nbRoundSelected')
+                            .val(),
+                        scoreLeaderboard: snapshot
+                            .child('scoreLeaderboard')
+                            .val(),
+                        guessedLeaderboard: snapshot
+                            .child('guessedLeaderboard')
+                            .val(),
                     };
                     dispatch('startGameMultiplayer', gameParams);
                 });

@@ -1,31 +1,33 @@
+import { createApp, reactive } from 'vue';
+import router from './router.js';
+import i18n from './lang';
+import store from './store/index';
+import App from '@/App.vue';
 import axios from '@/plugins/axios';
+// import vuetify from '@/plugins/vuetify.js';
+import VueGoogleMaps from '@fawmi/vue-google-maps';
+import VueAxios from 'vue-axios';
 import 'firebase/analytics';
 import firebase from 'firebase/app';
 import 'firebase/database';
-import * as GmapVue from 'gmap-vue';
-import Vue from 'vue';
-import VueAxios from 'vue-axios';
 import VueClipboard from 'vue-clipboard2';
-import App from './App.vue';
-import i18n from './lang';
 import CountryNamePlugin from './plugins/countryNamePlugin';
-import vuetify from './plugins/vuetify';
-import './registerServiceWorker';
-import router from './router';
-import store from './store';
+import './registerServiceWorker.js';
+import { createVuetify } from 'vuetify';
 
-Vue.use(VueAxios, axios);
+export const app = createApp(App);
 
-Vue.use(CountryNamePlugin);
-Vue.use(VueClipboard);
+app.use(router);
+app.use(VueAxios, axios);
+app.use(CountryNamePlugin, CountryNamePlugin(app));
+app.use(VueClipboard);
 
-Vue.use(GmapVue, {
+app.use(VueGoogleMaps, {
     load: {
-        key: process.env.VUE_APP_API_KEY,
-        language: localStorage.getItem('language'),
+        key: import.meta.env.VITE_APP_API_KEY,
     },
 });
-Vue.config.productionTip = false;
+app.config.productionTip = false;
 
 const updateSizes = (obj = {}) => {
     obj.width = window.innerWidth;
@@ -37,12 +39,10 @@ const updateSizes = (obj = {}) => {
     return obj;
 };
 
-Object.defineProperty(Vue.prototype, '$viewport', {
-    value: Vue.observable(updateSizes()),
-});
+app.config.globalProperties.$viewport = reactive(updateSizes());
 
 window.addEventListener('resize', () => {
-    updateSizes(Vue.prototype.$viewport);
+    updateSizes(app.config.globalProperties.$viewport);
 });
 
 const firebaseConfig = {
@@ -68,11 +68,10 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 if (firebaseConfig.measurementId) firebase.analytics();
 
-new Vue({
-    vuetify: vuetify(i18n),
-    router,
-    i18n,
-    store,
-    axios,
-    render: (h) => h(App),
-}).$mount('#app');
+app.use(i18n);
+app.use(store);
+
+const vuetify = createVuetify({});
+app.use(vuetify);
+
+app.mount('#app');

@@ -1,4 +1,4 @@
-import HeaderGame from '@/components/HeaderGame';
+import HeaderGame from '@/components/HeaderGame.vue';
 import { createLocalVue, shallowMount } from '@vue/test-utils';
 import appInit from '../testutils/appInit';
 
@@ -39,7 +39,7 @@ describe('HeaderGame.vue', () => {
     });
 
     it('methods', (done) => {
-        const spy = jest.fn();
+        const spy = vi.fn();
         const wrapper = shallowMount(HeaderGame, {
             ...args,
             propsData: {

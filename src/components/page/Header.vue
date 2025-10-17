@@ -5,10 +5,12 @@
                 <img
                     class="header__logo mt-1"
                     src="@/assets/geoguessLogo.png"
+                    alt="logo"
                 />
                 <img
                     class="header__logo-min"
-                    src="@/../public/img/icons/android-icon-72x72.png"
+                    src="/img/icons/android-icon-72x72.png"
+                    alt="logo"
                 />
             </router-link>
 
@@ -134,8 +136,8 @@
     </div>
 </template>
 <script>
-import About from '@/components/page/About';
-import { languages, RTL_LANGUAGES } from '../../lang';
+import About from '@/components/page/About.vue';
+import { languages, RTL_LANGUAGES } from '@/lang';
 import { mapActions, mapState } from 'vuex';
 import HeaderAlert from './HeaderAlert.vue';
 
@@ -161,7 +163,7 @@ export default {
             user: (state) => state.authStore.user,
         }),
         demoMode() {
-            return !!process.env.VUE_APP_DEMO_MODE;
+            return !!import.meta.env.VITE_APP_DEMO_MODE;
         },
         darkTheme() {
             return this.$vuetify.theme.dark;
@@ -246,10 +248,10 @@ export default {
             }
             position: absolute;
             top: 6.2rem;
-            right: 0rem;
+            right: 0;
             background: var(--v-header-base);
             padding: 1rem;
-            box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%);
+            box-shadow: 0 2px 4px -1px rgb(0 0 0 / 20%);
             border-bottom-left-radius: 0.3125rem;
             border-bottom-right-radius: 0.3125rem;
             max-width: 100%;

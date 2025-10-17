@@ -12,11 +12,8 @@
 </template>
 
 <script lang="js">
-import { VBtn } from 'vuetify/lib';
-
 export default {
     name: 'SaveButton',
-    extends: VBtn,
     data: () => ({
         success: false,
     }),

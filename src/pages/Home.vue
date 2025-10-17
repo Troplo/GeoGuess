@@ -32,9 +32,9 @@
 </template>
 
 <script>
-import SearchBox from '@/components/home/SearchBox';
-import ContentPage from '@/components/page/ContentPage';
-import { GAME_MODE } from '../constants';
+import SearchBox from '@/components/home/SearchBox.vue';
+import ContentPage from '@/components/page/ContentPage.vue';
+import { GAME_MODE } from '@/constants';
 import MapsContainer from '@/components/home/MapsContainer.vue';
 export default {
     components: {

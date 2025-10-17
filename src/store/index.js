@@ -1,8 +1,4 @@
-import Vue from 'vue';
 import Vuex from 'vuex';
-
-Vue.use(Vuex);
-// Load all modules.
 function loadModules() {
     const localContext = require.context('./modules', false, /([a-z_]+)\.js$/i);
 

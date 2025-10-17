@@ -17,7 +17,7 @@
                                 id="modeClassicBtn"
                                 :text="
                                     gameSettings.modeSelected !==
-                                        gameMode.CLASSIC
+                                    gameMode.CLASSIC
                                 "
                                 rounded
                                 outlined
@@ -35,7 +35,7 @@
                                 id="modeCountryBtn"
                                 :text="
                                     gameSettings.modeSelected !==
-                                        gameMode.COUNTRY
+                                    gameMode.COUNTRY
                                 "
                                 rounded
                                 outlined
@@ -52,10 +52,13 @@
 
                             <v-btn
                                 id="modeCustomAreaBtn"
-                                v-if="gameSettings.modeSelected === gameMode.CUSTOM_AREA"
+                                v-if="
+                                    gameSettings.modeSelected ===
+                                    gameMode.CUSTOM_AREA
+                                "
                                 :text="
                                     gameSettings.modeSelected !==
-                                        gameMode.CUSTOM_AREA
+                                    gameMode.CUSTOM_AREA
                                 "
                                 rounded
                                 outlined
@@ -108,8 +111,8 @@
                                 :label="$t('CardRoomSettings.allowPan')"
                                 hide-details
                             />
-                            <br />
                             <v-checkbox
+                                class="mt-2"
                                 :input-value="gameSettings.allPanorama"
                                 @change="
                                     (allPanorama) =>
@@ -133,6 +136,8 @@
                             />
                             <br>
                             <v-checkbox
+                                class="mt-2"
+                                v-if="!singlePlayer"
                                 :input-value="gameSettings.scoreLeaderboard"
                                 @change="
                                     (scoreLeaderboard) =>
@@ -144,6 +149,11 @@
                                 hide-details
                             />
                             <v-checkbox
+                                :label="$t('CardRoomSettings.scoreLeaderboard')"
+                                hide-details
+                            />
+                            <v-checkbox
+                                v-if="!singlePlayer"
                                 :input-value="gameSettings.guessedLeaderboard"
                                 @change="
                                     (guessedLeaderboard) =>
@@ -242,24 +252,34 @@
                             <v-list-group prepend-icon="mdi-cog">
                                 <template v-slot:activator>
                                     <v-list-item-title>
-                                        {{$t('CardRoomSettings.moreSettings')}}
+                                        {{
+                                            $t('CardRoomSettings.moreSettings')
+                                        }}
                                     </v-list-item-title>
                                 </template>
                                 <v-text-field
+                                    class="mt-2"
                                     type="number"
                                     :disabled="gameSettings.timeAttackSelected"
                                     :label="$t('CardRoomSettings.nbRound')"
-                                    :value="gameSettings.timeAttackSelected ? 10 : gameSettings.nbRoundSelected"
+                                    :value="
+                                        gameSettings.timeAttackSelected
+                                            ? 10
+                                            : gameSettings.nbRoundSelected
+                                    "
                                     min="1"
                                     @input="
                                         (nbRoundSelected) =>
-                                            setGameSettings({ nbRoundSelected: +nbRoundSelected })
+                                            setGameSettings({
+                                                nbRoundSelected:
+                                                    +nbRoundSelected,
+                                            })
                                     "
                                 />
                                 <v-select
                                     v-if="
                                         gameSettings.modeSelected ===
-                                            gameMode.CLASSIC
+                                        gameMode.CLASSIC
                                     "
                                     :label="
                                         $t('CardRoomSettings.scoreModeLabel')
@@ -284,7 +304,7 @@
                                 />
                             </v-list-group>
                         </v-col>
-                        <v-col/>
+                        <v-col />
                     </v-row>
                 </v-col>
             </v-row>
@@ -307,12 +327,12 @@
     </v-card>
 </template>
 <script>
-import TimePicker from '@/components/shared/TimePicker';
-import { GAME_MODE, SCORE_MODE } from '../../../constants';
+import TimePicker from '@/components/shared/TimePicker.vue';
+import { GAME_MODE, SCORE_MODE } from '@/constants';
 import CardRoomMixin from './mixins/CardRoomMixin';
 import { mapActions, mapGetters, mapState, mapMutations } from 'vuex';
 import bbox from '@turf/bbox';
-import { SETTINGS_SET_GAME_SETTINGS } from '@/store/mutation-types';
+import { SETTINGS_SET_GAME_SETTINGS } from '@/store/mutation-types.js';
 
 export default {
     components: {
@@ -393,13 +413,13 @@ export default {
         }
     }
 
-        .v-input {
-            align-self: start;
-            margin: 0;
-            .v-messages {
-                display: contents;
-            }
+    .v-input {
+        align-self: start;
+        margin: 0;
+        .v-messages {
+            display: contents;
         }
+    }
 
     @media (max-width: 360px) {
         .card_settings__mode__btns {

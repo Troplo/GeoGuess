@@ -141,10 +141,10 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex';
-import { download } from '../../utils';
-import HistoryMapClassic from './gameResult/HistoryMapClassic';
-import HistoryMapArea from './gameResult/HistoryMapArea';
-import HistoryTimeDetail from './gameResult/HistoryTimeDetail';
+import { download } from '@/utils';
+import HistoryMapClassic from './gameResult/HistoryMapClassic.vue';
+import HistoryMapArea from './gameResult/HistoryMapArea.vue';
+import HistoryTimeDetail from './gameResult/HistoryTimeDetail.vue';
 export default {
     name: 'HistoryTable',
     components: {
