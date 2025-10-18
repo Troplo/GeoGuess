@@ -37,7 +37,7 @@
                 :items="items"
                 :search="search"
                 :items-per-page="-1"
-                sort-by="maxScore"
+                :sort-by="[{ key: 'maxScore', order: 'desc' }]"
                 disable-pagination
                 @click:row="onClickRow"
             >

@@ -72,6 +72,7 @@ firebase.initializeApp(firebaseConfig);
 if (firebaseConfig.measurementId) firebase.analytics();
 
 app.use(i18n);
+app.config.globalProperties.$i18n = i18n;
 app.use(store);
 
 app.use(vuetify);
