@@ -7,7 +7,7 @@
         content-class="dialog-room"
     >
         <component
-            :is="currentComponent"
+            :is="selectedComponent"
             :single-player="singlePlayer"
             :current-component="currentComponent"
             :room="room"
@@ -17,51 +17,57 @@
     </v-dialog>
 </template>
 
-<script>
+<script setup>
+import { computed, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { storeToRefs } from 'pinia';
+import { useGameStore } from '@/modernStores/game.store.js';
+
 import CardRoomName from '@/components/dialogroom/card/CardRoomName.vue';
 import CardRoomSettings from '@/components/dialogroom/card/CardRoomSettings.vue';
 import CardRoomPlayerName from '@/components/dialogroom/card/CardRoomPlayerName.vue';
-import { mapState, mapActions } from 'vuex';
 import CardRoomMap from './card/CardRoomMap.vue';
 
-export default {
-    components: {
-        roomName: CardRoomName,
-        settingsMap: CardRoomMap,
-        settings: CardRoomSettings,
-        playerName: CardRoomPlayerName,
-    },
-    computed: {
-        ...mapState('settingsStore', [
-            'isOpenDialogRoom',
-            'currentComponent',
-            'singlePlayer',
-            'loadingGeoJson',
-            'placeGeoJson',
-            'room',
-            'roomName',
-        ]),
-    },
-    mounted() {
-        if (this.$route.params.roomName) {
-            this.searchRoom(this.$route.params.roomName);
-        }
-    },
-    methods: {
-        ...mapActions('settingsStore', ['closeDialogRoom', 'searchRoom']),
+// Initialize store
+const gameStore = useGameStore();
 
-        ...mapActions(['loadPlaceGeoJSON']),
-        cancel() {
-            this.closeDialogRoom();
-        },
-    },
-};
-</script>
-<style lang="scss">
-.dialog-room {
-    .v-card__actions {
-        gap: 0.5rem;
-        padding: 1rem;
+// Extract reactive state as refs
+const {
+    isOpenDialogRoom,
+    currentComponent,
+    singlePlayer,
+    loadingGeoJson,
+    placeGeoJson,
+    room,
+    roomName,
+} = storeToRefs(gameStore);
+
+const selectedComponent = computed(() => {
+    switch (currentComponent.value) {
+        case 'roomName':
+            return CardRoomName;
+        case 'playerName':
+            return CardRoomPlayerName;
+        case 'settingsMap':
+            return CardRoomMap;
+        case 'settings':
+        default:
+            return CardRoomSettings;
     }
+});
+
+// Access route params
+const route = useRoute();
+
+// Lifecycle hook to check roomName on mount
+onMounted(() => {
+    if (route.params.roomName) {
+        gameStore.searchRoom(route.params.roomName);
+    }
+});
+
+// Methods
+function cancel() {
+    gameStore.closeDialogRoom();
 }
-</style>
+</script>

@@ -69,6 +69,8 @@ export default {
                 window.location.reload();
             });
         this.handleCloudSync();
+        this.$app.getState();
+        this.$session.startSession();
     },
     computed: {
         ...mapState({

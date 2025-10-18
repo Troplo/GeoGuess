@@ -21,8 +21,12 @@ export const MapMixin = {
                 }
             }
         },
-        drawPolyline() {},
-        removePolylines() {},
+        drawPolyline() {
+            //
+        },
+        removePolylines() {
+            //
+        },
     },
 };
 

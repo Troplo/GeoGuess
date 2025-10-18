@@ -24,6 +24,12 @@ export default defineConfig({
     ],
     server: {
         port: 8080,
+        proxy: {
+            '/api': {
+                target: 'http://localhost:24035',
+                ws: true,
+            },
+        },
     },
     optimizeDeps: {
         include: ['vue-google-maps-community-fork', 'fast-deep-equal'],

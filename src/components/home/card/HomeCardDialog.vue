@@ -42,56 +42,49 @@
     </v-dialog>
 </template>
 
-<script>
-import { mapActions, mapMutations } from 'vuex';
-import { SETTINGS_SET_GAME_SETTINGS } from '../../../store/mutation-types';
-export default {
-    props: {
-        data: Object,
-        type: {
-            type: String,
-            validator: (v) => ['map', 'area'].includes(v),
-        },
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useGameStore } from '@/modernStores/game.store.js';
+
+// Props
+defineProps({
+    data: Object,
+    type: {
+        type: String,
+        validator: (v) => ['map', 'area'].includes(v),
     },
-    data() {
-        return {
-            visible: false,
-        };
-    },
-    methods: {
-        ...mapMutations('settingsStore', {
-            setGameSettings: SETTINGS_SET_GAME_SETTINGS,
-        }),
-        ...mapActions('settingsStore', ['openDialogRoom']),
-        ...mapActions([
-            'loadGeoJsonFromUrl',
-            'setGeoJson',
-            'setMapLoaded',
-            'loadMap',
-        ]),
-        setMap() {
-            if (this.type === 'area') {
-                this.loadGeoJsonFromUrl(this.data.data.urlArea);
-                this.setGameSettings({ areaParams: this.data });
-            } else {
-                if (this.data.type === 'custom') {
-                    this.setMapLoaded(this.data);
-                } else {
-                    this.loadMap(this.data);
-                }
-            }
-            this.visible = false;
-        },
-        onClickSinglePlayer() {
-            this.setMap();
-            this.openDialogRoom(true);
-        },
-        onClickMultiPlayer() {
-            this.setMap();
-            this.openDialogRoom(false);
-        },
-    },
-};
+});
+
+// Local state
+const visible = ref(false);
+
+// Pinia store
+const gameStore = useGameStore();
+
+// Methods
+function setMap() {
+    if (type === 'area') {
+        gameStore.loadGeoJsonFromUrl(data.data.urlArea);
+        gameStore.setGameSettings({ areaParams: data });
+    } else {
+        if (data.type === 'custom') {
+            gameStore.setMapLoaded(data);
+        } else {
+            gameStore.loadMap(data);
+        }
+    }
+    visible.value = false;
+}
+
+function onClickSinglePlayer() {
+    // setMap();
+    gameStore.openDialogRoom(true);
+}
+
+function onClickMultiPlayer() {
+    // setMap();
+    gameStore.openDialogRoom(false);
+}
 </script>
 
 <style scoped>

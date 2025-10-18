@@ -41,48 +41,48 @@
         </div>
     </div>
 </template>
-<script>
+<script setup lang="ts">
+import { ref, watch, onMounted, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import { useGameStore } from '@/modernStores/game.store.js';
 import DialogCustomMap from '@/components/home/DialogCustomMap.vue';
 import DialogRoom from '@/components/dialogroom/DialogRoom.vue';
-import { mapActions, mapGetters } from 'vuex';
+import { useStore } from 'vuex';
 
-export default {
-    components: {
-        DialogRoom,
-        DialogCustomMap,
-    },
-    props: {
-        dialogCustomOpen: Boolean,
-    },
-    data() {
-        return {
-            dialogCustom: this.dialogCustomOpen,
-        };
-    },
-    computed: {
-        ...mapGetters(['nbPlaceVisits']),
-    },
-    watch: {
-        dialogCustomOpen(v) {
-            this.dialogCustom = v;
-        },
-    },
-    mounted() {
-        this.loadHistory();
-    },
-    methods: {
-        ...mapActions('settingsStore', ['openDialogRoom']), // map with settingsStore to make openDialogRoom work
-        ...mapActions(['loadHistory']),
-        openDialog(isSinglePlayer) {
-            this.openDialogRoom(isSinglePlayer);
-        },
-        changeDialogCustom() {
-            this.dialogCustom = !this.dialogCustom;
+const props = defineProps({
+    dialogCustomOpen: Boolean,
+});
 
-            this.$router.push(this.dialogCustom ? '/custom' : '/');
-        },
+const dialogCustom = ref(false);
+
+const gameStore = useGameStore();
+
+const vuexStore = useStore();
+
+const router = useRouter();
+
+const nbPlaceVisits = computed(() => vuexStore.getters.nbPlaceVisits);
+
+watch(
+    () => props.dialogCustomOpen,
+    (val) => {
+        dialogCustom.value = val;
     },
-};
+    { immediate: true }
+);
+
+onMounted(() => {
+    vuexStore.dispatch('loadHistory');
+});
+
+function openDialog(isSinglePlayer) {
+    gameStore.openDialogRoom(isSinglePlayer); // Pinia action
+}
+
+function changeDialogCustom() {
+    dialogCustom.value = !dialogCustom.value;
+    router.push(dialogCustom.value ? '/custom' : '/');
+}
 </script>
 <style lang="scss">
 .search-box {

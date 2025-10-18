@@ -37,39 +37,38 @@
         </v-card-actions>
     </v-card>
 </template>
-
-<script>
-import { mapState, mapActions } from 'vuex';
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import { useStore } from 'vuex'; // For homeStore
+import { useGameStore } from '@/modernStores/game.store.js';
 import CardRoomMixin from './mixins/CardRoomMixin';
-export default {
-    mixins: [CardRoomMixin],
-    data() {
-        return {
-            roomNameText: '',
-        };
+import { storeToRefs } from 'pinia';
+
+// Local state
+const roomNameText = ref('');
+
+// Vuex store (homeStore)
+const vuexStore = useStore();
+const streamerMode = computed(() => vuexStore.state.homeStore.streamerMode);
+
+// Pinia store (settingsStore)
+const gameStore = useGameStore();
+const { roomErrorMessage, loadRoom, roomName } = storeToRefs(gameStore);
+
+// Computed with getter/setter
+const roomInputValue = computed({
+    get() {
+        return roomNameText.value;
     },
-    computed: {
-        ...mapState({
-            streamerMode: (state) => state.homeStore.streamerMode,
-        }),
-        ...mapState('settingsStore', [
-            'roomErrorMessage',
-            'loadRoom',
-            'roomName',
-        ]),
-        roomInputValue: {
-            get: function () {
-                return this.loadRoom ? this.roomName : this.roomNameText;
-            },
-            set: function (newValue) {
-                this.roomNameText = newValue;
-            },
-        },
+    set(newValue) {
+        roomNameText.value = newValue;
     },
-    methods: {
-        ...mapActions('settingsStore', ['searchRoom']),
-    },
-};
+});
+
+// Methods
+function searchRoom(value) {
+    gameStore.searchRoom(value);
+}
 </script>
 
 <style lang="scss" scoped>

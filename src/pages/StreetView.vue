@@ -586,7 +586,7 @@ export default {
             this.devScan();
         }, 200);
     },
-    beforeDestroy() {
+    beforeUnmount() {
         if (document.querySelector('.widget-scene')) {
             document
                 .querySelector('.widget-scene')

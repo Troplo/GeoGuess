@@ -24,7 +24,7 @@ export default {
             next();
         }
     },
-    beforeDestroy() {
+    beforeUnmount() {
         window.removeEventListener('beforeunload', this.beforeUnload);
     },
 };
