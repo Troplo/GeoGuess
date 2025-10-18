@@ -21,17 +21,16 @@
             />
 
             <div id="game-interface">
-                <v-overlay :value="!isReady && multiplayer" opacity="1" />
+                <v-overlay :model-value="!isReady && multiplayer" opacity="1" />
                 <div id="street-view" ref="streetView" />
-
-
-                <div id="game-interface__overlay">
-                    <v-tooltip top>
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-btn class="resetBtn" rounded dark fab
-                                   v-bind="attrs"
-                                   v-on="on"
-                                   @click="resetLocation" >
+                    <v-tooltip location="top">
+                        <template v-slot:activator="{ props }">
+                            <v-btn
+                                class="resetBtn"
+                                rounded
+                                v-bind="props"
+                                @click="resetLocation"
+                            >
                                 <v-icon>mdi-crosshairs-gps</v-icon>
                             </v-btn>
                         </template>
@@ -64,22 +63,30 @@
                         :mapDetails="mapDetails"
                         :score-leaderboard="scoreLeaderboard"
                         :guessed-leaderboard="guessedLeaderboard"
+                        :guess-string="guessString"
+                        :leaderboard-shown="leaderboardShown"
                         @resetLocation="resetLocation"
                         @calculateDistance="updateScore"
                         @showResult="showResult"
                         @goToNextRound="goToNextRound"
                         @finishGame="finishGame"
+                        @printMapFull="printMapFull = $event"
                     />
                 </div>
             </div>
         </div>
-        <v-overlay :value="overlay" opacity="0.8" z-index="1" />
+        <v-overlay :model-value="overlay" opacity="0.8" z-index="1" />
         <DialogMessage
             :dialog-message="dialogMessage"
             :dialog-title="dialogTitle"
             :dialog-text="dialogText"
         />
         <div class="alert-container">
+            <Leaderboard
+                :guess-string="guessString"
+                :leaderboard-shown="leaderboardShown"
+                v-if="!printMapFull"
+            ></Leaderboard>
             <v-alert
                 id="leaderboard-alert"
                 transition="slide-x-transition"
@@ -94,7 +101,7 @@
             <v-alert
                 v-if="isVisibleDialog"
                 type="warning"
-                dismissible
+                closable
                 class="warning-alert"
             >
                 <b>{{ $t('StreetView.nearby.title') }}</b> :
@@ -104,12 +111,19 @@
                 id="warningCountdown"
                 v-model="isVisibleCountdownAlert"
                 type="info"
-                dismissible
-                transition="slide-x-transition"
+                closable
+                standard-easing
                 prominent
                 icon="mdi-clock-fast"
             >
-                {{ $tc('StreetView.countdownAlert', timeCountdown) }}
+                {{ $tc('StreetView.countdownAlert', remainingTime) }}
+                <v-progress-linear
+                    :active="isVisibleCountdownAlert"
+                    color="white"
+                    v-model="countdownPercentage"
+                    absolute
+                    location="bottom"
+                ></v-progress-linear>
             </v-alert>
         </div>
     </div>
@@ -119,25 +133,24 @@
 import firebase from 'firebase/app';
 import 'firebase/database';
 
-import HeaderGame from '@/components/HeaderGame';
-import Maps from '@/components/Maps';
-import DialogMessage from '@/components/DialogMessage';
-
+import HeaderGame from '@/components/HeaderGame.vue';
+import Maps from '@/components/Maps.vue';
+import DialogMessage from '@/components/DialogMessage.vue';
 
 import StreetViewService from '@/plugins/StreetViewService';
 
-import {
-    getRandomArea,
-} from '../utils';
+import { getRandomArea } from '@/utils';
 
-import { GAME_MODE, SCORE_MODE } from '../constants';
+import { GAME_MODE, SCORE_MODE } from '@/constants';
 
-import {mapActions, mapGetters, mapState} from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 
-import ConfirmExitMixin from '@/mixins/ConfirmExitMixin';
+import ConfirmExitMixin from '@/mixins/ConfirmExitMixin.js';
+import Leaderboard from '@/components/game/Leaderboard.vue';
 
 export default {
     components: {
+        Leaderboard,
         HeaderGame,
         Maps,
         DialogMessage,
@@ -220,10 +233,10 @@ export default {
         areaParams: {
             type: Object,
         },
-        mapDetails:{
+        mapDetails: {
             type: Object,
             required: false,
-            default: undefined
+            default: undefined,
         },
         nbRoundSelected: {
             type: Number,
@@ -283,26 +296,39 @@ export default {
             playerCount: 0,
             votedCount: 0,
             leaderboard: [],
-            leaderboardShown: this.guessedLeaderboard || this.scoreLeaderboard
+            leaderboardShown: this.guessedLeaderboard || this.scoreLeaderboard,
+            printMapFull: false,
         };
     },
     computed: {
         ...mapGetters(['areasJson']),
-        ...mapState('settingsStore', [
-            'players',
-        ]),
+        ...mapState('settingsStore', ['players']),
         guessString() {
-            if(!this.leaderboardShown) return "";
-            if(this.scoreLeaderboard) {
+            if (!this.leaderboardShown) return '';
+            if (this.scoreLeaderboard) {
                 return Object.entries(this.leaderboard)
-                        .sort(([, a], [, b]) => b.score - a.score)
-                        .map(([, player]) => `${player.name}: ${player.guessed ? this.$t("Maps.leaderboard.guessed") : this.$t("Maps.leaderboard.notGuessed")} / ${player.scoreHeader || 0}`)
-                        .join('\n');
+                    .sort(([, a], [, b]) => b.score - a.score)
+                    .map(
+                        ([, player]) =>
+                            `${player.name}: ${
+                                player.guessed
+                                    ? this.$t('Maps.leaderboard.guessed')
+                                    : this.$t('Maps.leaderboard.notGuessed')
+                            } / ${player.scoreHeader || 0}`
+                    )
+                    .join('\n');
             } else {
                 return Object.entries(this.leaderboard)
-                        .sort(([, a], [, b]) => b.guessed - a.guessed)
-                        .map(([, player]) => `${player.name}: ${player.guessed ? this.$t("Maps.leaderboard.guessed") : this.$t("Maps.leaderboard.notGuessed")}`)
-                        .join('\n');
+                    .sort(([, a], [, b]) => b.guessed - a.guessed)
+                    .map(
+                        ([, player]) =>
+                            `${player.name}: ${
+                                player.guessed
+                                    ? this.$t('Maps.leaderboard.guessed')
+                                    : this.$t('Maps.leaderboard.notGuessed')
+                            }`
+                    )
+                    .join('\n');
             }
         },
         countdownPercentage() {
@@ -325,10 +351,17 @@ export default {
 
         if (!this.streetViewService) {
             this.streetViewService = new StreetViewService(
-                    { allPanorama: this.allPanorama, optimiseStreetView: this.optimiseStreetView },
-                    { mode: this.mode, areaParams: this.areaParams, areasJson: this.areasJson },
-                    this.placeGeoJson,
-                    this.roundsPredefined
+                {
+                    allPanorama: this.allPanorama,
+                    optimiseStreetView: this.optimiseStreetView,
+                },
+                {
+                    mode: this.mode,
+                    areaParams: this.areaParams,
+                    areasJson: this.areasJson,
+                },
+                this.placeGeoJson,
+                this.roundsPredefined
             );
         }
 
@@ -388,24 +421,86 @@ export default {
                 // Check if the room is already removed
                 if (snapshot.hasChild('active')) {
                     // Leaderboard
-                    if(this.scoreLeaderboard) {
-                        this.leaderboard = Object.entries(snapshot.val().playerName).map((player) => {
+                    if (this.scoreLeaderboard) {
+                        this.leaderboard = Object.entries(
+                            snapshot.val().playerName
+                        ).map((player) => {
                             return {
-                                scoreHeader: this.leaderboard.find((entity) => entity.id === player[0])?.scoreHeader || 0,
-                                score: snapshot.val()?.finalPoints?.[player[0]] || 0,
+                                scoreHeader:
+                                    this.leaderboard.find(
+                                        (entity) => entity.id === player[0]
+                                    )?.scoreHeader || 0,
+                                score:
+                                    snapshot.val()?.finalPoints?.[player[0]] ||
+                                    0,
                                 name: player[1],
                                 id: player[0],
                                 guessed: !!snapshot.val()?.guess?.[player[0]],
                             };
                         });
-                    } else if(this.guessedLeaderboard) {
-                        this.leaderboard = Object.entries(snapshot.val().playerName).map((player) => {
+                    } else if (this.guessedLeaderboard) {
+                        this.leaderboard = Object.entries(
+                            snapshot.val().playerName
+                        ).map((player) => {
                             return {
                                 name: player[1],
                                 guessed: !!snapshot.val()?.guess?.[player[0]],
                                 id: player[0],
                             };
                         });
+                    }
+
+                    // Put the player into the current round node if the player is not put yet
+                    if (
+                        !snapshot
+                            .child('round' + this.round)
+                            .hasChild('player' + this.playerNumber)
+                    ) {
+                        this.room
+                            .child('round' + this.round)
+                            .child('player' + this.playerNumber)
+                            .set(0);
+
+                        // Other players load the streetview the first player loaded earlier
+                        if (this.playerNumber != 1) {
+                            let randomLat = snapshot
+                                .child(
+                                    'streetView/round' +
+                                        this.round +
+                                        '/latitude'
+                                )
+                                .val();
+                            let randomLng = snapshot
+                                .child(
+                                    'streetView/round' +
+                                        this.round +
+                                        '/longitude'
+                                )
+                                .val();
+
+                            this.area = snapshot
+                                .child(
+                                    'streetView/round' + this.round + '/area'
+                                )
+                                .val();
+                            this.isVisibleDialog = snapshot
+                                .child(
+                                    'streetView/round' + this.round + '/warning'
+                                )
+                                .val();
+                            this.randomFeatureProperties = snapshot
+                                .child(
+                                    'streetView/round' +
+                                        this.round +
+                                        '/roundInfo'
+                                )
+                                .val();
+                            this.randomLatLng = new google.maps.LatLng(
+                                randomLat,
+                                randomLng
+                            );
+                            this.resetLocation();
+                        }
                     }
 
                     // Put the player into the current round node if the player is not put yet
@@ -561,7 +656,8 @@ export default {
             }
         },
         async loadStreetView() {
-            let {panorama, roundInfo, warning, area} = await this.streetViewService.getStreetView(this.round);
+            let { panorama, roundInfo, warning, area } =
+                await this.streetViewService.getStreetView(this.round);
             this.randomLatLng = panorama.location.latLng;
             this.randomFeatureProperties = roundInfo;
             this.area = area;
@@ -569,15 +665,13 @@ export default {
 
             if (this.multiplayer) {
                 // Put the streetview's location into firebase
-                this.room
-                        .child('streetView/round' + this.round)
-                        .set({
-                            latitude: this.randomLatLng.lat(),
-                            longitude: this.randomLatLng.lng(),
-                            roundInfo: roundInfo,
-                            ...(area && {area}),
-                            warning,
-                        });
+                this.room.child('streetView/round' + this.round).set({
+                    latitude: this.randomLatLng.lat(),
+                    longitude: this.randomLatLng.lng(),
+                    roundInfo: roundInfo,
+                    ...(area && { area }),
+                    warning,
+                });
             }
         },
         resetLocation() {
@@ -641,7 +735,7 @@ export default {
                 }
             }, 50);
 
-            if(data && data.location)
+            if (data && data.location)
                 this.panorama.setPano(data.location.pano);
             this.panorama.setPov({
                 heading: 270,
@@ -693,7 +787,8 @@ export default {
                         } else {
                             // Set a random location if the player didn't select a location in time
                             this.$refs.mapContainer.selectRandomLocation(
-                                    this.streetViewService.getRandomLatLng().position
+                                this.streetViewService.getRandomLatLng()
+                                    .position
                             );
                         }
                     }
@@ -859,7 +954,7 @@ export default {
         top: 0;
         right: 0;
         display: flex;
-        .resetBtn{
+        .resetBtn {
             position: absolute;
             bottom: 22px;
             right: 70px;

@@ -1,6 +1,6 @@
 <template>
     <div id="map">
-        <GmapMap
+        <GMapMap
             id="mapClassic"
             ref="mapRef"
             :center="{ lat: 37.86926, lng: -122.254811 }"
@@ -12,7 +12,10 @@
                 streetViewControl: false,
                 draggableCursor: 'crosshair',
                 clickableIcons: false,
-                styles: $vuetify.theme.dark ? $vuetify.theme.themes.dark.gmap : $vuetify.theme.themes.light.gmap
+                styles:
+                    $vuetify.theme.global.name === 'dark'
+                        ? $vuetify.theme.themes.dark.gmap
+                        : $vuetify.theme.themes.light.gmap,
             }"
         />
     </div>
@@ -47,9 +50,11 @@ export default {
             if (isRandomLocation) {
                 info = {
                     icon: {
-                        url: window.location.origin + '/img/icons/favicon-16x16.png',
-                        anchor: new google.maps.Point(8,8),
-                    }
+                        url:
+                            window.location.origin +
+                            '/img/icons/favicon-16x16.png',
+                        anchor: new google.maps.Point(8, 8),
+                    },
                 };
             }
             if (label) {
@@ -80,13 +85,19 @@ export default {
                     '<b>' +
                     this.$t('Maps.infoWindow.Distance') +
                     ': </b>' +
-                    new Intl.NumberFormat(this.$i18n.locale, { style: "unit", unit:"meter" }).format(distance);
+                    new Intl.NumberFormat(this.$i18n.locale, {
+                        style: 'unit',
+                        unit: 'meter',
+                    }).format(distance);
             } else {
                 dataToDisplay +=
                     '<b>' +
                     this.$t('Maps.infoWindow.Distance') +
                     ': </b>' +
-                    new Intl.NumberFormat(this.$i18n.locale, { style: "unit", unit:"kilometer" }).format(distance / 1000);
+                    new Intl.NumberFormat(this.$i18n.locale, {
+                        style: 'unit',
+                        unit: 'kilometer',
+                    }).format(distance / 1000);
             }
 
             dataToDisplay +=
@@ -107,7 +118,7 @@ export default {
         },
         drawPolyline(selectedLatLng, i = 0, randomLatLng) {
             const lineSymbol = {
-                path: "M 0,-1 0,1",
+                path: 'M 0,-1 0,1',
                 strokeOpacity: 1,
                 scale: 2,
             };
@@ -118,8 +129,8 @@ export default {
                 icons: [
                     {
                         icon: lineSymbol,
-                        offset: "0",
-                        repeat: "10px",
+                        offset: '0',
+                        repeat: '10px',
                     },
                 ],
             });
@@ -172,6 +183,6 @@ export default {
 }
 
 .gm-style-iw {
-  color: black;
+    color: black;
 }
 </style>

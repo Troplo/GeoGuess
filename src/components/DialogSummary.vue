@@ -1,6 +1,6 @@
 <template>
     <v-dialog
-        :value="dialogSummary"
+        :model-value="dialogSummary"
         max-width="720"
         persistent
         :fullscreen="$viewport.width < 450"
@@ -14,11 +14,11 @@
                             $t('DialogSummary.summaryMsgSinglePoints', {
                                 points,
                             }) +
-                                (showDistance
-                                    ? $t('DialogSummary.summaryMsgSingleDistance', {
-                                        distance: score / 1000,
-                                    })
-                                    : '')
+                            (showDistance
+                                ? $t('DialogSummary.summaryMsgSingleDistance', {
+                                      distance: score / 1000,
+                                  })
+                                : '')
                         "
                     />
                 </v-row>
@@ -35,10 +35,10 @@
                                 index == 0
                                     ? '#CCAC00'
                                     : index == 1
-                                        ? '#C0C0C0'
-                                        : '#CC8E34'
+                                      ? '#C0C0C0'
+                                      : '#CC8E34'
                             "
-                        >mdi-crown</v-icon
+                            >mdi-crown</v-icon
                         >
                         <span
                             v-html="
@@ -46,14 +46,14 @@
                                     playerName: text.playerName,
                                     points: text.finalPoints,
                                 }) +
-                                    (showDistance
-                                        ? $t(
-                                            'DialogSummary.summaryMsgMultiDistance',
-                                            {
-                                                distance: text.finalScore / 1000,
-                                            }
-                                        )
-                                        : '')
+                                (showDistance
+                                    ? $t(
+                                          'DialogSummary.summaryMsgMultiDistance',
+                                          {
+                                              distance: text.finalScore / 1000,
+                                          }
+                                      )
+                                    : '')
                             "
                         />
                     </span>
@@ -62,7 +62,6 @@
                     <v-btn
                         id="play-again-button"
                         class="mt-8"
-                        dark
                         color="#43B581"
                         @click="$emit('finishGame')"
                     >
@@ -72,7 +71,6 @@
                         v-if="!multiplayer"
                         id="exit-button"
                         class="mt-8"
-                        dark
                         color="#f44336"
                         @click="$emit('playAgain')"
                     >

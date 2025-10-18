@@ -3,27 +3,33 @@
         id="container-map"
         :class="[
             ($viewport.width >= 450 && (activeMap || pinActive)) ||
-                isMakeGuessButtonClicked ||
-                isNextButtonVisible
+            isMakeGuessButtonClicked ||
+            isNextButtonVisible
                 ? 'container-map--active'
                 : '',
             printMapFull ? 'container-map--full' : '',
             `container-map--size-${size}`,
         ]"
-        v-on="
+        v-on:click="
             $viewport.width >= 450 // Only on tablet and desktop Issue #104
                 ? {
-                    mouseover: () => {
-                        activeMap = true;
-                    },
-                    mouseleave: () => {
-                        activeMap = false;
-                    },
-                }
+                      mouseover: () => {
+                          activeMap = true;
+                      },
+                      mouseleave: () => {
+                          activeMap = false;
+                      },
+                  }
                 : {}
         "
     >
         <div class="container-map_details">
+            <div class="alert-container">
+                <Leaderboard
+                    :leaderboard-shown="leaderboardShown"
+                    :guess-string="guessString"
+                ></Leaderboard>
+            </div>
             <DetailsMap
                 v-if="printMapFull"
                 :properties="randomFeatureProperties"
@@ -32,44 +38,45 @@
 
         <div class="container-map_controls">
             <div class="container-map_btns">
-                <v-btn fab x-small @click="showNotepad">
-                    <v-icon dark> mdi-file-document-edit </v-icon>
+                <v-btn size="x-small" @click="showNotepad">
+                    <v-icon> mdi-file-document-edit </v-icon>
                 </v-btn>
 
                 <v-btn
                     id="btnDown"
-                    fab
-                    x-small
+                    size="x-small"
                     :disabled="size < 2"
                     @click="size--"
                 >
-                    <v-icon dark> mdi-arrow-bottom-left </v-icon>
+                    <v-icon> mdi-arrow-bottom-left </v-icon>
                 </v-btn>
 
                 <v-btn
                     id="btnUp"
-                    fab
-                    x-small
+                    size="x-small"
                     :disabled="size > 3"
                     @click="size++"
                 >
-                    <v-icon dark> mdi-arrow-top-right </v-icon>
+                    <v-icon> mdi-arrow-top-right </v-icon>
                 </v-btn>
 
-                <v-btn id="btnPin" fab x-small @click="pinActive = !pinActive">
-                    <v-icon dark> mdi-pin{{ pinActive ? '-off' : '' }} </v-icon>
+                <v-btn
+                    id="btnPin"
+                    size="x-small"
+                    @click="pinActive = !pinActive"
+                >
+                    <v-icon> mdi-pin{{ pinActive ? '-off' : '' }} </v-icon>
                 </v-btn>
             </div>
         </div>
         <v-btn
             v-if="
                 $viewport.width < 450 &&
-                    !isGuessButtonClicked &&
-                    isMakeGuessButtonClicked
+                !isGuessButtonClicked &&
+                isMakeGuessButtonClicked
             "
             id="hide-map-button"
-            fab
-            x-small
+            size="x-small"
             color="red"
             @click="hideMap"
         >
@@ -103,15 +110,15 @@
         <button
             v-if="
                 !isNextButtonVisible &&
-                    !isSummaryButtonVisible &&
-                    ($viewport.width > 450 || isMakeGuessButtonClicked)
+                !isSummaryButtonVisible &&
+                ($viewport.width > 450 || isMakeGuessButtonClicked)
             "
             id="guess-button"
             :disabled="
                 randomLatLng == null ||
-                    selectedPos == null ||
-                    isGuessButtonClicked ||
-                    (!!this.room && !isReady)
+                selectedPos == null ||
+                isGuessButtonClicked ||
+                (!!this.room && !isReady)
             "
             @click="selectLocation"
         >
@@ -139,12 +146,12 @@
         <button
             v-if="
                 $viewport.width < 450 &&
-                    !isGuessButtonClicked &&
-                    !isMakeGuessButtonClicked &&
-                    !isNextButtonVisible
+                !isGuessButtonClicked &&
+                !isMakeGuessButtonClicked &&
+                !isNextButtonVisible
             "
             id="make-guess-button"
-            class="primary"
+            class="bg-primary"
             @click="showMap"
         >
             {{ $t('Maps.makeGuess') }}
@@ -169,16 +176,18 @@
 import firebase from 'firebase/app';
 import 'firebase/database';
 
-import DialogSummary from '@/components/DialogSummary';
-import DetailsMap from '@/components/game/DetailsMap';
-import Map from '@/components/map/Map';
-import MapAreas from '@/components/map/MapAreas';
-import { GAME_MODE } from '../constants';
-import { getSelectedPos } from '../utils';
-import { getScore } from '../utils/game/score';
+import DialogSummary from '@/components/DialogSummary.vue';
+import DetailsMap from '@/components/game/DetailsMap.vue';
+import Map from '@/components/map/Map.vue';
+import MapAreas from '@/components/map/MapAreas.vue';
+import { GAME_MODE } from '@/constants';
+import { getSelectedPos } from '@/utils';
+import { getScore } from '@/utils/game/score';
+import Leaderboard from '@/components/game/Leaderboard.vue';
 
 export default {
     components: {
+        Leaderboard,
         DialogSummary,
         DetailsMap,
         Map,
@@ -207,7 +216,9 @@ export default {
         'pathKey',
         'mapDetails',
         'scoreLeaderboard',
-        'guessedLeaderboard'
+        'guessedLeaderboard',
+        'leaderboardShown',
+        'guessString',
     ],
     data() {
         return {
@@ -251,9 +262,12 @@ export default {
         },
     },
     watch: {
-      pinActive() {
-        localStorage.setItem('pinActive', this.pinActive);
-      }
+        pinActive() {
+            localStorage.setItem('pinActive', this.pinActive);
+        },
+        printMapFull(value) {
+            this.$emit('printMapFull', value);
+        },
     },
     async mounted() {
         await this.$gmapApiPromiseLazy();
@@ -319,7 +333,12 @@ export default {
                                 .child(childSnapshot.key)
                                 .val();
                             const roundValues = snapshot
-                                .child('round' + this.round + '/' + childSnapshot.key)
+                                .child(
+                                    'round' +
+                                        this.round +
+                                        '/' +
+                                        childSnapshot.key
+                                )
                                 .exportVal();
 
                             const { points, distance } = roundValues;
@@ -583,6 +602,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.alert-container {
+    position: absolute;
+    right: 0;
+    .v-alert {
+        z-index: 2;
+    }
+}
+
 #container-map {
     display: flex;
     flex-direction: column;
@@ -638,6 +665,7 @@ export default {
         }
         .container-map_details {
             display: block;
+            position: relative;
         }
     }
 
@@ -701,7 +729,6 @@ export default {
     padding: 10px 0;
     z-index: 999;
 }
-
 
 #reset-button {
     overflow: hidden;
@@ -798,7 +825,6 @@ button.w-50 {
         bottom: 0;
         width: 100%;
     }
-
 
     #hide-map-button {
         position: absolute;

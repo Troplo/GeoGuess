@@ -46,7 +46,7 @@
       "area": "Площадь"
     },
     "Sections": {
-      "areasTitle": "Areas",
+      "areasTitle": "Территории",
       "mapsTitle": "Maps",
       "pleaseSelectLabel": "Похоже, вы потерялись, выберите тип или вы можете ",
       "barrelRoll": "Вверх"
@@ -68,13 +68,17 @@
     "makeGuess": "Предположить догадку",
     "guess": "Угадать",
     "nextRound": "СЛЕДУЮЩИЙ РАУНД",
-    "viewSummary": "Посмтреть Сводку",
+    "viewSummary": "Посмотреть сводку",
     "exit": "Выход",
     "reset": "Рестарт",
     "playAgain": "Играть заново",
     "infoWindow": {
       "Distance": "Дистанция",
       "Points": "Очки"
+    },
+    "leaderboard": {
+      "notGuessed": "Not Guessed",
+      "guessed": "Guessed"
     }
   },
   "Header": {
@@ -165,6 +169,8 @@
     "allowMove": "Разрешить перемещение",
     "allowZoom": "Разрешить масштабирование",
     "allowPan": "Разрешить Пан",
+    "guessedLeaderboard": "Display whether players have guessed",
+    "scoreLeaderboard": "Display score leaderboard",
     "countDownLabel": "Обратный отсчет (секунд)",
     "scoreModeLabel": "Формула баллов",
     "scoreModes": {

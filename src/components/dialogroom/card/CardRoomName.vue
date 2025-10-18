@@ -23,13 +23,12 @@
             </v-container>
         </v-card-text>
         <v-card-actions>
-            <div class="flex-grow-1" />
-            <v-btn dark depressed color="error" @click="cancel">
+            <v-spacer />
+            <v-btn variant="flat" color="error" @click="cancel">
                 {{ $t('cancel') }}
             </v-btn>
             <v-btn
-                dark
-                depressed
+                variant="flat"
                 color="#43B581"
                 @click="searchRoom(roomNameText)"
             >

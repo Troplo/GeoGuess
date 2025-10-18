@@ -21,12 +21,12 @@ jobs:
             echo "::set-output name=is_MY_SECRET_set::${{ env.MY_SECRET != '' }}"
   integration:
     env:
-      VUE_APP_API_KEY: YOUR_GOOGLE_MAPS_API_KEY
-      VUE_APP_FIREBASE_API_KEY: YOUR_FIREBASE_API_KEY
-      VUE_APP_FIREBASE_PROJECT_ID: YOUR_FIREBASE_PROJECT_ID
-      VUE_APP_FIREBASE_MESSAGING_SENDER_ID: YOUR_FIREBASE_MESSAGING_SENDER_ID
-      VUE_APP_FIREBASE_APP_ID: YOUR_FIREBASE_APP_ID
-      VUE_APP_FIREBASE_MEASUREMENT_ID: YOUR_FIREBASE_MEASUREMENT_ID
+      VITE_APP_API_KEY: YOUR_GOOGLE_MAPS_API_KEY
+      VITE_APP_FIREBASE_API_KEY: YOUR_FIREBASE_API_KEY
+      VITE_APP_FIREBASE_PROJECT_ID: YOUR_FIREBASE_PROJECT_ID
+      VITE_APP_FIREBASE_MESSAGING_SENDER_ID: YOUR_FIREBASE_MESSAGING_SENDER_ID
+      VITE_APP_FIREBASE_APP_ID: YOUR_FIREBASE_APP_ID
+      VITE_APP_FIREBASE_MEASUREMENT_ID: YOUR_FIREBASE_MEASUREMENT_ID
     strategy:
       matrix:
         os: [ubuntu-latest] # , macos-latest, windows-latest
@@ -36,8 +36,8 @@ jobs:
       run: |
         git config --global core.autocrlf false
         git config --global core.eol lf
-    - uses: actions/checkout@v3
-    - uses: actions/cache@v3.0.11
+    - uses: actions/checkout@v4
+    - uses: actions/cache@v4.0.2
       id: cache
       if: matrix.os != 'windows-latest'
       with:
@@ -48,7 +48,7 @@ jobs:
       if: matrix.os == 'windows-latest'
       run: |
         echo "::set-output name=dir::$(npm config get cache)"
-    - uses: actions/cache@v3.0.11
+    - uses: actions/cache@v4.0.2
       if: matrix.os == 'windows-latest'
       with:
         path: ${{ steps.npm-cache.outputs.dir }}
@@ -60,17 +60,17 @@ jobs:
       run: NODE_ENV=production npm run lint -- --no-fix
 
     - name: Run unit tests
-      run: npm run test:unit
+      run: npm run test:unit -- run --coverage --reporter json
 
     - name: Code coverage
       if:  matrix.os == 'ubuntu-latest'
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
 
     - name: Build
       run: npm run build
 
     - name: Upload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.os }}-node-build
         path: dist
@@ -86,8 +86,8 @@ jobs:
       matrix:
         browsers: [chrome]
     steps:
-      - uses: actions/checkout@v3
-      - uses: cypress-io/github-action@v5
+      - uses: actions/checkout@v4
+      - uses: cypress-io/github-action@v6
         with:
           start: npm run serve
           wait-on: 'http://localhost:8080'
@@ -109,14 +109,14 @@ jobs:
     needs: [checksecret, integration]
     if: needs.checksecret.outputs.is_MY_SECRET_set == 'true'
     env:
-      VUE_APP_API_KEY:  ${{ secrets.GMAP_API_KEY }}
-      VUE_APP_FIREBASE_API_KEY:  ${{ secrets.VUE_APP_FIREBASE_API_KEY }}
-      VUE_APP_FIREBASE_APP_ID:  ${{ secrets.VUE_APP_FIREBASE_APP_ID }}
-      VUE_APP_FIREBASE_AUTH_DOMAIN:  ${{ secrets.VUE_APP_FIREBASE_AUTH_DOMAIN }}
-      VUE_APP_FIREBASE_DATABASE_URL:  ${{ secrets.VUE_APP_FIREBASE_DATABASE_URL }}
-      VUE_APP_FIREBASE_MESSAGING_SENDER_ID:  ${{ secrets.VUE_APP_FIREBASE_MESSAGING_SENDER_ID }}
-      VUE_APP_FIREBASE_PROJECT_ID:  ${{ secrets.VUE_APP_FIREBASE_PROJECT_ID }}
-      VUE_APP_STORAGE_BUCKET:  ${{ secrets.VUE_APP_STORAGE_BUCKET }}
+      VITE_APP_API_KEY:  ${{ secrets.GMAP_API_KEY }}
+      VITE_APP_FIREBASE_API_KEY:  ${{ secrets.VITE_APP_FIREBASE_API_KEY }}
+      VITE_APP_FIREBASE_APP_ID:  ${{ secrets.VITE_APP_FIREBASE_APP_ID }}
+      VITE_APP_FIREBASE_AUTH_DOMAIN:  ${{ secrets.VITE_APP_FIREBASE_AUTH_DOMAIN }}
+      VITE_APP_FIREBASE_DATABASE_URL:  ${{ secrets.VITE_APP_FIREBASE_DATABASE_URL }}
+      VITE_APP_FIREBASE_MESSAGING_SENDER_ID:  ${{ secrets.VITE_APP_FIREBASE_MESSAGING_SENDER_ID }}
+      VITE_APP_FIREBASE_PROJECT_ID:  ${{ secrets.VITE_APP_FIREBASE_PROJECT_ID }}
+      VITE_APP_STORAGE_BUCKET:  ${{ secrets.VITE_APP_STORAGE_BUCKET }}
     runs-on: ubuntu-latest
     name: E2E on Ubuntu
     strategy:
@@ -125,8 +125,8 @@ jobs:
         containers: [1, 2, 3]
         browsers: [chrome]
     steps:
-      - uses: actions/checkout@v3
-      - uses: cypress-io/github-action@v5
+      - uses: actions/checkout@v4
+      - uses: cypress-io/github-action@v6
         with:
           start: npm run serve
           wait-on: 'http://localhost:8080'
@@ -144,12 +144,12 @@ jobs:
   # cypress-edge:    
   #   needs: integration
   #   env:
-  #     VUE_APP_API_KEY:  ${{ secrets.GMAP_API_KEY }}
-  #     VUE_APP_FIREBASE_API_KEY: YOUR_FIREBASE_API_KEY
-  #     VUE_APP_FIREBASE_PROJECT_ID: YOUR_FIREBASE_PROJECT_ID
-  #     VUE_APP_FIREBASE_MESSAGING_SENDER_ID: YOUR_FIREBASE_MESSAGING_SENDER_ID
-  #     VUE_APP_FIREBASE_APP_ID: YOUR_FIREBASE_APP_ID
-  #     VUE_APP_FIREBASE_MEASUREMENT_ID: YOUR_FIREBASE_MEASUREMENT_ID
+  #     VITE_APP_API_KEY:  ${{ secrets.GMAP_API_KEY }}
+  #     VITE_APP_FIREBASE_API_KEY: YOUR_FIREBASE_API_KEY
+  #     VITE_APP_FIREBASE_PROJECT_ID: YOUR_FIREBASE_PROJECT_ID
+  #     VITE_APP_FIREBASE_MESSAGING_SENDER_ID: YOUR_FIREBASE_MESSAGING_SENDER_ID
+  #     VITE_APP_FIREBASE_APP_ID: YOUR_FIREBASE_APP_ID
+  #     VITE_APP_FIREBASE_MEASUREMENT_ID: YOUR_FIREBASE_MEASUREMENT_ID
   #   runs-on: windows-latest
   #   name: E2E on Windows
   #   strategy:
@@ -161,7 +161,7 @@ jobs:
   #       run: |
   #         git config --global core.autocrlf false
   #         git config --global core.eol lf
-  #     - uses: actions/checkout@v3
+  #     - uses: actions/checkout@v4
   #     - uses: cypress-io/github-action@v2
   #       with:
   #         start: npm run serve

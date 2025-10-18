@@ -9,6 +9,8 @@ module.exports = {
             ? ['eslint:recommended']
             : []),
         'plugin:vue/essential',
+        'plugin:vue/base',
+        'plugin:vuetify/base',
     ],
     globals: {
         launchQueue: 'readonly',
@@ -20,24 +22,19 @@ module.exports = {
         ecmaVersion: 2020,
         sourceType: 'module',
     },
-    plugins: ['vue', 'prettier'],
+    plugins: ['vue', 'prettier', 'vitest'],
     rules: {
         'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
         'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
         semi: ['error', 'always'],
-        'vue/html-indent': ['warn', 4],        
-        "vue/multi-word-component-names": 'off',
+        'vue/multi-word-component-names': 'off',
         'vue/valid-v-slot': 'off',
+        'vue/no-duplicate-attributes': 'off',
     },
     overrides: [
         {
-            files: [
-                '**/__tests__/*.{j,t}s?(x)',
-                '**/tests/unit/**/*.spec.{j,t}s?(x)',
-            ],
-            env: {
-                jest: true,
-            },
+            files: ['**/*.spec.js'],
+            extends: ['plugin:vitest/recommended'],
         },
     ],
 };

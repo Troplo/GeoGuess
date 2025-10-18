@@ -1,42 +1,44 @@
 <template>
     <div>
-        <v-app-bar class="header" height="100">
+        <v-app-bar class="header" height="92">
             <router-link to="/">
                 <img
-                    class="header__logo mt-1"
-                    src="@/assets/geoguessLogo.png"
+                    class="header__logo"
+                    src="/src/assets/geoguessLogo.png"
+                    alt="logo"
                 />
                 <img
                     class="header__logo-min"
-                    src="@/../public/img/icons/android-icon-72x72.png"
+                    src="/img/icons/android-icon-72x72.png"
+                    alt="logo"
                 />
             </router-link>
 
-            <div class="flex-grow-1" />
+            <v-spacer />
 
             <v-app-bar-nav-icon
                 class="header__nav-icon"
                 @click="menuMobile = !menuMobile"
             ></v-app-bar-nav-icon>
             <nav class="header__nav" :class="{ visible: menuMobile }">
-                <v-btn id="historyBtn" text link to="/history">
+                <v-btn id="historyBtn" variant="text" to="/history">
                     {{ $t('Home.historyBtn') }}
                 </v-btn>
-                <v-btn id="historyBtn" text link to="/medals">
+                <v-btn id="historyBtn" variant="text" to="/medals">
                     {{ $t('Home.medalsBtn') }}
                 </v-btn>
                 <div class="header__nav__btns">
-                    <v-btn id="aboutBtn" icon @click="aboutDialog = true">
+                    <v-btn id="aboutBtn" @click="aboutDialog = true">
                         <v-icon size="30"> mdi-help-circle </v-icon>
                     </v-btn>
-                    <v-btn icon @click="changeStreamerMode(!streamerMode)">
+                    <v-btn @click="changeStreamerMode(!streamerMode)">
                         <v-icon size="30">
                             mdi-eye{{ streamerMode ? '-off' : '' }}
                         </v-icon>
                     </v-btn>
                     <v-menu>
-                        <template v-slot:activator="{ on }">
-                            <v-btn id="languageBtn" icon v-on="on">
+                        <template v-slot:activator="{ props }">
+                            <v-btn id="languageBtn" v-bind="props">
                                 <v-icon size="30"> mdi-translate </v-icon>
                             </v-btn>
                         </template>
@@ -52,10 +54,10 @@
                             </v-list-item>
                         </v-list>
                     </v-menu>
-                    <v-btn icon @click="changeTheme(!darkTheme)">
+                    <v-btn @click="changeTheme()">
                         <v-icon size="30">
                             {{
-                                darkTheme
+                                $vuetify.theme.global.current.dark
                                     ? 'mdi-white-balance-sunny'
                                     : 'mdi-weather-night'
                             }}
@@ -117,14 +119,14 @@
             </v-dialog>
         </v-app-bar>
 
-        <v-alert v-if="demoMode" color="#7289DA" dark class="demo-alert">
+        <v-alert v-if="demoMode" color="#7289DA" class="demo-alert">
             <v-row align="center">
                 <v-col class="grow">
                     {{ $t('Demo.message') }}
                 </v-col>
                 <v-col class="shrink">
                     <v-btn target="_blank" href="https://discord.gg/9GXm6RT">
-                        <v-icon left> mdi-discord </v-icon>
+                        <v-icon start> mdi-discord </v-icon>
                         {{ $t('Demo.btn') }}
                     </v-btn>
                 </v-col>
@@ -134,8 +136,8 @@
     </div>
 </template>
 <script>
-import About from '@/components/page/About';
-import { languages, RTL_LANGUAGES } from '../../lang';
+import About from '@/components/page/About.vue';
+import { languages, RTL_LANGUAGES } from '@/lang';
 import { mapActions, mapState } from 'vuex';
 import HeaderAlert from './HeaderAlert.vue';
 
@@ -161,11 +163,8 @@ export default {
             user: (state) => state.authStore.user,
         }),
         demoMode() {
-            return !!process.env.VUE_APP_DEMO_MODE;
-        },
-        darkTheme() {
-            return this.$vuetify.theme.dark;
-        },
+            return !!import.meta.env.VITE_APP_DEMO_MODE;
+        }
     },
     methods: {
         ...mapActions(['setStreamerMode']),
@@ -178,16 +177,20 @@ export default {
         },
         switchLanguage(language) {
             this.$root.$i18n.locale = language;
-            this.$vuetify.lang.current = language;
+            this.$vuetify.locale.current = language;
             this.$vuetify.rtl = RTL_LANGUAGES.includes(language);
             this.saveLanguage(language);
         },
         saveLanguage(language) {
             localStorage.setItem('language', language);
         },
-        changeTheme(dark) {
-            this.$vuetify.theme.dark = dark;
-            localStorage.setItem('darkTheme', dark);
+        changeTheme() {
+            this.$vuetify.theme.global.name =
+                this.$vuetify.theme.global.name === 'light' ? 'dark' : 'light';
+            localStorage.setItem(
+                'theme',
+                this.$vuetify.theme.global.name === 'light' ? 'light' : 'dark'
+            );
         },
     },
 };
@@ -195,8 +198,9 @@ export default {
 <style lang="scss" scoped>
 .header {
     z-index: 1;
-    padding: 0 5%;
-    background-color: var(--v-header-base) !important;
+    padding: 4px calc(16px + 5%) !important;
+    width: 90% !important;
+    background-color: rgb(var(--v-theme-header)) !important;
     .header__nav,
     .header__nav__btns {
         display: flex;
@@ -205,11 +209,11 @@ export default {
             margin: 0 1.5rem;
         }
     }
-    .theme--light .header__nav__btns .v-btn {
+    .v-theme--light .header__nav__btns .v-btn {
         color: rgba(0, 0, 0, 0.87);
         margin: 0.25rem;
     }
-    .theme--dark .header__nav__btns .v-btn {
+    .v-theme--dark .header__nav__btns .v-btn {
         color: rgba(196, 110, 110, 0.87);
         margin: 0.25rem;
     }
@@ -244,12 +248,12 @@ export default {
             &:not(.visible) {
                 display: none;
             }
-            position: absolute;
+            position: fixed;
             top: 6.2rem;
-            right: 0rem;
-            background: var(--v-header-base);
+            right: 0;
+            background: rgb(var(--v-theme-header));
             padding: 1rem;
-            box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%);
+            box-shadow: 0 2px 4px -1px rgb(0 0 0 / 20%);
             border-bottom-left-radius: 0.3125rem;
             border-bottom-right-radius: 0.3125rem;
             max-width: 100%;

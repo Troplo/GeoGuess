@@ -1,10 +1,13 @@
 <template>
-    <GmapMap
+    <GMapMap
         :center="{ lat: 0, lng: 0 }"
         :options="{
             mapTypeControl: false,
             gestureHandling: 'greedy',
-            styles: $vuetify.theme.dark ? $vuetify.theme.themes.dark.gmap : $vuetify.theme.themes.light.gmap,
+            styles:
+                $vuetify.theme.global.name === 'dark'
+                    ? $vuetify.theme.themes.dark.gmap
+                    : $vuetify.theme.themes.light.gmap,
         }"
         :zoom="0"
         map-type-id="roadmap"
@@ -12,20 +15,23 @@
     >
         <div v-if="!item.multiplayer">
             <div v-for="(r, index) in item.rounds" :key="index">
-                <GmapMarker
+                <GMapMarker
                     :position="{ lat: r.guess.lat, lng: r.guess.lng }"
                 />
-                <GmapInfoWindow :options="infoOptions" :position="r.guess">
+                <GMapInfoWindow :options="infoOptions" :position="r.guess">
                     <p>
                         <b>{{ $t('Maps.infoWindow.Distance') }}: </b>
-                        {{ new Intl.NumberFormat($i18n.locale, { style: "unit", unit:"kilometer" }).format(r.distance / 1000)  }}
+                        {{
+                            new Intl.NumberFormat($i18n.locale, {
+                                style: 'unit',
+                                unit: 'kilometer',
+                            }).format(r.distance / 1000)
+                        }}
                         <br />
-                        <b>
-                            {{ $t('Maps.infoWindow.Points') }}:
-                        </b>
+                        <b> {{ $t('Maps.infoWindow.Points') }}: </b>
                         {{ r.points }}
                     </p>
-                </GmapInfoWindow>
+                </GMapInfoWindow>
                 <GmapPolyline
                     :path="[
                         { lat: r.position.lat, lng: r.position.lng },
@@ -83,11 +89,15 @@
                         <p>
                             <b>{{ player }}</b
                             ><br />
-                            <b>{{ $t('Maps.infoWindow.Distance') }} : </b >
-                            {{ new Intl.NumberFormat($i18n.locale, { style: "unit", unit:"kilometer" }).format(r.players[player].distance / 1000)  }} <br />
-                            <b>
-                                {{ $t('Maps.infoWindow.Points') }}:
-                            </b>
+                            <b>{{ $t('Maps.infoWindow.Distance') }} : </b>
+                            {{
+                                new Intl.NumberFormat($i18n.locale, {
+                                    style: 'unit',
+                                    unit: 'kilometer',
+                                }).format(r.players[player].distance / 1000)
+                            }}
+                            <br />
+                            <b> {{ $t('Maps.infoWindow.Points') }}: </b>
                             {{ r.players[player].points }}
                         </p>
                     </GmapInfoWindow>
@@ -123,7 +133,7 @@
                 />
             </div>
         </div>
-    </GmapMap>
+    </GMapMap>
 </template>
 
 <script>
@@ -143,7 +153,7 @@ export default {
             icon: {
                 url: window.location.origin + '/img/icons/favicon-16x16.png',
                 anchor: { x: 8, y: 8 },
-            }
+            },
         };
     },
 };
@@ -151,6 +161,6 @@ export default {
 
 <style>
 .gm-style-iw {
-  color: black;
+    color: black;
 }
 </style>

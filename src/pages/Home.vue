@@ -19,10 +19,9 @@
             <v-btn
                 id="btnMaps"
                 href="#maps-container"
-                large
-                fab
+                size="large"
+                icon
                 color="secondary"
-                dark
             >
                 <v-icon>mdi-arrow-down</v-icon>
             </v-btn>
@@ -32,9 +31,9 @@
 </template>
 
 <script>
-import SearchBox from '@/components/home/SearchBox';
-import ContentPage from '@/components/page/ContentPage';
-import { GAME_MODE } from '../constants';
+import SearchBox from '@/components/home/SearchBox.vue';
+import ContentPage from '@/components/page/ContentPage.vue';
+import { GAME_MODE } from '@/constants';
 import MapsContainer from '@/components/home/MapsContainer.vue';
 export default {
     components: {
@@ -88,11 +87,12 @@ export default {
     }
     background-color: var(--v-home-base);
     .home-page__main {
+        margin-top: 100px;
         position: relative;
-        .theme--light & .home-page__main__container {
+        .v-theme--light & .home-page__main__container {
             background: url('../assets/home/world.svg');
         }
-        .theme--dark & .home-page__main__container {
+        .v-theme--dark & .home-page__main__container {
             background: url('../assets/home/world-dark.svg');
         }
         .home-page__main__container {
@@ -129,6 +129,9 @@ export default {
             }
         }
         #btnMaps {
+            width: 64px;
+            height: 64px;
+            z-index: 1000;
             position: absolute;
             margin: auto;
             bottom: 0.4rem;

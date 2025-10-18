@@ -9,7 +9,7 @@
 
         <v-card-subtitle ref="roomUrl" class="pb-0">
             <span :class="{ blur: streamerMode }">{{ roomUrl }} </span>
-            <v-icon small @click="copy"> mdi-content-copy </v-icon>
+            <v-icon size="small" @click="copy"> mdi-content-copy </v-icon>
         </v-card-subtitle>
         <v-card-text>
             <v-container>
@@ -17,8 +17,8 @@
                     <v-col cols="12">
                         <v-text-field
                             id="inputPlayerName"
-                            :value="name"
-                            @input="setPlayerName"
+                            :model-value="name"
+                            @update:model-value="setPlayerName"
                             maxlength="20"
                             autofocus
                             :label="$t('CardRoomPlayerName.input')"
@@ -33,7 +33,6 @@
                         v-for="(name, i) in players"
                         :key="'player' + i"
                         color="#424242"
-                        dark
                     >
                         <v-avatar
                             :color="
@@ -45,7 +44,7 @@
                                     '#00b8b8',
                                 ][i % 5]
                             "
-                            left
+                            start
                         >
                             {{ name.slice(0, 2).toUpperCase() }}
                         </v-avatar>
@@ -55,15 +54,14 @@
             </v-container>
         </v-card-text>
         <v-card-actions>
-            <div class="flex-grow-1" />
-            <v-btn dark depressed color="error" @click="cancel">
+            <v-spacer />
+            <v-btn variant="flat" color="error" @click="cancel">
                 {{ $t('cancel') }}
             </v-btn>
             <v-btn
                 v-if="playerNumber === 1"
                 id="btnStart"
-                dark
-                depressed
+                variant="flat"
                 color="#43B581"
                 :disabled="players.length < 2 || !canNext"
                 @click="startGame"
@@ -95,14 +93,14 @@ export default {
         },
         canNext() {
             return !this.players.some((name) => name === '');
-        }
+        },
     },
     methods: {
         ...mapActions('settingsStore', ['startGame', 'setPlayerName']),
         copy() {
             this.$copyText(this.roomUrl, this.$refs.roomUrl);
         },
-    }
+    },
 };
 </script>
 

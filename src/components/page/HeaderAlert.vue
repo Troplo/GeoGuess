@@ -2,12 +2,12 @@
     <v-alert
         v-if="!!alert"
         type="success"
-        dismissible
-        transition="slide-x-reverse-transition"
+        closable
+        decelerated-easing
         class="header-alert"
         :icon="alert.icon"
         :color="alert.color"
-        @input="closeAlert"
+        @update:model-value="closeAlert"
     >
         <h4>{{ $t(alert.title) }}</h4>
         <p>{{ $t(alert.subtitle) }}</p>

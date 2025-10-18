@@ -24,7 +24,7 @@
                     {{ areaName }}
                 </span>
             </div>
-            <GmapMap
+            <GMapMap
                 id="mapAreas"
                 ref="mapRef"
                 :center="{ lat: 37.86926, lng: -122.254811 }"
@@ -36,7 +36,10 @@
                     streetViewControl: false,
                     draggableCursor: 'crosshair',
                     clickableIcons: false,
-                    styles: $vuetify.theme.dark ? $vuetify.theme.themes.dark.gmap : $vuetify.theme.themes.light.gmap,
+                    styles:
+                        $vuetify.theme.global.name === 'dark'
+                            ? $vuetify.theme.themes.dark.gmap
+                            : $vuetify.theme.themes.light.gmap,
                 }"
             />
         </div>
@@ -55,7 +58,7 @@
     </div>
 </template>
 <script type="text/javascript">
-import FlagIcon from '@/components/shared/FlagIcon';
+import FlagIcon from '@/components/shared/FlagIcon.vue';
 import { mapActions, mapGetters } from 'vuex';
 import MapMixin from './mixins/MapMixin';
 
@@ -238,7 +241,7 @@ export default {
     .result-panel {
         height: 100%;
         padding: 2%;
-        background: var(--v-card-base);
+        background: rgb(var(--v-theme-card));
         display: flex;
         flex-direction: column;
         width: 30%;

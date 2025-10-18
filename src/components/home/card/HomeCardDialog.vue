@@ -4,14 +4,14 @@
         max-width="500"
         :fullscreen="$viewport.width < 450"
     >
-        <template v-slot:activator="{ on, attrs }">
-            <v-btn v-bind="attrs" text color="darkGreen" v-on="on">
+        <template v-slot:activator="{ props }">
+            <v-btn variant="text" color="darkGreen" v-bind="props">
                 {{ $t('Home.play') }}
             </v-btn>
         </template>
         <v-card>
             <v-img
-                class="white--text align-end"
+                class="text-white align-end"
                 height="230px"
                 gradient="rgba(0,0,0,0), rgba(0,0,0,0.8)"
                 :src="data.imageSrc"
@@ -25,7 +25,7 @@
                 {{ data.descriptionLocate }}
             </v-card-text>
             <v-card-actions>
-                <v-btn color="error" text @click="visible = false">
+                <v-btn color="error" variant="text" @click="visible = false">
                     {{ $t('cancel') }}
                 </v-btn>
 
@@ -34,7 +34,7 @@
                     {{ $t('DialogRoom.singlePlayer') }}
                 </v-btn>
 
-                <v-btn color="secondary" dark @click="onClickMultiPlayer">
+                <v-btn color="secondary" @click="onClickMultiPlayer">
                     {{ $t('DialogRoom.withFriends') }}
                 </v-btn>
             </v-card-actions>
@@ -63,7 +63,12 @@ export default {
             setGameSettings: SETTINGS_SET_GAME_SETTINGS,
         }),
         ...mapActions('settingsStore', ['openDialogRoom']),
-        ...mapActions(['loadGeoJsonFromUrl', 'setGeoJson', 'setMapLoaded', 'loadMap']),
+        ...mapActions([
+            'loadGeoJsonFromUrl',
+            'setGeoJson',
+            'setMapLoaded',
+            'loadMap',
+        ]),
         setMap() {
             if (this.type === 'area') {
                 this.loadGeoJsonFromUrl(this.data.data.urlArea);

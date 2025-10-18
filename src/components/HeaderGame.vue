@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-app-bar class="header-game" color="grey darken-4">
+        <v-app-bar class="header-game" color="grey-darken-4">
             <DialogMessage
                 :dialog-message="scoreboard"
                 dialog-title="Leaderboard"
@@ -8,7 +8,13 @@
                 :dismissible="true"
                 @close="scoreboard = false"
             />
-            <v-btn dark icon @click="scoreboard = true" v-if="$vuetify.breakpoint.mobile && guessString && leaderboardShown">
+            <v-btn
+                icon
+                @click="scoreboard = true"
+                v-if="
+                    $vuetify.display.mobile && guessString && leaderboardShown
+                "
+            >
                 <v-icon>mdi-scoreboard-outline</v-icon>
             </v-btn>
             <div v-if="remainingTime != null && remainingTime > 0">
@@ -43,12 +49,14 @@
                     total: playerCount
                 })}}</span>
             </v-tooltip>
+            <v-spacer />
             <div class="round-score-container">
                 <span class="sub-text">{{ $t('HeaderGame.round') }}: </span>
                 <span id="roundLabel" class="main-text">
                     {{ round }} / {{ nbRound }}
                 </span>
             </div>
+
             <div v-if="isDistanceVisible" class="round-score-container">
                 <span class="sub-text">{{ $t('HeaderGame.distance') }}: </span>
                 <span class="main-text">{{
@@ -70,7 +78,7 @@
 
 <script>
 import { getCountdownText } from '@/utils';
-import { GAME_MODE } from '../constants';
+import { GAME_MODE } from '@/constants';
 import { mapState } from 'vuex';
 import DialogMessage from '@/components/DialogMessage.vue';
 
@@ -93,6 +101,7 @@ export default {
         'playerCount',
         'votedCount',
         'allowReRoll',
+        'mode',
     ],
     data() {
         return {

@@ -1,13 +1,13 @@
 <template>
     <div class="time_detail">
-        <v-chip color="#424242" dark v-if="playerName">
+        <v-chip color="#424242" v-if="playerName">
             <v-avatar
                 :color="
                     ['#E91B0C', '#5ccc00', '#e0ca00', '#FF1F69', '#00b8b8'][
                         index % 5
                     ]
                 "
-                left
+                start
             >
                 {{ playerName.slice(0, 2).toUpperCase() }}
             </v-avatar>

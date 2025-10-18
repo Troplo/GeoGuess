@@ -1,22 +1,14 @@
 <template>
     <div class="page">
         <Header class="page__header" />
-
         <slot />
-
         <Footer class="page__footer" />
     </div>
 </template>
 
-<script>
-import Header from '@/components/page/Header';
-import Footer from '@/components/page/Footer';
-export default {
-    components: {
-        Header,
-        Footer,
-    },
-};
+<script setup>
+import Header from '@/components/page/Header.vue';
+import Footer from '@/components/page/Footer.vue';
 </script>
 
 <style scoped lang="scss">
@@ -32,9 +24,7 @@ export default {
     }
     background-color: var(--v-page-base);
 }
-</style>
 
-<style lang="scss" scoped>
 .page .content {
     background: var(--v-content-base);
     &--no-background {
@@ -45,4 +35,3 @@ export default {
     padding: 2%;
 }
 </style>
-

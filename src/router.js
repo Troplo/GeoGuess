@@ -1,25 +1,17 @@
-import HistoryPage from '@/pages/HistoryPage';
-import Home from '@/pages/Home';
-import MedalsPage from '@/pages/MedalsPage';
-import Vue from 'vue';
-import Router from 'vue-router';
-import { GAME_MODE } from './constants';
-import Login from './pages/Login';
+import HistoryPage from '@/pages/HistoryPage.vue';
+import Home from '@/pages/Home.vue';
+import MedalsPage from '@/pages/MedalsPage.vue';
+import { createRouter, createWebHistory } from 'vue-router';
+import { GAME_MODE } from '@/constants';
+import Login from './pages/Login.vue';
 
-const StreetView = () => import('@/pages/StreetView');
+const StreetView = () => import('@/pages/StreetView.vue');
 
-const originalPush = Router.prototype.push;
-Router.prototype.push = function push(location) {
-    return originalPush.call(this, location).catch((err) => err);
-};
-
-Vue.use(Router);
-
-export default new Router({
-    mode: 'history',
+const router = createRouter({
+    history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
-            path: '*',
+            path: '/:a',
             redirect: '/',
         },
         {
@@ -106,3 +98,5 @@ export default new Router({
         },
     ],
 });
+
+export default router;

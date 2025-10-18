@@ -25,11 +25,10 @@
         <v-alert
             v-model="updateAvailable"
             id="alertUpdate"
-            dark
             type="info"
             elevation="3"
             prominent
-            dismissible
+            closable
         >
             <v-row align="center">
                 <v-col class="grow">

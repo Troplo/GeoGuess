@@ -10,28 +10,24 @@
                     id="search-input"
                     v-model="place"
                     :items="items"
-                    :search-input.sync="search"
+                    :search.sync="search"
                     :loading="isLoading"
                     autofocus
                     :placeholder="$t('Home.searchBar.enterCity')"
-                    background-color="secondary"
-                    dark
+                    bg-color="secondary"
                     rounded
-                    height="15"
-                    full-width
-                    @input="loadPlaceGeoJSON"
+                    @update:model-value="loadPlaceGeoJSON"
                 />
                 <v-btn
                     @click="loadPlaceGeoJSON(place)"
                     color="dark"
-                    dark
                     id="loadBtn"
                     :loading="loadingGeoJson"
                 >
                     {{ $t('CardRoomMap.loadBtn') }}
                 </v-btn>
             </v-row>
-            <GmapMap
+            <GMapMap
                 ref="mapRef"
                 :center="{ lat: 10, lng: 10 }"
                 :zoom="1"
@@ -41,7 +37,10 @@
                     mapTypeControl: false,
                     fullscreenControl: false,
                     gestureHandling: 'greedy',
-                    styles: $vuetify.theme.dark ? $vuetify.theme.themes.dark.gmap : $vuetify.theme.themes.light.gmap,
+                    styles:
+                        $vuetify.theme.global.name === 'dark'
+                            ? $vuetify.theme.themes.dark.gmap
+                            : $vuetify.theme.themes.light.gmap,
                 }"
             />
             <v-row justify="space-around">
@@ -56,17 +55,16 @@
             </v-row>
         </v-card-text>
         <v-card-actions>
-            <v-btn plain v-if="geoJson" @click="reset">{{
+            <v-btn variant="plain" v-if="geoJson" @click="reset">{{
                 $t('CardRoomMap.reset')
             }}</v-btn>
-            <div class="flex-grow-1" />
-            <v-btn dark depressed color="error" @click="cancel">
+            <v-spacer />
+            <v-btn variant="flat" color="error" @click="cancel">
                 {{ $t('cancel') }}
             </v-btn>
             <v-btn
                 id="btnStart"
-                dark
-                depressed
+                variant="flat"
                 color="#43B581"
                 @click="next"
                 :disabled="loadingGeoJson || !canPlayGeoJSON"
@@ -79,7 +77,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
-import { SETTINGS_SET_STEP_DIALOG_ROOM } from '../../../store/mutation-types';
+import { SETTINGS_SET_STEP_DIALOG_ROOM } from '@/store/mutation-types';
 import CardRoomMixin from './mixins/CardRoomMixin';
 export default {
     name: 'CardRoomMap',
@@ -93,7 +91,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters([ 'geoJson']),
+        ...mapGetters(['geoJson']),
         ...mapState({
             loadingGeoJson: (state) => state.homeStore.loadingGeoJson,
         }),
@@ -101,14 +99,16 @@ export default {
             return this.entries.map((entry) => entry.properties.name);
         },
         // If map have enough point, return false
-        canPlayGeoJSON(){
+        canPlayGeoJSON() {
             return !(
                 this.geoJson &&
                 Array.isArray(this.geoJson.features) &&
                 this.geoJson.features.length < 5 &&
-                this.geoJson.features.every(feature => feature.geometry.type === 'Point')
+                this.geoJson.features.every(
+                    (feature) => feature.geometry.type === 'Point'
+                )
             );
-        }
+        },
     },
     watch: {
         search(val) {
