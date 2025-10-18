@@ -36,7 +36,7 @@ class IndexedDBService {
         return new Promise((resolve, reject) => {
             let transaction = this.db.transaction(['maps'], 'readonly');
             let store = transaction.objectStore('maps');
-            const maps = new Array();
+            const maps = [];
 
             const request = store.openCursor(null, 'prev');
             request.onsuccess = function (e) {
@@ -52,7 +52,7 @@ class IndexedDBService {
 
             request.onerror = (e) => {
                 // eslint-disable-next-line no-console
-                console.log('Error getting maps', e);
+                console.log('Erraor getting maps', e);
                 reject('Error');
             };
         });

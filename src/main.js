@@ -1,6 +1,7 @@
 import { createApp, reactive } from 'vue';
 import router from './router.js';
 import i18n from './lang';
+import { createPinia } from 'pinia';
 import store from './store/index';
 import App from '@/App.vue';
 import axios from '@/plugins/axios';
@@ -13,9 +14,12 @@ import 'firebase/database';
 import VueClipboard from 'vue-clipboard2';
 import CountryNamePlugin from './plugins/countryNamePlugin';
 import './registerServiceWorker.js';
+import { setupLegacyPiniaCompat } from '@/plugins/legacyPiniaCompat';
 
+const pinia = createPinia();
 export const app = createApp(App);
 
+app.use(pinia);
 app.use(router);
 app.use(VueAxios, axios);
 app.use(CountryNamePlugin, CountryNamePlugin(app));
@@ -71,5 +75,6 @@ app.use(i18n);
 app.use(store);
 
 app.use(vuetify);
+setupLegacyPiniaCompat(app);
 
 app.mount('#app');

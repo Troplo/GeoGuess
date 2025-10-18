@@ -74,7 +74,11 @@ export default {
                 state.isOpenDialogRoom = true;
             }
 
+            console.log(state.room);
             state.room.once('value', (snapshot) => {
+                console.log(
+                    `here! started? ${snapshot.child('started').val()}`
+                );
                 if (snapshot.child('started').val()) {
                     state.roomErrorMessage = 'DialogRoom.alreadyStarted';
                     state.room.off();
@@ -84,6 +88,7 @@ export default {
                 const numberOfPlayers = snapshot
                     .child('playerName')
                     .numChildren();
+                console.log('number of players', numberOfPlayers);
                 const playerNumber = numberOfPlayers + 1;
 
                 state.playerNumber = playerNumber;
@@ -96,13 +101,17 @@ export default {
                 if (numberOfPlayers === 0) {
                     // Put the tentative player's name into the room node
                     // So that other player can't enter as the first player while the player decide the name and room size
-                    state.room.child('playerName').update(
-                        {
-                            player1: name,
-                        },
-                        (error) => {
+                    console.log('noplay 0', state.room);
+                    const playerRef = state.room.child(`playerName`);
+                    console.log(playerRef);
+                    playerRef.once('value').then((snapshot) => {
+                        let data = snapshot.val();
+                        if (!data || typeof data !== 'object') data = {}; // Make sure it's an object
+                        data.player1 = name;
+
+                        playerRef.set(data, (error) => {
+                            console.log('here again', error);
                             if (!error) {
-                                // Put the timestamp the room is created so the expired rooms can be removed by cloud function
                                 state.room.update({
                                     createdAt:
                                         firebase.database.ServerValue.TIMESTAMP,
@@ -110,10 +119,11 @@ export default {
                                 state.loadRoom = false;
                                 state.currentComponent = 'settingsMap';
                             }
-                        }
-                    );
+                        });
+                    });
                 } else {
                     // Put other player's tentative name
+                    console.log('other route');
                     state.room
                         .child('playerName/player' + playerNumber)
                         .set(name, (error) => {
