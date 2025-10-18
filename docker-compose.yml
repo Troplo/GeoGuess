@@ -1,19 +1,19 @@
 version: '2.1'
 
 services:
-  geoguess:
-    build: .
-    # image:
-    environment:
-      #- VITE_APP_PUBLIC_PATH=/
-      - VITE_APP_API_KEY=myapi
-      #- VITE_APP_FIREBASE_API_KEY=myapi
-      #- VITE_APP_FIREBASE_PROJECT_ID=myid
-      #- VITE_APP_FIREBASE_MESSAGING_SENDER_ID=senderid
-      #- VITE_APP_FIREBASE_APP_ID=appid
-      #- VITE_APP_FIREBASE_MEASUREMENT_ID=measurment
-      #- VITE_APP_FIREBASE_AUTH_DOMAIN=auth
-      #- VITE_APP_FIREBASE_DATABASE_URL=db
-      #- VITE_APP_STORAGE_BUCKET=bucket
-    ports:
-      - 3000:80
+    geoguess:
+        build: .
+        # image:
+        environment:
+            #- VITE_APP_PUBLIC_PATH=/
+            - VITE_APP_API_KEY=myapi
+            #- VITE_APP_FIREBASE_API_KEY=myapi
+            #- VITE_APP_FIREBASE_PROJECT_ID=myid
+            #- VITE_APP_FIREBASE_MESSAGING_SENDER_ID=senderid
+            #- VITE_APP_FIREBASE_APP_ID=appid
+            #- VITE_APP_FIREBASE_MEASUREMENT_ID=measurment
+            #- VITE_APP_FIREBASE_AUTH_DOMAIN=auth
+            #- VITE_APP_FIREBASE_DATABASE_URL=db
+            #- VITE_APP_STORAGE_BUCKET=bucket
+        ports:
+            - 3000:80

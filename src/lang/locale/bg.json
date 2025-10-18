@@ -1,222 +1,222 @@
 {
-  "Home": {
-    "placeVisited": "0 посетени места | 1 посетено място | {count} посетени места",
-    "historyBtn": "ИСТОРИЯ",
-    "medalsBtn": "MEDALS",
-    "about": "ИНФОРМАЦИЯ",
-    "createMap": "Create Map",
-    "searchBar": {
-      "customLoaded": "Картата е заредена.",
-      "enterCity": "Въведи град, провинция или страна."
+    "Home": {
+        "placeVisited": "0 посетени места | 1 посетено място | {count} посетени места",
+        "historyBtn": "ИСТОРИЯ",
+        "medalsBtn": "MEDALS",
+        "about": "ИНФОРМАЦИЯ",
+        "createMap": "Create Map",
+        "searchBar": {
+            "customLoaded": "Картата е заредена.",
+            "enterCity": "Въведи град, провинция или страна."
+        },
+        "aboutDescriptions": {
+            "1": "Междинна станция е безплатна игра, без реклами.                  Играчите се състезават колко близо играчът може да познае произволни местоположения в пет рунда.                 Можете да споделите резултата през Facebook или Twitter.                 Мултиплейър режима поддържа до пет човека.                  Първият играч създава стая и определя размера й. Други играчи въвеждат същото име на стая като първия играч и играта започва.",
+            "2": "This game was forked from "
+        },
+        "customMap": "ПЕРСОНАЛИЗИРАНА КАРТА",
+        "customMapDescriptions": {
+            "1": "Можете да ограничите произволни местоположения до град, щат или държава с лентата за търсене.",
+            "2": "Iв мултиплейъра първият играч определя местоположението.",
+            "3": "Освен това можете да направите вашата карта с ",
+            "4": "файл.",
+            "5": "Качете съдържанието на картата GeoJson с бутона :",
+            "6": "Избор на карта : "
+        },
+        "limitation": "ОГРАНИЧЕНИЯ",
+        "limitationDescription": "В момента задавам квоти на ден, така че разходите за стартиране на тази игра да не могат да станат твърде високи.             Ако картата не се зареди, това означава, че квотите са надвишени за деня.             Ще се нулира в полунощ тихоокеанско време. Съжалявам за неудобството.",
+        "play": "Започни игра",
+        "streamerModeActivate": "Активиране на стриймър режим",
+        "streamerModeDetails": "URL адресите и имената на стаите са скрити",
+        "mapSavedAlert": {
+            "title": "Map saved 🎉",
+            "subtitle": "You will find it in your map lists"
+        },
+        "HomeCard": {
+            "edit": "Edit",
+            "delete": "Delete",
+            "medal": {
+                "platinum": "Platinum",
+                "gold": "Gold",
+                "silver": "Silver",
+                "bronze": "Bronze"
+            }
+        },
+        "HomeCardMode": {
+            "map": "Map",
+            "area": "Area"
+        },
+        "Sections": {
+            "areasTitle": "Areas",
+            "mapsTitle": "Maps",
+            "pleaseSelectLabel": "You seems lost, please select a type or you can ",
+            "barrelRoll": "do a barrel roll"
+        }
     },
-    "aboutDescriptions": {
-      "1": "Междинна станция е безплатна игра, без реклами.                  Играчите се състезават колко близо играчът може да познае произволни местоположения в пет рунда.                 Можете да споделите резултата през Facebook или Twitter.                 Мултиплейър режима поддържа до пет човека.                  Първият играч създава стая и определя размера й. Други играчи въвеждат същото име на стая като първия играч и играта започва.",
-      "2": "This game was forked from "
+    "StreetView": {
+        "nearby": {
+            "title": "Близка позиция",
+            "message": "За съжаление не успяхме да намерим произволна позиция в определеното място. Това се случва ако Google Maps не са преминали за StreetView от тук. 😉"
+        },
+        "waitForOtherPlayers": "Изчакване за играчите...",
+        "redirectToHomePage": "Пренасочване към началната страница...",
+        "exitGame": "Вие сте принудени да излезете от играта. Пренасочване към началната страница след 5 секунди...",
+        "waitForOtherPlayersToFinish": "Изчакване другите играчи да завършат играта...",
+        "confirmExit": "Сигурни ли сте, че ще напуснете текущата игра? Това ще прекрати играта!",
+        "countdownAlert": "Обратното броене започна: {count} оставаща секунда | Обратното броене започна: остават {count} секунди"
     },
-    "customMap": "ПЕРСОНАЛИЗИРАНА КАРТА",
-    "customMapDescriptions": {
-      "1": "Можете да ограничите произволни местоположения до град, щат или държава с лентата за търсене.",
-      "2": "Iв мултиплейъра първият играч определя местоположението.",
-      "3": "Освен това можете да направите вашата карта с ",
-      "4": "файл.",
-      "5": "Качете съдържанието на картата GeoJson с бутона :",
-      "6": "Избор на карта : "
+    "Maps": {
+        "makeGuess": "Направи предположение",
+        "guess": "Познай",
+        "nextRound": "Следващ рунд",
+        "viewSummary": "Виж резюме",
+        "exit": "ИЗХОД",
+        "reset": "НУЛИРАНЕ",
+        "playAgain": "ИГРАЙ ОТНОВО",
+        "infoWindow": {
+            "Distance": "Дистанция",
+            "Points": "Точки"
+        },
+        "leaderboard": {
+            "notGuessed": "Not Guessed",
+            "guessed": "Guessed"
+        }
     },
-    "limitation": "ОГРАНИЧЕНИЯ",
-    "limitationDescription": "В момента задавам квоти на ден, така че разходите за стартиране на тази игра да не могат да станат твърде високи.             Ако картата не се зареди, това означава, че квотите са надвишени за деня.             Ще се нулира в полунощ тихоокеанско време. Съжалявам за неудобството.",
-    "play": "Започни игра",
-    "streamerModeActivate": "Активиране на стриймър режим",
-    "streamerModeDetails": "URL адресите и имената на стаите са скрити",
-    "mapSavedAlert": {
-      "title": "Map saved 🎉",
-      "subtitle": "You will find it in your map lists"
+    "Header": {
+        "language": "Език",
+        "about": "Информация",
+        "limitation": "Ограничения",
+        "contact": "Контакт"
     },
-    "HomeCard": {
-      "edit": "Edit",
-      "delete": "Delete",
-      "medal": {
-        "platinum": "Platinum",
-        "gold": "Gold",
-        "silver": "Silver",
-        "bronze": "Bronze"
-      }
+    "HeaderGame": {
+        "room": "Стая",
+        "round": "Рунд",
+        "distance": "Дистанция",
+        "kmaway": "{value} км далеч",
+        "score": "РЕЗУЛТАТ"
     },
-    "HomeCardMode": {
-      "map": "Map",
-      "area": "Area"
+    "next": "Следващ",
+    "cancel": "Отказ",
+    "DialogCustomMap": {
+        "title": "Персонализирана карта",
+        "invalid": "Невалиден GeoJSON",
+        "text": "Текст",
+        "url": "Линк",
+        "file": "Фаил",
+        "edit": "Редактиране на картата",
+        "fileLabel": "Изберете GeoJSON файл",
+        "OK": "ОК.",
+        "download": "Свали GeoJSON",
+        "Clean": "Clean",
+        "save": "save",
+        "inputName": {
+            "label": "Map Name",
+            "placeholder": "My favorite place"
+        }
     },
-    "Sections": {
-      "areasTitle": "Areas",
-      "mapsTitle": "Maps",
-      "pleaseSelectLabel": "You seems lost, please select a type or you can ",
-      "barrelRoll": "do a barrel roll"
+    "History": {
+        "title": "История",
+        "date": "Дата",
+        "mode": "Режим",
+        "mapName": "Map Name",
+        "time": "Време",
+        "distance": "Дистанция",
+        "points": "Точки",
+        "rank": "Ранк",
+        "actions": "Actions",
+        "search": "Търси",
+        "exportGeoSave": "Експорт GeoSave",
+        "importGeoSave": "Импорт GeoSave",
+        "exportCSV": "Експорт CSV",
+        "total": "Тотал",
+        "nbRound": "Nb Rounds"
+    },
+    "DialogRoom": {
+        "singlePlayer": "Един играч",
+        "withFriends": "Игра с приятели",
+        "invalidRoomName": "Невалидно име на стая. Проверете изписването на букви, специални символи и числа, и опитайте отново.",
+        "inProgress": "Стаята се прави от грач. Моля изчакайте, и опитайте отново по-късно.",
+        "roomIsFull": "Тази стая вече е пълна.",
+        "alreadyStarted": "Стаята вече е започнала игра."
+    },
+    "CardRoomName": {
+        "title": "Въведете име на стая, за да създадете нова или да се присъедините към съществуваща стая."
+    },
+    "CardRoomPlayerName": {
+        "title": "Room:",
+        "input": "Име на играча.",
+        "anonymousPlayerName": "Шпионин 🕵",
+        "players": "1 играч | {count} играча"
+    },
+    "CardRoomSize": {
+        "title": "Размер на стая."
+    },
+    "CardRoomTime": {
+        "title": "Времево ограничение.",
+        "infinite": "Безкрайно"
+    },
+    "CardRoomMap": {
+        "title": "Define your map",
+        "loadBtn": "Load MAP",
+        "reset": "Reset",
+        "cantPlayGeoJson": "Invalid GeoJSON, you need to have more than 5 positions."
+    },
+    "CardRoomSettings": {
+        "title": "Настройки на играта",
+        "modeLabel": "Игрови режим",
+        "includePhotopheres": "Включете фотосфери",
+        "timeAttackLabel": "TimeAttack",
+        "timeattackInfos": "В режим TimeAttack само играчът, който пръв познае държавата, получава точката. Бъдете бързи и спечелете!",
+        "allowMove": "Позволи движение",
+        "allowZoom": "Позволи увеличение",
+        "allowPan": "Позволи Pan",
+        "guessedLeaderboard": "Display whether players have guessed",
+        "scoreLeaderboard": "Display score leaderboard",
+        "countDownLabel": "Обратно броене (seconds)",
+        "scoreModeLabel": "Формула за оценка",
+        "scoreModes": {
+            "normal": "нормален",
+            "time": "време"
+        },
+        "selectAreas": "Select Areas",
+        "moreSettings": "More settings",
+        "optimiseStreetView": "StreetView Optimize (only official)",
+        "nbRound": "Number of rounds"
+    },
+    "CardRoomDifficulty": {
+        "title": "Въведете ниво на трудност.",
+        "easy": "лесно (свят)",
+        "medium": "средно (страна)",
+        "hard": "трудно (град)"
+    },
+    "DialogSummary": {
+        "summaryMsgSinglePoints": "Резултат: <strong>{points}</strong>! ",
+        "summaryMsgSingleDistance": "Намирате се <strong>{distance}</strong> км надалеч!",
+        "summaryMsgMultiPoints": "<strong>{playerName}</strong> оценката е <strong>{points}</strong> ! ",
+        "summaryMsgMultiDistance": "(<strong>{distance}</strong> км надалеч)",
+        "viewDetails": "Виж детайли"
+    },
+    "Footer": {
+        "under": "под",
+        "privacyPolicy": "Политика за поверителност"
+    },
+    "urlCopied": "Линка е копиран!",
+    "DetailsMap": {
+        "moreInfo": "Още информация"
+    },
+    "modes": {
+        "classic": "Класически",
+        "country": "Избери страна",
+        "custom_area": "Pick"
+    },
+    "Demo": {
+        "message": "Ако искате да допринесете за проекта и да го подобрите, вашата помощ е добре дошла:  Преводи 🔠, Топографи 🌍, Кодове 💻, Идеи 💡, БЕТА тест 👀.",
+        "btn": "Присъедини се"
+    },
+    "OK": "ОК",
+    "yes": "да",
+    "no": "не",
+    "AlertUpdate": {
+        "label": "A new version is available. Click on the button to obtain it.",
+        "btn": "Update"
     }
-  },
-  "StreetView": {
-    "nearby": {
-      "title": "Близка позиция",
-      "message": "За съжаление не успяхме да намерим произволна позиция в определеното място. Това се случва ако Google Maps не са преминали за StreetView от тук. 😉"
-    },
-    "waitForOtherPlayers": "Изчакване за играчите...",
-    "redirectToHomePage": "Пренасочване към началната страница...",
-    "exitGame": "Вие сте принудени да излезете от играта. Пренасочване към началната страница след 5 секунди...",
-    "waitForOtherPlayersToFinish": "Изчакване другите играчи да завършат играта...",
-    "confirmExit": "Сигурни ли сте, че ще напуснете текущата игра? Това ще прекрати играта!",
-    "countdownAlert": "Обратното броене започна: {count} оставаща секунда | Обратното броене започна: остават {count} секунди"
-  },
-  "Maps": {
-    "makeGuess": "Направи предположение",
-    "guess": "Познай",
-    "nextRound": "Следващ рунд",
-    "viewSummary": "Виж резюме",
-    "exit": "ИЗХОД",
-    "reset": "НУЛИРАНЕ",
-    "playAgain": "ИГРАЙ ОТНОВО",
-    "infoWindow": {
-      "Distance": "Дистанция",
-      "Points": "Точки"
-    },
-    "leaderboard": {
-      "notGuessed": "Not Guessed",
-      "guessed": "Guessed"
-    }
-  },
-  "Header": {
-    "language": "Език",
-    "about": "Информация",
-    "limitation": "Ограничения",
-    "contact": "Контакт"
-  },
-  "HeaderGame": {
-    "room": "Стая",
-    "round": "Рунд",
-    "distance": "Дистанция",
-    "kmaway": "{value} км далеч",
-    "score": "РЕЗУЛТАТ"
-  },
-  "next": "Следващ",
-  "cancel": "Отказ",
-  "DialogCustomMap": {
-    "title": "Персонализирана карта",
-    "invalid": "Невалиден GeoJSON",
-    "text": "Текст",
-    "url": "Линк",
-    "file": "Фаил",
-    "edit": "Редактиране на картата",
-    "fileLabel": "Изберете GeoJSON файл",
-    "OK": "ОК.",
-    "download": "Свали GeoJSON",
-    "Clean": "Clean",
-    "save": "save",
-    "inputName": {
-      "label": "Map Name",
-      "placeholder": "My favorite place"
-    }
-  },
-  "History": {
-    "title": "История",
-    "date": "Дата",
-    "mode": "Режим",
-    "mapName": "Map Name",
-    "time": "Време",
-    "distance": "Дистанция",
-    "points": "Точки",
-    "rank": "Ранк",
-    "actions": "Actions",
-    "search": "Търси",
-    "exportGeoSave": "Експорт GeoSave",
-    "importGeoSave": "Импорт GeoSave",
-    "exportCSV": "Експорт CSV",
-    "total": "Тотал",
-    "nbRound": "Nb Rounds"
-  },
-  "DialogRoom": {
-    "singlePlayer": "Един играч",
-    "withFriends": "Игра с приятели",
-    "invalidRoomName": "Невалидно име на стая. Проверете изписването на букви, специални символи и числа, и опитайте отново.",
-    "inProgress": "Стаята се прави от грач. Моля изчакайте, и опитайте отново по-късно.",
-    "roomIsFull": "Тази стая вече е пълна.",
-    "alreadyStarted": "Стаята вече е започнала игра."
-  },
-  "CardRoomName": {
-    "title": "Въведете име на стая, за да създадете нова или да се присъедините към съществуваща стая."
-  },
-  "CardRoomPlayerName": {
-    "title": "Room:",
-    "input": "Име на играча.",
-    "anonymousPlayerName": "Шпионин 🕵",
-    "players": "1 играч | {count} играча"
-  },
-  "CardRoomSize": {
-    "title": "Размер на стая."
-  },
-  "CardRoomTime": {
-    "title": "Времево ограничение.",
-    "infinite": "Безкрайно"
-  },
-  "CardRoomMap": {
-    "title": "Define your map",
-    "loadBtn": "Load MAP",
-    "reset": "Reset",
-    "cantPlayGeoJson": "Invalid GeoJSON, you need to have more than 5 positions."
-  },
-  "CardRoomSettings": {
-    "title": "Настройки на играта",
-    "modeLabel": "Игрови режим",
-    "includePhotopheres": "Включете фотосфери",
-    "timeAttackLabel": "TimeAttack",
-    "timeattackInfos": "В режим TimeAttack само играчът, който пръв познае държавата, получава точката. Бъдете бързи и спечелете!",
-    "allowMove": "Позволи движение",
-    "allowZoom": "Позволи увеличение",
-    "allowPan": "Позволи Pan",
-    "guessedLeaderboard": "Display whether players have guessed",
-    "scoreLeaderboard": "Display score leaderboard",
-    "countDownLabel": "Обратно броене (seconds)",
-    "scoreModeLabel": "Формула за оценка",
-    "scoreModes": {
-      "normal": "нормален",
-      "time": "време"
-    },
-    "selectAreas": "Select Areas",
-    "moreSettings": "More settings",
-    "optimiseStreetView": "StreetView Optimize (only official)",
-    "nbRound": "Number of rounds"
-  },
-  "CardRoomDifficulty": {
-    "title": "Въведете ниво на трудност.",
-    "easy": "лесно (свят)",
-    "medium": "средно (страна)",
-    "hard": "трудно (град)"
-  },
-  "DialogSummary": {
-    "summaryMsgSinglePoints": "Резултат: <strong>{points}</strong>! ",
-    "summaryMsgSingleDistance": "Намирате се <strong>{distance}</strong> км надалеч!",
-    "summaryMsgMultiPoints": "<strong>{playerName}</strong> оценката е <strong>{points}</strong> ! ",
-    "summaryMsgMultiDistance": "(<strong>{distance}</strong> км надалеч)",
-    "viewDetails": "Виж детайли"
-  },
-  "Footer": {
-    "under": "под",
-    "privacyPolicy": "Политика за поверителност"
-  },
-  "urlCopied": "Линка е копиран!",
-  "DetailsMap": {
-    "moreInfo": "Още информация"
-  },
-  "modes": {
-    "classic": "Класически",
-    "country": "Избери страна",
-    "custom_area": "Pick"
-  },
-  "Demo": {
-    "message": "Ако искате да допринесете за проекта и да го подобрите, вашата помощ е добре дошла:  Преводи 🔠, Топографи 🌍, Кодове 💻, Идеи 💡, БЕТА тест 👀.",
-    "btn": "Присъедини се"
-  },
-  "OK": "ОК",
-  "yes": "да",
-  "no": "не",
-  "AlertUpdate": {
-    "label": "A new version is available. Click on the button to obtain it.",
-    "btn": "Update"
-  }
 }

@@ -1,13 +1,11 @@
 name: CI mutation
 
 on:
-  workflow_dispatch:
-  schedule:
-  - cron: "0 2 * * 0"
-      
+    workflow_dispatch:
+    schedule:
+        - cron: '0 2 * * 0'
 
 jobs:
-
     mutation:
         env:
             VITE_APP_API_KEY: YOUR_GOOGLE_MAPS_API_KEY
@@ -35,7 +33,6 @@ jobs:
               run: npm run test:mutation
               env:
                   STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
-
 
             - name: Upload artifact
               uses: actions/upload-artifact@v4

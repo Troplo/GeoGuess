@@ -1,222 +1,222 @@
 {
-  "Home": {
-    "placeVisited": "0 מקומות שביקרתם בהם | מקום אחד שביקרתם בו | {count} מקומות שביקרתם בהם",
-    "historyBtn": "היסטוריה",
-    "medalsBtn": "MEDALS",
-    "about": "אודות",
-    "createMap": "Create Map",
-    "searchBar": {
-      "customLoaded": "המפה בהתאמה האישית מוכנה",
-      "enterCity": "הזנו שם של עיר, מחוז או מדינה"
+    "Home": {
+        "placeVisited": "0 מקומות שביקרתם בהם | מקום אחד שביקרתם בו | {count} מקומות שביקרתם בהם",
+        "historyBtn": "היסטוריה",
+        "medalsBtn": "MEDALS",
+        "about": "אודות",
+        "createMap": "Create Map",
+        "searchBar": {
+            "customLoaded": "המפה בהתאמה האישית מוכנה",
+            "enterCity": "הזנו שם של עיר, מחוז או מדינה"
+        },
+        "aboutDescriptions": {
+            "1": "ג'יאוגס הוא משחק חינמי של התמצאות בשטח, ללא פרסומות.                  מטרת המשחק היא לנחש את מיקומם של 5 מקומות אקראיים בעולם בדיוק מירבי.                  אתם יכולים לשתף את הניקוד שלכם ברשתות חברתיות כמו פייסבוק וטוויטר.                  אתם יכולים לשחק במחשק מרובה משתתפים עם עד 5 חברים. השחקן הראשון יוצר את החדר ומחליט על גודלו. שאר השחקנים כותבים את שם החדר שנקבע מראש והמשחק יתחיל.",
+            "2": "המשחק הזה פוצל מ "
+        },
+        "customMap": "מפה מותאמת אישית",
+        "customMapDescriptions": {
+            "1": "תוכלו לבחור עיר, מחוז או מדינה ספציפיים למשחק באמצעות סרגל החיפוש.",
+            "2": "במשחק מרובה משתתפים, השחקן הראשון בוחר את המיקום.",
+            "3": "בנוסף לכך, אתם יכולים להכין מפה משלכם באמצעות ",
+            "4": "קובץ.",
+            "5": "הזינו את תוכנה של מפת ה-GeoJson עם הכפתור:",
+            "6": "בחירת מפה מותאמת אישית: "
+        },
+        "limitation": "הגבלה",
+        "limitationDescription": "נכון לעכשיו אנחנו מגדיר מספר מוגבל של משחקים ליום כך שהעלות להפעלת המשחק הזה לא יכולה להיות גבוהה מדי.             אם המפה לא נטענת, פירוש הדבר שמספר המשחקים היומי נגמר.             מספר המשחקים יתאפס בחצות (שעון האוקיינוס השקט). מצטערים על אי הנוחות.             המשחק הזה הוא קוד פתוח, כך שתוכל לבנות שרת משחק משלך ולשחק את המשחק הזה ללא הגבלה.",
+        "play": "התחל משחק",
+        "streamerModeActivate": "הפעלת מצב שידור חי",
+        "streamerModeDetails": "כתובות אתרים ושמות חדרים מוסתרים",
+        "mapSavedAlert": {
+            "title": "המפה נשמרה 🎉",
+            "subtitle": "אתה תמצא אותה ברשימת המפות שלך"
+        },
+        "HomeCard": {
+            "edit": "ערוך",
+            "delete": "מחק",
+            "medal": {
+                "platinum": "Platinum",
+                "gold": "Gold",
+                "silver": "Silver",
+                "bronze": "Bronze"
+            }
+        },
+        "HomeCardMode": {
+            "map": "מפה",
+            "area": "אזור"
+        },
+        "Sections": {
+            "areasTitle": "אזורים",
+            "mapsTitle": "מפות",
+            "pleaseSelectLabel": "נדמה שאיבדת את הדרך, אנא בחר סוג או שתוכל ",
+            "barrelRoll": "do a barrel roll"
+        }
     },
-    "aboutDescriptions": {
-      "1": "ג'יאוגס הוא משחק חינמי של התמצאות בשטח, ללא פרסומות.                  מטרת המשחק היא לנחש את מיקומם של 5 מקומות אקראיים בעולם בדיוק מירבי.                  אתם יכולים לשתף את הניקוד שלכם ברשתות חברתיות כמו פייסבוק וטוויטר.                  אתם יכולים לשחק במחשק מרובה משתתפים עם עד 5 חברים. השחקן הראשון יוצר את החדר ומחליט על גודלו. שאר השחקנים כותבים את שם החדר שנקבע מראש והמשחק יתחיל.",
-      "2": "המשחק הזה פוצל מ "
+    "StreetView": {
+        "nearby": {
+            "title": "מיקום סמוך",
+            "message": "למרבה הצער, לא הצלחנו למצוא מיקום אקראי במיקום המוגדר. עם זאת, מצאנו אחד בקרבת מקום 😉"
+        },
+        "waitForOtherPlayers": "מחכים לעוד שחקנים...",
+        "redirectToHomePage": "הנך מופנה לדף הבית...",
+        "exitGame": "נאלצתם לצאת מהמשחק. תופנו לדף הבית בעוד 5 שניות...",
+        "waitForOtherPlayersToFinish": "מחכים לשאר השחקנים לסיים את המשחק...",
+        "confirmExit": "אתם בטוחים שתרצו לצאת מהמשחק?",
+        "countdownAlert": "הספירה לאחור החלה: נותרו {count} שניות | הספירה לאחור החלה: נותרו {count} שניות "
     },
-    "customMap": "מפה מותאמת אישית",
-    "customMapDescriptions": {
-      "1": "תוכלו לבחור עיר, מחוז או מדינה ספציפיים למשחק באמצעות סרגל החיפוש.",
-      "2": "במשחק מרובה משתתפים, השחקן הראשון בוחר את המיקום.",
-      "3": "בנוסף לכך, אתם יכולים להכין מפה משלכם באמצעות ",
-      "4": "קובץ.",
-      "5": "הזינו את תוכנה של מפת ה-GeoJson עם הכפתור:",
-      "6": "בחירת מפה מותאמת אישית: "
+    "Maps": {
+        "makeGuess": "נחשו",
+        "guess": "שלח ניחוש",
+        "nextRound": "סיבוב הבא",
+        "viewSummary": "הראה את תקציר המשחק",
+        "exit": "צא",
+        "reset": "התחל מחדש",
+        "playAgain": "שחק שוב",
+        "infoWindow": {
+            "Distance": "מרחק",
+            "Points": "נקודות"
+        },
+        "leaderboard": {
+            "notGuessed": "Not Guessed",
+            "guessed": "Guessed"
+        }
     },
-    "limitation": "הגבלה",
-    "limitationDescription": "נכון לעכשיו אנחנו מגדיר מספר מוגבל של משחקים ליום כך שהעלות להפעלת המשחק הזה לא יכולה להיות גבוהה מדי.             אם המפה לא נטענת, פירוש הדבר שמספר המשחקים היומי נגמר.             מספר המשחקים יתאפס בחצות (שעון האוקיינוס השקט). מצטערים על אי הנוחות.             המשחק הזה הוא קוד פתוח, כך שתוכל לבנות שרת משחק משלך ולשחק את המשחק הזה ללא הגבלה.",
-    "play": "התחל משחק",
-    "streamerModeActivate": "הפעלת מצב שידור חי",
-    "streamerModeDetails": "כתובות אתרים ושמות חדרים מוסתרים",
-    "mapSavedAlert": {
-      "title": "המפה נשמרה 🎉",
-      "subtitle": "אתה תמצא אותה ברשימת המפות שלך"
+    "Header": {
+        "language": "שפה",
+        "about": "אודות",
+        "limitation": "הגבלה",
+        "contact": "צור קשר"
     },
-    "HomeCard": {
-      "edit": "ערוך",
-      "delete": "מחק",
-      "medal": {
-        "platinum": "Platinum",
-        "gold": "Gold",
-        "silver": "Silver",
-        "bronze": "Bronze"
-      }
+    "HeaderGame": {
+        "room": "חדר",
+        "round": "סיבוב",
+        "distance": "מרחק",
+        "kmaway": "{value} ק\"מ",
+        "score": "ניקוד"
     },
-    "HomeCardMode": {
-      "map": "מפה",
-      "area": "אזור"
+    "next": "הבא",
+    "cancel": "בטל",
+    "DialogCustomMap": {
+        "title": "מפה מותאמת אישית",
+        "invalid": "GeoJSON לא תקין",
+        "text": "כיתוב",
+        "url": "קישור",
+        "file": "קובץ",
+        "edit": "ערוך מפה",
+        "fileLabel": "בחר קובץ GeoJSON",
+        "OK": "בסדר",
+        "download": "הורד קובץ GeoJSON",
+        "Clean": "נקה",
+        "save": "שמור",
+        "inputName": {
+            "label": "שם המפה",
+            "placeholder": "המיקום המועדף עליי"
+        }
     },
-    "Sections": {
-      "areasTitle": "אזורים",
-      "mapsTitle": "מפות",
-      "pleaseSelectLabel": "נדמה שאיבדת את הדרך, אנא בחר סוג או שתוכל ",
-      "barrelRoll": "do a barrel roll"
-    }
-  },
-  "StreetView": {
-    "nearby": {
-      "title": "מיקום סמוך",
-      "message": "למרבה הצער, לא הצלחנו למצוא מיקום אקראי במיקום המוגדר. עם זאת, מצאנו אחד בקרבת מקום 😉"
+    "History": {
+        "title": "היסטוריה",
+        "date": "תאריך",
+        "mode": "מצב משחק",
+        "mapName": "Map Name",
+        "time": "זמן",
+        "distance": "מרחק",
+        "points": "נקודות",
+        "rank": "דירוג",
+        "actions": "פעולות",
+        "search": "חיפוש",
+        "exportGeoSave": "יצא GeoSave",
+        "importGeoSave": "יבא GeoSave",
+        "exportCSV": "יצא CSV",
+        "total": "סה\"כ",
+        "nbRound": "Nb Rounds"
     },
-    "waitForOtherPlayers": "מחכים לעוד שחקנים...",
-    "redirectToHomePage": "הנך מופנה לדף הבית...",
-    "exitGame": "נאלצתם לצאת מהמשחק. תופנו לדף הבית בעוד 5 שניות...",
-    "waitForOtherPlayersToFinish": "מחכים לשאר השחקנים לסיים את המשחק...",
-    "confirmExit": "אתם בטוחים שתרצו לצאת מהמשחק?",
-    "countdownAlert": "הספירה לאחור החלה: נותרו {count} שניות | הספירה לאחור החלה: נותרו {count} שניות "
-  },
-  "Maps": {
-    "makeGuess": "נחשו",
-    "guess": "שלח ניחוש",
-    "nextRound": "סיבוב הבא",
-    "viewSummary": "הראה את תקציר המשחק",
-    "exit": "צא",
-    "reset": "התחל מחדש",
-    "playAgain": "שחק שוב",
-    "infoWindow": {
-      "Distance": "מרחק",
-      "Points": "נקודות"
+    "DialogRoom": {
+        "singlePlayer": "שחקן יחיד",
+        "withFriends": "רב משתתפים",
+        "invalidRoomName": "שם לא זמין. נא לבחור שם אחר.",
+        "inProgress": "השחקן הראשון יוצר את החדר עכשיו. אנא המתן ונסה שוב.",
+        "roomIsFull": "החדר הזה כבר מלא. אנא נסה למצוא חדר אחר.",
+        "alreadyStarted": "משחק זה כבר התחיל. אנא חפש חדר אחר."
     },
-    "leaderboard": {
-      "notGuessed": "Not Guessed",
-      "guessed": "Guessed"
-    }
-  },
-  "Header": {
-    "language": "שפה",
-    "about": "אודות",
-    "limitation": "הגבלה",
-    "contact": "צור קשר"
-  },
-  "HeaderGame": {
-    "room": "חדר",
-    "round": "סיבוב",
-    "distance": "מרחק",
-    "kmaway": "{value} ק\"מ",
-    "score": "ניקוד"
-  },
-  "next": "הבא",
-  "cancel": "בטל",
-  "DialogCustomMap": {
-    "title": "מפה מותאמת אישית",
-    "invalid": "GeoJSON לא תקין",
-    "text": "כיתוב",
-    "url": "קישור",
-    "file": "קובץ",
-    "edit": "ערוך מפה",
-    "fileLabel": "בחר קובץ GeoJSON",
+    "CardRoomName": {
+        "title": "הקלד שם חדר כדי ליצור חדר חדש או להצטרף לחדר קיים"
+    },
+    "CardRoomPlayerName": {
+        "title": "חדר:",
+        "input": "כתוב את שם השחקן.",
+        "anonymousPlayerName": "אנונימי 🕵",
+        "players": "שחקן אחד | {count} שחקנים"
+    },
+    "CardRoomSize": {
+        "title": "קבע את גודל החדר."
+    },
+    "CardRoomTime": {
+        "title": "הגבלת זמן",
+        "infinite": "ללא הגבלה"
+    },
+    "CardRoomMap": {
+        "title": "הגדר את המפה שלך",
+        "loadBtn": "טען מפה",
+        "reset": "אתחל",
+        "cantPlayGeoJson": "Invalid GeoJSON, you need to have more than 5 positions."
+    },
+    "CardRoomSettings": {
+        "title": "הגדרות משחק",
+        "modeLabel": "בחר מצב משחק",
+        "includePhotopheres": "כלול תמונות לא נעות",
+        "timeAttackLabel": "מתקפת זמן",
+        "timeattackInfos": "במצב מתקפת זמן, אך ורק השחקן שמנחש את המדינה ראשון זוכה בנקודה.",
+        "allowMove": "אפשר תזוזה",
+        "allowZoom": "אפשר הגדלה והקטנה של התמונה",
+        "allowPan": "אפשר שינוי זווית ראייה",
+        "guessedLeaderboard": "Display whether players have guessed",
+        "scoreLeaderboard": "Display score leaderboard",
+        "countDownLabel": "ספירה לאחור (שניות)",
+        "scoreModeLabel": "נוסחת הניקוד",
+        "scoreModes": {
+            "normal": "רגיל",
+            "time": "זמן"
+        },
+        "selectAreas": "בחר אזורים",
+        "moreSettings": "הגדרות נוספות",
+        "optimiseStreetView": "StreetView Optimize (only official)",
+        "nbRound": "Number of rounds"
+    },
+    "CardRoomDifficulty": {
+        "title": "בחר רמת קושי.",
+        "easy": "קל (העולם)",
+        "medium": "בינוני (מדינה)",
+        "hard": "קשה (עיר)"
+    },
+    "DialogSummary": {
+        "summaryMsgSinglePoints": "הניקוד שלך הוא <strong>{points}</strong> נקודות! ",
+        "summaryMsgSingleDistance": "אתה נמצא במרחק של <strong>{distance}</strong> ק\"מ מהתשובה!",
+        "summaryMsgMultiPoints": "הניקוד של <strong>{playerName}</strong> הוא <strong>{points}</strong>! ",
+        "summaryMsgMultiDistance": "(מרחק של <strong>{distance}</strong> ק\"מ)",
+        "viewDetails": "הראה פרטים"
+    },
+    "Footer": {
+        "under": "בכפוף ל",
+        "privacyPolicy": "תקנות הגנת הפרטיות"
+    },
+    "urlCopied": "קישור הועתק",
+    "DetailsMap": {
+        "moreInfo": "עוד מידע"
+    },
+    "modes": {
+        "classic": "קלאסי",
+        "country": "בחר מדינה",
+        "custom_area": "בחר"
+    },
+    "Demo": {
+        "message": "אם ברצונך לתרום לפרויקט ולהיטיב אותו, עזרתך מבורכת מאוד: תרגום 🔠, יוצר מפות 🌍, מתכנת 💻, יוצר רעיונות 💡, בדיקת גרסאות בטא 👀.",
+        "btn": "הצטרף אלינו"
+    },
     "OK": "בסדר",
-    "download": "הורד קובץ GeoJSON",
-    "Clean": "נקה",
-    "save": "שמור",
-    "inputName": {
-      "label": "שם המפה",
-      "placeholder": "המיקום המועדף עליי"
+    "yes": "כן",
+    "no": "לא",
+    "AlertUpdate": {
+        "label": "גרסה חדשה מהניילונים זמינה. לחצו כאן כדי לקבל אותה.",
+        "btn": "עדכון"
     }
-  },
-  "History": {
-    "title": "היסטוריה",
-    "date": "תאריך",
-    "mode": "מצב משחק",
-    "mapName": "Map Name",
-    "time": "זמן",
-    "distance": "מרחק",
-    "points": "נקודות",
-    "rank": "דירוג",
-    "actions": "פעולות",
-    "search": "חיפוש",
-    "exportGeoSave": "יצא GeoSave",
-    "importGeoSave": "יבא GeoSave",
-    "exportCSV": "יצא CSV",
-    "total": "סה\"כ",
-    "nbRound": "Nb Rounds"
-  },
-  "DialogRoom": {
-    "singlePlayer": "שחקן יחיד",
-    "withFriends": "רב משתתפים",
-    "invalidRoomName": "שם לא זמין. נא לבחור שם אחר.",
-    "inProgress": "השחקן הראשון יוצר את החדר עכשיו. אנא המתן ונסה שוב.",
-    "roomIsFull": "החדר הזה כבר מלא. אנא נסה למצוא חדר אחר.",
-    "alreadyStarted": "משחק זה כבר התחיל. אנא חפש חדר אחר."
-  },
-  "CardRoomName": {
-    "title": "הקלד שם חדר כדי ליצור חדר חדש או להצטרף לחדר קיים"
-  },
-  "CardRoomPlayerName": {
-    "title": "חדר:",
-    "input": "כתוב את שם השחקן.",
-    "anonymousPlayerName": "אנונימי 🕵",
-    "players": "שחקן אחד | {count} שחקנים"
-  },
-  "CardRoomSize": {
-    "title": "קבע את גודל החדר."
-  },
-  "CardRoomTime": {
-    "title": "הגבלת זמן",
-    "infinite": "ללא הגבלה"
-  },
-  "CardRoomMap": {
-    "title": "הגדר את המפה שלך",
-    "loadBtn": "טען מפה",
-    "reset": "אתחל",
-    "cantPlayGeoJson": "Invalid GeoJSON, you need to have more than 5 positions."
-  },
-  "CardRoomSettings": {
-    "title": "הגדרות משחק",
-    "modeLabel": "בחר מצב משחק",
-    "includePhotopheres": "כלול תמונות לא נעות",
-    "timeAttackLabel": "מתקפת זמן",
-    "timeattackInfos": "במצב מתקפת זמן, אך ורק השחקן שמנחש את המדינה ראשון זוכה בנקודה.",
-    "allowMove": "אפשר תזוזה",
-    "allowZoom": "אפשר הגדלה והקטנה של התמונה",
-    "allowPan": "אפשר שינוי זווית ראייה",
-    "guessedLeaderboard": "Display whether players have guessed",
-    "scoreLeaderboard": "Display score leaderboard",
-    "countDownLabel": "ספירה לאחור (שניות)",
-    "scoreModeLabel": "נוסחת הניקוד",
-    "scoreModes": {
-      "normal": "רגיל",
-      "time": "זמן"
-    },
-    "selectAreas": "בחר אזורים",
-    "moreSettings": "הגדרות נוספות",
-    "optimiseStreetView": "StreetView Optimize (only official)",
-    "nbRound": "Number of rounds"
-  },
-  "CardRoomDifficulty": {
-    "title": "בחר רמת קושי.",
-    "easy": "קל (העולם)",
-    "medium": "בינוני (מדינה)",
-    "hard": "קשה (עיר)"
-  },
-  "DialogSummary": {
-    "summaryMsgSinglePoints": "הניקוד שלך הוא <strong>{points}</strong> נקודות! ",
-    "summaryMsgSingleDistance": "אתה נמצא במרחק של <strong>{distance}</strong> ק\"מ מהתשובה!",
-    "summaryMsgMultiPoints": "הניקוד של <strong>{playerName}</strong> הוא <strong>{points}</strong>! ",
-    "summaryMsgMultiDistance": "(מרחק של <strong>{distance}</strong> ק\"מ)",
-    "viewDetails": "הראה פרטים"
-  },
-  "Footer": {
-    "under": "בכפוף ל",
-    "privacyPolicy": "תקנות הגנת הפרטיות"
-  },
-  "urlCopied": "קישור הועתק",
-  "DetailsMap": {
-    "moreInfo": "עוד מידע"
-  },
-  "modes": {
-    "classic": "קלאסי",
-    "country": "בחר מדינה",
-    "custom_area": "בחר"
-  },
-  "Demo": {
-    "message": "אם ברצונך לתרום לפרויקט ולהיטיב אותו, עזרתך מבורכת מאוד: תרגום 🔠, יוצר מפות 🌍, מתכנת 💻, יוצר רעיונות 💡, בדיקת גרסאות בטא 👀.",
-    "btn": "הצטרף אלינו"
-  },
-  "OK": "בסדר",
-  "yes": "כן",
-  "no": "לא",
-  "AlertUpdate": {
-    "label": "גרסה חדשה מהניילונים זמינה. לחצו כאן כדי לקבל אותה.",
-    "btn": "עדכון"
-  }
 }

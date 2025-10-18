@@ -4,23 +4,22 @@ const admin = require('firebase-admin');
 const yargs = require('yargs');
 
 const argv = yargs
-  .scriptName("clean-rooms")
-  .usage('$0 -f <file-path> -c <database>')
-  .option('file-path', {
-    alias: 'f',
-    describe: 'Path to the file to be uploaded',
-    type: 'string',
-    default: './keys.json'
-  })
-  .option('databaseUrl', {
-    alias: 'd',
-    description: 'realtime database url',
-    type: 'string',
-    default: 'https://clean-rooms.firebaseio.com/',
-  })
-  .help()
-  .alias('help', 'h').argv;
-
+    .scriptName('clean-rooms')
+    .usage('$0 -f <file-path> -c <database>')
+    .option('file-path', {
+        alias: 'f',
+        describe: 'Path to the file to be uploaded',
+        type: 'string',
+        default: './keys.json',
+    })
+    .option('databaseUrl', {
+        alias: 'd',
+        description: 'realtime database url',
+        type: 'string',
+        default: 'https://clean-rooms.firebaseio.com/',
+    })
+    .help()
+    .alias('help', 'h').argv;
 
 const serviceAccount = require(argv.filePath);
 

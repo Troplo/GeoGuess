@@ -1,4 +1,4 @@
-import "regenerator-runtime/runtime.js";
+import 'regenerator-runtime/runtime.js';
 import { setup } from 'axios-cache-adapter';
 
 const axi = setup({

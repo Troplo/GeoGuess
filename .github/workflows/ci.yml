@@ -1,177 +1,173 @@
 name: CI
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
+    push:
+        branches: [master]
+    pull_request:
 
 jobs:
-  checksecret:
-    name: check if MY_SECRET is set in github secrets
-    runs-on: ubuntu-latest
-    outputs:
-      is_MY_SECRET_set: ${{ steps.checksecret_job.outputs.is_MY_SECRET_set }}
-    steps:
-      - name: Check whether unity activation requests should be done
-        id: checksecret_job
+    checksecret:
+        name: check if MY_SECRET is set in github secrets
+        runs-on: ubuntu-latest
+        outputs:
+            is_MY_SECRET_set: ${{ steps.checksecret_job.outputs.is_MY_SECRET_set }}
+        steps:
+            - name: Check whether unity activation requests should be done
+              id: checksecret_job
+              env:
+                  MY_SECRET: ${{ secrets.GMAP_API_KEY }}
+              run: |
+                  echo "is_MY_SECRET_set: ${{ env.MY_SECRET != '' }}"
+                  echo "::set-output name=is_MY_SECRET_set::${{ env.MY_SECRET != '' }}"
+    integration:
         env:
-            MY_SECRET: ${{ secrets.GMAP_API_KEY }}
-        run: |
-            echo "is_MY_SECRET_set: ${{ env.MY_SECRET != '' }}"
-            echo "::set-output name=is_MY_SECRET_set::${{ env.MY_SECRET != '' }}"
-  integration:
-    env:
-      VITE_APP_API_KEY: YOUR_GOOGLE_MAPS_API_KEY
-      VITE_APP_FIREBASE_API_KEY: YOUR_FIREBASE_API_KEY
-      VITE_APP_FIREBASE_PROJECT_ID: YOUR_FIREBASE_PROJECT_ID
-      VITE_APP_FIREBASE_MESSAGING_SENDER_ID: YOUR_FIREBASE_MESSAGING_SENDER_ID
-      VITE_APP_FIREBASE_APP_ID: YOUR_FIREBASE_APP_ID
-      VITE_APP_FIREBASE_MEASUREMENT_ID: YOUR_FIREBASE_MEASUREMENT_ID
-    strategy:
-      matrix:
-        os: [ubuntu-latest] # , macos-latest, windows-latest
-    runs-on: ${{ matrix.os }}
-    steps:
-    - name: Set git to use LF
-      run: |
-        git config --global core.autocrlf false
-        git config --global core.eol lf
-    - uses: actions/checkout@v4
-    - uses: actions/cache@v4.0.2
-      id: cache
-      if: matrix.os != 'windows-latest'
-      with:
-        path: ~/.npm          
-        key: ${{ matrix.os }}-node-deps-${{ hashFiles('**/package-lock.json') }}
-    - name: Get npm cache directory
-      id: npm-cache
-      if: matrix.os == 'windows-latest'
-      run: |
-        echo "::set-output name=dir::$(npm config get cache)"
-    - uses: actions/cache@v4.0.2
-      if: matrix.os == 'windows-latest'
-      with:
-        path: ${{ steps.npm-cache.outputs.dir }}
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-    - name: Install dependencies
-      run: npm ci
+            VITE_APP_API_KEY: YOUR_GOOGLE_MAPS_API_KEY
+            VITE_APP_FIREBASE_API_KEY: YOUR_FIREBASE_API_KEY
+            VITE_APP_FIREBASE_PROJECT_ID: YOUR_FIREBASE_PROJECT_ID
+            VITE_APP_FIREBASE_MESSAGING_SENDER_ID: YOUR_FIREBASE_MESSAGING_SENDER_ID
+            VITE_APP_FIREBASE_APP_ID: YOUR_FIREBASE_APP_ID
+            VITE_APP_FIREBASE_MEASUREMENT_ID: YOUR_FIREBASE_MEASUREMENT_ID
+        strategy:
+            matrix:
+                os: [ubuntu-latest] # , macos-latest, windows-latest
+        runs-on: ${{ matrix.os }}
+        steps:
+            - name: Set git to use LF
+              run: |
+                  git config --global core.autocrlf false
+                  git config --global core.eol lf
+            - uses: actions/checkout@v4
+            - uses: actions/cache@v4.0.2
+              id: cache
+              if: matrix.os != 'windows-latest'
+              with:
+                  path: ~/.npm
+                  key: ${{ matrix.os }}-node-deps-${{ hashFiles('**/package-lock.json') }}
+            - name: Get npm cache directory
+              id: npm-cache
+              if: matrix.os == 'windows-latest'
+              run: |
+                  echo "::set-output name=dir::$(npm config get cache)"
+            - uses: actions/cache@v4.0.2
+              if: matrix.os == 'windows-latest'
+              with:
+                  path: ${{ steps.npm-cache.outputs.dir }}
+                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+            - name: Install dependencies
+              run: npm ci
 
-    - name: Linter
-      run: NODE_ENV=production npm run lint -- --no-fix
+            - name: Linter
+              run: NODE_ENV=production npm run lint -- --no-fix
 
-    - name: Run unit tests
-      run: npm run test:unit -- run --coverage --reporter json
+            - name: Run unit tests
+              run: npm run test:unit -- run --coverage --reporter json
 
-    - name: Code coverage
-      if:  matrix.os == 'ubuntu-latest'
-      uses: codecov/codecov-action@v4
+            - name: Code coverage
+              if: matrix.os == 'ubuntu-latest'
+              uses: codecov/codecov-action@v4
 
-    - name: Build
-      run: npm run build
+            - name: Build
+              run: npm run build
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ matrix.os }}-node-build
-        path: dist
+            - name: Upload artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: ${{ matrix.os }}-node-build
+                  path: dist
 
+    cypress-chrome-firefox-simple:
+        needs: [checksecret, integration]
+        if: needs.checksecret.outputs.is_MY_SECRET_set == 'false'
+        runs-on: ubuntu-latest
+        name: E2E Simple on Ubuntu
+        strategy:
+            fail-fast: false
+            matrix:
+                browsers: [chrome]
+        steps:
+            - uses: actions/checkout@v4
+            - uses: cypress-io/github-action@v6
+              with:
+                  start: npm run serve
+                  wait-on: 'http://localhost:8080'
+                  record: true
+                  group: ${{matrix.browsers}}
+                  tag: ${{ github.event_name }}
+                  browser: ${{matrix.browsers}}
+                  spec: |
+                      tests/e2e/specs/homePage.test.js
+                  wait-on-timeout: 500
+              env:
+                  CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+                  COMMIT_INFO_MESSAGE: ${{ github.event.pull_request.title }}
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  cypress-chrome-firefox-simple:
-    needs: [checksecret, integration]
-    if: needs.checksecret.outputs.is_MY_SECRET_set == 'false'
-    runs-on: ubuntu-latest
-    name: E2E Simple on Ubuntu
-    strategy:
-      fail-fast: false
-      matrix:
-        browsers: [chrome]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: cypress-io/github-action@v6
-        with:
-          start: npm run serve
-          wait-on: 'http://localhost:8080'
-          record: true
-          group: ${{matrix.browsers}}
-          tag: ${{ github.event_name }}
-          browser: ${{matrix.browsers}}
-          spec: |
-            tests/e2e/specs/homePage.test.js
-          wait-on-timeout: 500
+    cypress-chrome-firefox:
+        needs: [checksecret, integration]
+        if: needs.checksecret.outputs.is_MY_SECRET_set == 'true'
         env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          COMMIT_INFO_MESSAGE: ${{ github.event.pull_request.title }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            VITE_APP_API_KEY: ${{ secrets.GMAP_API_KEY }}
+            VITE_APP_FIREBASE_API_KEY: ${{ secrets.VITE_APP_FIREBASE_API_KEY }}
+            VITE_APP_FIREBASE_APP_ID: ${{ secrets.VITE_APP_FIREBASE_APP_ID }}
+            VITE_APP_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_APP_FIREBASE_AUTH_DOMAIN }}
+            VITE_APP_FIREBASE_DATABASE_URL: ${{ secrets.VITE_APP_FIREBASE_DATABASE_URL }}
+            VITE_APP_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_APP_FIREBASE_MESSAGING_SENDER_ID }}
+            VITE_APP_FIREBASE_PROJECT_ID: ${{ secrets.VITE_APP_FIREBASE_PROJECT_ID }}
+            VITE_APP_STORAGE_BUCKET: ${{ secrets.VITE_APP_STORAGE_BUCKET }}
+        runs-on: ubuntu-latest
+        name: E2E on Ubuntu
+        strategy:
+            fail-fast: false
+            matrix:
+                containers: [1, 2, 3]
+                browsers: [chrome]
+        steps:
+            - uses: actions/checkout@v4
+            - uses: cypress-io/github-action@v6
+              with:
+                  start: npm run serve
+                  wait-on: 'http://localhost:8080'
+                  record: true
+                  parallel: true
+                  group: ${{matrix.browsers}}
+                  tag: ${{ github.event_name }}
+                  browser: ${{matrix.browsers}}
+                  wait-on-timeout: 500
+              env:
+                  CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+                  COMMIT_INFO_MESSAGE: ${{ github.event.pull_request.title }}
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-
-
-  cypress-chrome-firefox:
-    needs: [checksecret, integration]
-    if: needs.checksecret.outputs.is_MY_SECRET_set == 'true'
-    env:
-      VITE_APP_API_KEY:  ${{ secrets.GMAP_API_KEY }}
-      VITE_APP_FIREBASE_API_KEY:  ${{ secrets.VITE_APP_FIREBASE_API_KEY }}
-      VITE_APP_FIREBASE_APP_ID:  ${{ secrets.VITE_APP_FIREBASE_APP_ID }}
-      VITE_APP_FIREBASE_AUTH_DOMAIN:  ${{ secrets.VITE_APP_FIREBASE_AUTH_DOMAIN }}
-      VITE_APP_FIREBASE_DATABASE_URL:  ${{ secrets.VITE_APP_FIREBASE_DATABASE_URL }}
-      VITE_APP_FIREBASE_MESSAGING_SENDER_ID:  ${{ secrets.VITE_APP_FIREBASE_MESSAGING_SENDER_ID }}
-      VITE_APP_FIREBASE_PROJECT_ID:  ${{ secrets.VITE_APP_FIREBASE_PROJECT_ID }}
-      VITE_APP_STORAGE_BUCKET:  ${{ secrets.VITE_APP_STORAGE_BUCKET }}
-    runs-on: ubuntu-latest
-    name: E2E on Ubuntu
-    strategy:
-      fail-fast: false
-      matrix:
-        containers: [1, 2, 3]
-        browsers: [chrome]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: cypress-io/github-action@v6
-        with:
-          start: npm run serve
-          wait-on: 'http://localhost:8080'
-          record: true
-          parallel: true
-          group: ${{matrix.browsers}}
-          tag: ${{ github.event_name }}
-          browser: ${{matrix.browsers}}
-          wait-on-timeout: 500
-        env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          COMMIT_INFO_MESSAGE: ${{ github.event.pull_request.title }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  # cypress-edge:    
-  #   needs: integration
-  #   env:
-  #     VITE_APP_API_KEY:  ${{ secrets.GMAP_API_KEY }}
-  #     VITE_APP_FIREBASE_API_KEY: YOUR_FIREBASE_API_KEY
-  #     VITE_APP_FIREBASE_PROJECT_ID: YOUR_FIREBASE_PROJECT_ID
-  #     VITE_APP_FIREBASE_MESSAGING_SENDER_ID: YOUR_FIREBASE_MESSAGING_SENDER_ID
-  #     VITE_APP_FIREBASE_APP_ID: YOUR_FIREBASE_APP_ID
-  #     VITE_APP_FIREBASE_MEASUREMENT_ID: YOUR_FIREBASE_MEASUREMENT_ID
-  #   runs-on: windows-latest
-  #   name: E2E on Windows
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       containers: [1, 2, 3, 4]
-  #   steps:
-  #     - name: Set git to use LF
-  #       run: |
-  #         git config --global core.autocrlf false
-  #         git config --global core.eol lf
-  #     - uses: actions/checkout@v4
-  #     - uses: cypress-io/github-action@v2
-  #       with:
-  #         start: npm run serve
-  #         wait-on: 'http://localhost:8080'
-  #         record: true
-  #         browser: edge
-  #         group: edge
-  #         parallel: true
-  #         tag: ${{ github.event_name }}
-  #       env:
-  #         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-  #         COMMIT_INFO_MESSAGE: ${{ github.event.pull_request.title }}
-
+    # cypress-edge:
+    #   needs: integration
+    #   env:
+    #     VITE_APP_API_KEY:  ${{ secrets.GMAP_API_KEY }}
+    #     VITE_APP_FIREBASE_API_KEY: YOUR_FIREBASE_API_KEY
+    #     VITE_APP_FIREBASE_PROJECT_ID: YOUR_FIREBASE_PROJECT_ID
+    #     VITE_APP_FIREBASE_MESSAGING_SENDER_ID: YOUR_FIREBASE_MESSAGING_SENDER_ID
+    #     VITE_APP_FIREBASE_APP_ID: YOUR_FIREBASE_APP_ID
+    #     VITE_APP_FIREBASE_MEASUREMENT_ID: YOUR_FIREBASE_MEASUREMENT_ID
+    #   runs-on: windows-latest
+    #   name: E2E on Windows
+    #   strategy:
+    #     fail-fast: false
+    #     matrix:
+    #       containers: [1, 2, 3, 4]
+    #   steps:
+    #     - name: Set git to use LF
+    #       run: |
+    #         git config --global core.autocrlf false
+    #         git config --global core.eol lf
+    #     - uses: actions/checkout@v4
+    #     - uses: cypress-io/github-action@v2
+    #       with:
+    #         start: npm run serve
+    #         wait-on: 'http://localhost:8080'
+    #         record: true
+    #         browser: edge
+    #         group: edge
+    #         parallel: true
+    #         tag: ${{ github.event_name }}
+    #       env:
+    #         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+    #         COMMIT_INFO_MESSAGE: ${{ github.event.pull_request.title }}

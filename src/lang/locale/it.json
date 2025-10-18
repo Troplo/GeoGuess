@@ -1,222 +1,222 @@
 {
-  "Home": {
-    "placeVisited": "0 luoghi visitati | 1 luogo visitato | {count} luoghi visitati",
-    "historyBtn": "CRONOLOGIA",
-    "medalsBtn": "MEDAGLIE",
-    "about": "INFO",
-    "createMap": "Crea mappa",
-    "searchBar": {
-      "customLoaded": "Mappa personalizzata caricata",
-      "enterCity": "Inserisci città, stato o paese"
+    "Home": {
+        "placeVisited": "0 luoghi visitati | 1 luogo visitato | {count} luoghi visitati",
+        "historyBtn": "CRONOLOGIA",
+        "medalsBtn": "MEDAGLIE",
+        "about": "INFO",
+        "createMap": "Crea mappa",
+        "searchBar": {
+            "customLoaded": "Mappa personalizzata caricata",
+            "enterCity": "Inserisci città, stato o paese"
+        },
+        "aboutDescriptions": {
+            "1": "Geoguess è un gioco gratuito e senza annunci. Il giocatore dovrà indovinare dove si trova tra location casuali in una partita a cinque round. È possibile condividere il punteggio con altre persone tramite social media come Facebook o Twitter. Puoi giocare in multiplayer con massimo cinque amici. Il primo giocatore crea una stanza e decide il numero di partecipanti. Gli altri giocatori digitano il nome della stanza creata dal primo e il gioco inizierà.",
+            "2": "Questo gioco è stato creato da "
+        },
+        "customMap": "MAPPE PERSONALIZZATE",
+        "customMapDescriptions": {
+            "1": "Puoi limitare le posizioni casuali alle città, agli stati o ai paesi attraverso la barra di ricerca.",
+            "2": "Nel multiplayer, il primo giocatore decide la posizione.",
+            "3": "Inoltre, puoi creare la tua mappa personalizzata con ",
+            "4": "file.",
+            "5": "Inserisci il contenuto della mappa GeoJson con il pulsante :",
+            "6": "Selezione Mappe Personalizzate : "
+        },
+        "limitation": "LIMITAZIONI",
+        "limitationDescription": "Attualmente ho impostato delle limitazioni giornaliere in modo che il costo per eseguire questo gioco non sia troppo alto. Se la mappa non carica vuol dire che il limite è stato superato. Si resetta a mezzanotte fuso orario Pacifico. Ci scusiamo per l'inconveniente. Questo gioco è open source, così si può costruire il proprio server di gioco per giocarci illimitatamente.",
+        "play": "Gioca",
+        "streamerModeActivate": "Modalità streamer attivata",
+        "streamerModeDetails": "URL e nomi delle stanze nascosti",
+        "mapSavedAlert": {
+            "title": "Mappa salvata 🎉",
+            "subtitle": "Lo troverai nelle tue liste di mappe"
+        },
+        "HomeCard": {
+            "edit": "Modifica",
+            "delete": "Elimina",
+            "medal": {
+                "platinum": "Platino",
+                "gold": "Oro",
+                "silver": "Argento",
+                "bronze": "Bronzo"
+            }
+        },
+        "HomeCardMode": {
+            "map": "Mappa",
+            "area": "Zona"
+        },
+        "Sections": {
+            "areasTitle": "Aree",
+            "mapsTitle": "Mappe",
+            "pleaseSelectLabel": "Sembri perso, per favore seleziona un tipo oppure ",
+            "barrelRoll": "fai una capriola"
+        }
     },
-    "aboutDescriptions": {
-      "1": "Geoguess è un gioco gratuito e senza annunci. Il giocatore dovrà indovinare dove si trova tra location casuali in una partita a cinque round. È possibile condividere il punteggio con altre persone tramite social media come Facebook o Twitter. Puoi giocare in multiplayer con massimo cinque amici. Il primo giocatore crea una stanza e decide il numero di partecipanti. Gli altri giocatori digitano il nome della stanza creata dal primo e il gioco inizierà.",
-      "2": "Questo gioco è stato creato da "
+    "StreetView": {
+        "nearby": {
+            "title": "Posizione Vicina",
+            "message": "Sfortunatamente, non siamo riusciti a trovare una location casuale nella posizione definita. Tuttavia, ne abbiamo trovata una vicina 😉"
+        },
+        "waitForOtherPlayers": "In attesa di altri giocatori...",
+        "redirectToHomePage": "Reindirizzamento alla pagina iniziale...",
+        "exitGame": "Sei stato costretto a uscire dal gioco. Reindirizzamento alla pagina iniziale in 5 secondi...",
+        "waitForOtherPlayersToFinish": "In attesa che gli altri giocatori finiscano il turno...",
+        "confirmExit": "Sei sicuro di voler lasciare la partita in corso? Questo interromperà il gioco!",
+        "countdownAlert": "Conto alla rovescia iniziato: {count} secondo rimanente | Conto alla rovescia iniziato: {count} secondi rimanenti"
     },
-    "customMap": "MAPPE PERSONALIZZATE",
-    "customMapDescriptions": {
-      "1": "Puoi limitare le posizioni casuali alle città, agli stati o ai paesi attraverso la barra di ricerca.",
-      "2": "Nel multiplayer, il primo giocatore decide la posizione.",
-      "3": "Inoltre, puoi creare la tua mappa personalizzata con ",
-      "4": "file.",
-      "5": "Inserisci il contenuto della mappa GeoJson con il pulsante :",
-      "6": "Selezione Mappe Personalizzate : "
+    "Maps": {
+        "makeGuess": "INDOVINA",
+        "guess": "INDOVINA",
+        "nextRound": "PROSSIMO ROUND",
+        "viewSummary": "VEDI SINTESI",
+        "exit": "ESCI",
+        "reset": "REIMPOSTA",
+        "playAgain": "GIOCA ANCORA",
+        "infoWindow": {
+            "Distance": "Distanza",
+            "Points": "Punti"
+        },
+        "leaderboard": {
+            "notGuessed": "Not Guessed",
+            "guessed": "Guessed"
+        }
     },
-    "limitation": "LIMITAZIONI",
-    "limitationDescription": "Attualmente ho impostato delle limitazioni giornaliere in modo che il costo per eseguire questo gioco non sia troppo alto. Se la mappa non carica vuol dire che il limite è stato superato. Si resetta a mezzanotte fuso orario Pacifico. Ci scusiamo per l'inconveniente. Questo gioco è open source, così si può costruire il proprio server di gioco per giocarci illimitatamente.",
-    "play": "Gioca",
-    "streamerModeActivate": "Modalità streamer attivata",
-    "streamerModeDetails": "URL e nomi delle stanze nascosti",
-    "mapSavedAlert": {
-      "title": "Mappa salvata 🎉",
-      "subtitle": "Lo troverai nelle tue liste di mappe"
+    "Header": {
+        "language": "Lingua",
+        "about": "Info",
+        "limitation": "Limitazioni",
+        "contact": "Contatta"
     },
-    "HomeCard": {
-      "edit": "Modifica",
-      "delete": "Elimina",
-      "medal": {
-        "platinum": "Platino",
-        "gold": "Oro",
-        "silver": "Argento",
-        "bronze": "Bronzo"
-      }
+    "HeaderGame": {
+        "room": "STANZA",
+        "round": "ROUND",
+        "distance": "DISTANZA",
+        "kmaway": "{value} km di distanza",
+        "score": "PUNTEGGIO"
     },
-    "HomeCardMode": {
-      "map": "Mappa",
-      "area": "Zona"
+    "next": "PROSSIMO",
+    "cancel": "ANNULLA",
+    "DialogCustomMap": {
+        "title": "Mappa Personalizzata",
+        "invalid": "GeoJSON Non Valido",
+        "text": "Testo",
+        "url": "Url",
+        "file": "File",
+        "edit": "Modifica Mappa",
+        "fileLabel": "Seleziona il file GeoJSON",
+        "OK": "OK",
+        "download": "Scarica GeoJSON",
+        "Clean": "Pulisci",
+        "save": "salva",
+        "inputName": {
+            "label": "Nome mappa",
+            "placeholder": "Il mio posto preferito"
+        }
     },
-    "Sections": {
-      "areasTitle": "Aree",
-      "mapsTitle": "Mappe",
-      "pleaseSelectLabel": "Sembri perso, per favore seleziona un tipo oppure ",
-      "barrelRoll": "fai una capriola"
-    }
-  },
-  "StreetView": {
-    "nearby": {
-      "title": "Posizione Vicina",
-      "message": "Sfortunatamente, non siamo riusciti a trovare una location casuale nella posizione definita. Tuttavia, ne abbiamo trovata una vicina 😉"
+    "History": {
+        "title": "Storia",
+        "date": "Data",
+        "mode": "Modalità",
+        "mapName": "Nome mappa",
+        "time": "Tempo",
+        "distance": "Distanza",
+        "points": "Punti",
+        "rank": "Classifica",
+        "actions": "Azioni",
+        "search": "Cerca",
+        "exportGeoSave": "Esporta GeoSave",
+        "importGeoSave": "Importa GeoSave",
+        "exportCSV": "Esporta CSV",
+        "total": "Totale",
+        "nbRound": "Nb Rounds"
     },
-    "waitForOtherPlayers": "In attesa di altri giocatori...",
-    "redirectToHomePage": "Reindirizzamento alla pagina iniziale...",
-    "exitGame": "Sei stato costretto a uscire dal gioco. Reindirizzamento alla pagina iniziale in 5 secondi...",
-    "waitForOtherPlayersToFinish": "In attesa che gli altri giocatori finiscano il turno...",
-    "confirmExit": "Sei sicuro di voler lasciare la partita in corso? Questo interromperà il gioco!",
-    "countdownAlert": "Conto alla rovescia iniziato: {count} secondo rimanente | Conto alla rovescia iniziato: {count} secondi rimanenti"
-  },
-  "Maps": {
-    "makeGuess": "INDOVINA",
-    "guess": "INDOVINA",
-    "nextRound": "PROSSIMO ROUND",
-    "viewSummary": "VEDI SINTESI",
-    "exit": "ESCI",
-    "reset": "REIMPOSTA",
-    "playAgain": "GIOCA ANCORA",
-    "infoWindow": {
-      "Distance": "Distanza",
-      "Points": "Punti"
+    "DialogRoom": {
+        "singlePlayer": "Giocatore Singolo",
+        "withFriends": "Multigiocatore",
+        "invalidRoomName": "Nome non valido. Provane un altro.",
+        "inProgress": "Il primo giocatore sta ancora creando la stanza. Si prega di attendere e riprovare.",
+        "roomIsFull": "Questa stanza è già piena. Si prega di provarne un'altra.",
+        "alreadyStarted": "Questa stanza ha già iniziato. Si prega di provarne un'altra."
     },
-    "leaderboard": {
-      "notGuessed": "Not Guessed",
-      "guessed": "Guessed"
-    }
-  },
-  "Header": {
-    "language": "Lingua",
-    "about": "Info",
-    "limitation": "Limitazioni",
-    "contact": "Contatta"
-  },
-  "HeaderGame": {
-    "room": "STANZA",
-    "round": "ROUND",
-    "distance": "DISTANZA",
-    "kmaway": "{value} km di distanza",
-    "score": "PUNTEGGIO"
-  },
-  "next": "PROSSIMO",
-  "cancel": "ANNULLA",
-  "DialogCustomMap": {
-    "title": "Mappa Personalizzata",
-    "invalid": "GeoJSON Non Valido",
-    "text": "Testo",
-    "url": "Url",
-    "file": "File",
-    "edit": "Modifica Mappa",
-    "fileLabel": "Seleziona il file GeoJSON",
+    "CardRoomName": {
+        "title": "Crea una nuova stanza dandole un nome o entra in una stanza esistente"
+    },
+    "CardRoomPlayerName": {
+        "title": "Stanza:",
+        "input": "Nome giocatore.",
+        "anonymousPlayerName": "Anonimo 🕵",
+        "players": "1 giocatore | {count} giocatori"
+    },
+    "CardRoomSize": {
+        "title": "Imposta la dimensione della stanza."
+    },
+    "CardRoomTime": {
+        "title": "Imposta un limite di tempo.",
+        "infinite": "Infinito"
+    },
+    "CardRoomMap": {
+        "title": "Definisci la tua mappa",
+        "loadBtn": "Carica MAPPA",
+        "reset": "Reimposta",
+        "cantPlayGeoJson": "GeoJSON non valido, è necessario avere più di 5 posizioni."
+    },
+    "CardRoomSettings": {
+        "title": "Impostazioni di gioco",
+        "modeLabel": "Seleziona una modalità di gioco",
+        "includePhotopheres": "Includi Fotosfere",
+        "timeAttackLabel": "Sfida a tempo",
+        "timeattackInfos": "Nella modalità Sfida a Tempo solo il giocatore che indovina il paese per primo ottiene il punto. Sii veloce e vinci!",
+        "allowMove": "Consenti Spostamenti",
+        "allowZoom": "Consenti Zoom",
+        "allowPan": "Consenti Guardati Attorno",
+        "guessedLeaderboard": "Display whether players have guessed",
+        "scoreLeaderboard": "Display score leaderboard",
+        "countDownLabel": "CountDown (secondi)",
+        "scoreModeLabel": "Tipo Punteggio",
+        "scoreModes": {
+            "normal": "normale",
+            "time": "tempo"
+        },
+        "selectAreas": "Seleziona Aree",
+        "moreSettings": "Altre impostazioni",
+        "optimiseStreetView": "Ottimizza lo StreetView (solo ufficiale)",
+        "nbRound": "Numero di round"
+    },
+    "CardRoomDifficulty": {
+        "title": "Imposta un livello di difficoltà.",
+        "easy": "facile (mondo)",
+        "medium": "medio (paese)",
+        "hard": "difficile (città)"
+    },
+    "DialogSummary": {
+        "summaryMsgSinglePoints": "Il tuo punteggio è <strong>{points}</strong> punti! ",
+        "summaryMsgSingleDistance": "Sei a <strong>{distance}</strong> km di distanza!",
+        "summaryMsgMultiPoints": "<strong>{playerName}</strong> ha un punteggio di <strong>{points}</strong>! ",
+        "summaryMsgMultiDistance": "(<strong>{distance}</strong> km di distanza)",
+        "viewDetails": "Mostra dettagli"
+    },
+    "Footer": {
+        "under": "sotto",
+        "privacyPolicy": "Norme sulla privacy"
+    },
+    "urlCopied": "Url copiato",
+    "DetailsMap": {
+        "moreInfo": "Ulteriori informazioni"
+    },
+    "modes": {
+        "classic": "Classico",
+        "country": "Scegli un paese",
+        "custom_area": "Scegli"
+    },
+    "Demo": {
+        "message": "Se vuoi contribuire al progetto e renderlo migliore, il tuo aiuto è molto gradito: Traduzioni 🔠, Mapper 🌍, Coding 💻, Idee 💡, Beta test 👀.",
+        "btn": "Unisciti"
+    },
     "OK": "OK",
-    "download": "Scarica GeoJSON",
-    "Clean": "Pulisci",
-    "save": "salva",
-    "inputName": {
-      "label": "Nome mappa",
-      "placeholder": "Il mio posto preferito"
+    "yes": "sì",
+    "no": "no",
+    "AlertUpdate": {
+        "label": "È disponibile una nuova versione. Clicca sul pulsante per ottenerla.",
+        "btn": "Aggiorna"
     }
-  },
-  "History": {
-    "title": "Storia",
-    "date": "Data",
-    "mode": "Modalità",
-    "mapName": "Nome mappa",
-    "time": "Tempo",
-    "distance": "Distanza",
-    "points": "Punti",
-    "rank": "Classifica",
-    "actions": "Azioni",
-    "search": "Cerca",
-    "exportGeoSave": "Esporta GeoSave",
-    "importGeoSave": "Importa GeoSave",
-    "exportCSV": "Esporta CSV",
-    "total": "Totale",
-    "nbRound": "Nb Rounds"
-  },
-  "DialogRoom": {
-    "singlePlayer": "Giocatore Singolo",
-    "withFriends": "Multigiocatore",
-    "invalidRoomName": "Nome non valido. Provane un altro.",
-    "inProgress": "Il primo giocatore sta ancora creando la stanza. Si prega di attendere e riprovare.",
-    "roomIsFull": "Questa stanza è già piena. Si prega di provarne un'altra.",
-    "alreadyStarted": "Questa stanza ha già iniziato. Si prega di provarne un'altra."
-  },
-  "CardRoomName": {
-    "title": "Crea una nuova stanza dandole un nome o entra in una stanza esistente"
-  },
-  "CardRoomPlayerName": {
-    "title": "Stanza:",
-    "input": "Nome giocatore.",
-    "anonymousPlayerName": "Anonimo 🕵",
-    "players": "1 giocatore | {count} giocatori"
-  },
-  "CardRoomSize": {
-    "title": "Imposta la dimensione della stanza."
-  },
-  "CardRoomTime": {
-    "title": "Imposta un limite di tempo.",
-    "infinite": "Infinito"
-  },
-  "CardRoomMap": {
-    "title": "Definisci la tua mappa",
-    "loadBtn": "Carica MAPPA",
-    "reset": "Reimposta",
-    "cantPlayGeoJson": "GeoJSON non valido, è necessario avere più di 5 posizioni."
-  },
-  "CardRoomSettings": {
-    "title": "Impostazioni di gioco",
-    "modeLabel": "Seleziona una modalità di gioco",
-    "includePhotopheres": "Includi Fotosfere",
-    "timeAttackLabel": "Sfida a tempo",
-    "timeattackInfos": "Nella modalità Sfida a Tempo solo il giocatore che indovina il paese per primo ottiene il punto. Sii veloce e vinci!",
-    "allowMove": "Consenti Spostamenti",
-    "allowZoom": "Consenti Zoom",
-    "allowPan": "Consenti Guardati Attorno",
-    "guessedLeaderboard": "Display whether players have guessed",
-    "scoreLeaderboard": "Display score leaderboard",
-    "countDownLabel": "CountDown (secondi)",
-    "scoreModeLabel": "Tipo Punteggio",
-    "scoreModes": {
-      "normal": "normale",
-      "time": "tempo"
-    },
-    "selectAreas": "Seleziona Aree",
-    "moreSettings": "Altre impostazioni",
-    "optimiseStreetView": "Ottimizza lo StreetView (solo ufficiale)",
-    "nbRound": "Numero di round"
-  },
-  "CardRoomDifficulty": {
-    "title": "Imposta un livello di difficoltà.",
-    "easy": "facile (mondo)",
-    "medium": "medio (paese)",
-    "hard": "difficile (città)"
-  },
-  "DialogSummary": {
-    "summaryMsgSinglePoints": "Il tuo punteggio è <strong>{points}</strong> punti! ",
-    "summaryMsgSingleDistance": "Sei a <strong>{distance}</strong> km di distanza!",
-    "summaryMsgMultiPoints": "<strong>{playerName}</strong> ha un punteggio di <strong>{points}</strong>! ",
-    "summaryMsgMultiDistance": "(<strong>{distance}</strong> km di distanza)",
-    "viewDetails": "Mostra dettagli"
-  },
-  "Footer": {
-    "under": "sotto",
-    "privacyPolicy": "Norme sulla privacy"
-  },
-  "urlCopied": "Url copiato",
-  "DetailsMap": {
-    "moreInfo": "Ulteriori informazioni"
-  },
-  "modes": {
-    "classic": "Classico",
-    "country": "Scegli un paese",
-    "custom_area": "Scegli"
-  },
-  "Demo": {
-    "message": "Se vuoi contribuire al progetto e renderlo migliore, il tuo aiuto è molto gradito: Traduzioni 🔠, Mapper 🌍, Coding 💻, Idee 💡, Beta test 👀.",
-    "btn": "Unisciti"
-  },
-  "OK": "OK",
-  "yes": "sì",
-  "no": "no",
-  "AlertUpdate": {
-    "label": "È disponibile una nuova versione. Clicca sul pulsante per ottenerla.",
-    "btn": "Aggiorna"
-  }
 }

@@ -1,14 +1,14 @@
 name: Version Patch
 
 on:
-  workflow_dispatch:
+    workflow_dispatch:
 
 jobs:
-  version:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: git config --global user.name 'GitHub Actions Bot'
-      - run: git config --global user.email '<>'
-      - run: npm version patch
-      - run: git push --tags
+    version:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - run: git config --global user.name 'GitHub Actions Bot'
+            - run: git config --global user.email '<>'
+            - run: npm version patch
+            - run: git push --tags

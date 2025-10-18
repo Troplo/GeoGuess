@@ -1,18 +1,18 @@
 import Vuex from 'vuex';
+
 function loadModules() {
-    const localContext = import.meta.globEager('./modules/*.js');
+    const context = import.meta.glob('./modules/*.js', {
+        eager: true,
+        import: 'default',
+    });
 
-    const modules = Object.keys(localContext)
-        .map((key) => ({ key, name: key.match(/([a-z_]+)(.store)?\.js$/i)[1] }))
-        .reduce(
-            (m, { key, name }) => ({
-                ...m,
-                [`${name}Store`]: localContext[key].default,
-            }),
-            {}
-        );
+    const modules = Object.entries(context).reduce((acc, [path, module]) => {
+        const name = path.match(/([a-z_]+)(.store)?\.js$/i)[1];
+        acc[`${name}Store`] = module;
+        return acc;
+    }, {});
 
-    return { context: localContext, modules };
+    return { context, modules };
 }
 
 const { context, modules } = loadModules();

@@ -141,7 +141,7 @@
                                 "
                                 hide-details
                             />
-                            <br>
+                            <br />
                             <v-checkbox
                                 class="mt-2"
                                 v-if="!singlePlayer"
@@ -172,9 +172,7 @@
                                     (allowReRoll) =>
                                         setGameSettings({ allowReRoll })
                                 "
-                                :label="
-                                    $t('CardRoomSettings.allowReRoll')
-                                "
+                                :label="$t('CardRoomSettings.allowReRoll')"
                                 hide-details
                             />
                         </v-col>

@@ -1,15 +1,15 @@
 name: Translation
 
 on:
-  pull_request:
+    pull_request:
 
 jobs:
-  add-label:
-    if: ${{ github.event.pull_request.title == 'New Crowdin updates' && github.actor == 'BilelJegham' }}
-    name: Add Label
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions-ecosystem/action-add-labels@v1
-        with:
-          labels: translation
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+    add-label:
+        if: ${{ github.event.pull_request.title == 'New Crowdin updates' && github.actor == 'BilelJegham' }}
+        name: Add Label
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions-ecosystem/action-add-labels@v1
+              with:
+                  labels: translation
+                  github_token: ${{ secrets.GITHUB_TOKEN }}

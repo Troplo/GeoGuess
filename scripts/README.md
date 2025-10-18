@@ -1,7 +1,5 @@
 # GeoGuess scripts
 
-
-
 ## Installation
 
 ```bash
@@ -16,5 +14,5 @@ clean-rooms -f <file-path> -c <database>
 Options :
   -f, --file-path    Path to the file to be uploaded                    [string] [default : "./keys.json"]
   -d, --databaseUrl  Realtime database url                             [string]
-  -h, --help        
+  -h, --help
 ```

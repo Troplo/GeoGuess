@@ -9,12 +9,15 @@
         "street-view"
     ],
     "orientation": "any",
-    "shortcuts": [{
-        "name": "Play",
-        "url": "/street-view",
-        "description": "Launch a game"
-    }],
-    "screenshots": [{
+    "shortcuts": [
+        {
+            "name": "Play",
+            "url": "/street-view",
+            "description": "Launch a game"
+        }
+    ],
+    "screenshots": [
+        {
             "src": "./screenshots/screenshot_game.png",
             "sizes": "1920x937",
             "type": "image/png"
@@ -30,7 +33,8 @@
             "type": "image/png"
         }
     ],
-    "icons": [{
+    "icons": [
+        {
             "src": "./img/icons/android-icon-36x36.png",
             "sizes": "36x36",
             "type": "image/png",
@@ -75,29 +79,29 @@
     ],
     "file_handlers": [
         {
-          "action": "/custom",
-          "accept": {
-            "application/vnd.geo+json": [".geojson"],
-            "application/json": [".geojson"]
-          },
-          "icons": [
-            {
-              "src": "./img/fileIcons/geojson.png",
-              "sizes": "144x144"
-            }
-          ] 
+            "action": "/custom",
+            "accept": {
+                "application/vnd.geo+json": [".geojson"],
+                "application/json": [".geojson"]
+            },
+            "icons": [
+                {
+                    "src": "./img/fileIcons/geojson.png",
+                    "sizes": "144x144"
+                }
+            ]
         },
         {
-          "action": "/history",
-          "accept": {
-            "application/json": [".geosave"]
-          },
-          "icons": [
-            {
-              "src": "./img/fileIcons/geosave.png",
-              "sizes": "144x144"
-            }
-          ] 
+            "action": "/history",
+            "accept": {
+                "application/json": [".geosave"]
+            },
+            "icons": [
+                {
+                    "src": "./img/fileIcons/geosave.png",
+                    "sizes": "144x144"
+                }
+            ]
         }
     ],
     "start_url": "/?utm_source=pwa",

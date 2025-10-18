@@ -1,5 +1,4 @@
-Contributing
-=====
+# Contributing
 
 Welcome 👋 !
 We glad to see that you are interested in contributing to GeoGuess.
@@ -7,6 +6,7 @@ We glad to see that you are interested in contributing to GeoGuess.
 Please note we have a [code of conduct](https://github.com/GeoGuess/Geoguess/blob/master/CODE_OF_CONDUCT.md), please follow it in all your interactions with the project.
 
 ## Geoguess Principe
+
 1. GeoGuess is an open-source game
 2. GeoGuess is free
 3. GeoGuess is decentralized. Anyone can install its game server without any dependence on this repository
@@ -17,9 +17,9 @@ Please note we have a [code of conduct](https://github.com/GeoGuess/Geoguess/blo
 You need to configure Google Maps Platform and Firebase to make game work.
 See the instructions below.
 
--   [Google Maps API](https://developers.google.com/maps/documentation/javascript/get-api-key#get-the-api-key)
--   [Firebase](https://firebase.google.com/docs/database/web/start)
--   [Firebase Realtime Database](https://firebase.google.com/docs/database/web/start)
+- [Google Maps API](https://developers.google.com/maps/documentation/javascript/get-api-key#get-the-api-key)
+- [Firebase](https://firebase.google.com/docs/database/web/start)
+- [Firebase Realtime Database](https://firebase.google.com/docs/database/web/start)
 
 Once you get an API key and register the project with Firebase, copy `.env.dist` named `.env`and replace all variables.
 
@@ -40,22 +40,22 @@ npm run serve
 npm run build
 ```
 
-
 ## Pull Request Process
 
 1. Make sure `npm test` passes
 2. Comments PR : We don't have rules about the PR description, just clearly explain what you have done
 
 ## Transalation
+
 > Update translation : https://translate.geoguess.games/
 
-- [ ] Add translation file in `src/lang/locale` following `en.json` 
+- [ ] Add translation file in `src/lang/locale` following `en.json`
 
 - [ ] Add the language in :
+    - `src/plugins/vuetify.js`
 
-    * `src/plugins/vuetify.js`
 ```js
-// 1 
+// 1
 import ru from 'vuetify/es5/locale/ru';
 
 export default new Vuetify({
@@ -65,4 +65,3 @@ export default new Vuetify({
     },
 
 ```
-

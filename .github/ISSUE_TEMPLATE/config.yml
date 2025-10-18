@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
-  - name: GeoGuess Documentation
-    url: https://geoguess.games/guide/
-    about: Official Documentation
-  - name: Discord Server
-    url: https://discord.gg/9GXm6RT
-    about: Join Official Discord Server
+    - name: GeoGuess Documentation
+      url: https://geoguess.games/guide/
+      about: Official Documentation
+    - name: Discord Server
+      url: https://discord.gg/9GXm6RT
+      about: Join Official Discord Server

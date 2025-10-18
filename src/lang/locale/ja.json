@@ -1,222 +1,222 @@
 {
-  "Home": {
-    "placeVisited": "0 visited places | 1 visited place | {count} visited places",
-    "historyBtn": "歴史",
-    "medalsBtn": "MEDALS",
-    "about": "このサイトについて",
-    "createMap": "地図を作成",
-    "searchBar": {
-      "customLoaded": "カスタムマップが読み込まれました",
-      "enterCity": "都市名、州や県、国名を入力してください"
+    "Home": {
+        "placeVisited": "0 visited places | 1 visited place | {count} visited places",
+        "historyBtn": "歴史",
+        "medalsBtn": "MEDALS",
+        "about": "このサイトについて",
+        "createMap": "地図を作成",
+        "searchBar": {
+            "customLoaded": "カスタムマップが読み込まれました",
+            "enterCity": "都市名、州や県、国名を入力してください"
+        },
+        "aboutDescriptions": {
+            "1": "Geoguess は無料で気軽に遊べる地図を使ったゲームです。        プレーヤーは5ラウンドでランダムに出された場所の正確な場所を推測して競います。        友達と遊ぶ時は最初に部屋を作る人が部屋の名前を決めて部屋を作り、他の人が部屋に入るだけで一緒に遊ぶことができます。",
+            "2": "このゲームは以下からフォークされました "
+        },
+        "customMap": "カスタムマップ",
+        "customMapDescriptions": {
+            "1": "検索バーで都市、都道府県、国にランダムな場所を制限できます。",
+            "2": "マルチプレイヤーでは、最初のプレイヤーが場所を修正します。",
+            "3": "さらに、あなたはあなたの習慣地図を作ることができます ",
+            "4": "ファイル",
+            "5": "以下のボタンでGeoJsonマップの内容を挿入します:",
+            "6": "カスタムマップ選択: "
+        },
+        "limitation": "制限",
+        "limitationDescription": "地図とストリートビューを表示させるのにお金がかかるため制限をかけています。        1日の制限を超えると地図が正しくロードされなくなります。         制限は太平洋標準時での深夜にリセットされます。        このサイトはオープンソースなので制限なく遊びたい方は自分でゲームをセットアップすることもできます。",
+        "play": "プレイ",
+        "streamerModeActivate": "Streamer mode activate",
+        "streamerModeDetails": "URLs and room names are hidden",
+        "mapSavedAlert": {
+            "title": "マップを保存しました 🎉",
+            "subtitle": "地図リストに表示されます"
+        },
+        "HomeCard": {
+            "edit": "編集",
+            "delete": "削除",
+            "medal": {
+                "platinum": "Platinum",
+                "gold": "ゴールド",
+                "silver": "シルバー",
+                "bronze": "Bronze"
+            }
+        },
+        "HomeCardMode": {
+            "map": "Map",
+            "area": "Area"
+        },
+        "Sections": {
+            "areasTitle": "Areas",
+            "mapsTitle": "Maps",
+            "pleaseSelectLabel": "失われたようです。タイプを選択するか、可能です。 ",
+            "barrelRoll": "バレルロールを使って"
+        }
     },
-    "aboutDescriptions": {
-      "1": "Geoguess は無料で気軽に遊べる地図を使ったゲームです。        プレーヤーは5ラウンドでランダムに出された場所の正確な場所を推測して競います。        友達と遊ぶ時は最初に部屋を作る人が部屋の名前を決めて部屋を作り、他の人が部屋に入るだけで一緒に遊ぶことができます。",
-      "2": "このゲームは以下からフォークされました "
+    "StreetView": {
+        "nearby": {
+            "title": "近くの位置",
+            "message": "残念ながら、定義された場所にランダムな位置を見つけることができませんでした。しかし、私たちは近くに見つけました 😉"
+        },
+        "waitForOtherPlayers": "他のプレーヤーを待っています...",
+        "redirectToHomePage": "ホーム画面にリダイレクトします...",
+        "exitGame": "ゲームを強制終了しました。5秒後にリダイレクトします...",
+        "waitForOtherPlayersToFinish": "他のプレーヤーが終了するのを待っています...",
+        "confirmExit": "Are you sure to leave the current game? This will abort the game!",
+        "countdownAlert": "Countdown started : {count} second remaining | Countdown started : {count} seconds remaining"
     },
-    "customMap": "カスタムマップ",
-    "customMapDescriptions": {
-      "1": "検索バーで都市、都道府県、国にランダムな場所を制限できます。",
-      "2": "マルチプレイヤーでは、最初のプレイヤーが場所を修正します。",
-      "3": "さらに、あなたはあなたの習慣地図を作ることができます ",
-      "4": "ファイル",
-      "5": "以下のボタンでGeoJsonマップの内容を挿入します:",
-      "6": "カスタムマップ選択: "
+    "Maps": {
+        "makeGuess": "推測する",
+        "guess": "決定",
+        "nextRound": "進む",
+        "viewSummary": "結果を見る",
+        "exit": "終了する",
+        "reset": "リセット",
+        "playAgain": "もう一度遊ぶ",
+        "infoWindow": {
+            "Distance": "距離",
+            "Points": "ポイント"
+        },
+        "leaderboard": {
+            "notGuessed": "Not Guessed",
+            "guessed": "Guessed"
+        }
     },
-    "limitation": "制限",
-    "limitationDescription": "地図とストリートビューを表示させるのにお金がかかるため制限をかけています。        1日の制限を超えると地図が正しくロードされなくなります。         制限は太平洋標準時での深夜にリセットされます。        このサイトはオープンソースなので制限なく遊びたい方は自分でゲームをセットアップすることもできます。",
-    "play": "プレイ",
-    "streamerModeActivate": "Streamer mode activate",
-    "streamerModeDetails": "URLs and room names are hidden",
-    "mapSavedAlert": {
-      "title": "マップを保存しました 🎉",
-      "subtitle": "地図リストに表示されます"
+    "Header": {
+        "language": "言語",
+        "about": "このサイトについて",
+        "limitation": "制限",
+        "contact": "お問い合わせ"
     },
-    "HomeCard": {
-      "edit": "編集",
-      "delete": "削除",
-      "medal": {
-        "platinum": "Platinum",
-        "gold": "ゴールド",
-        "silver": "シルバー",
-        "bronze": "Bronze"
-      }
+    "HeaderGame": {
+        "room": "ルーム",
+        "round": "ラウンド",
+        "distance": "距離",
+        "kmaway": "{value} km離れた",
+        "score": "スコア"
     },
-    "HomeCardMode": {
-      "map": "Map",
-      "area": "Area"
+    "next": "進む",
+    "cancel": "キャンセル",
+    "DialogCustomMap": {
+        "title": "カスタムマップ",
+        "invalid": "無効なGeoJSON",
+        "text": "Text",
+        "url": "Url",
+        "file": "File",
+        "edit": "Edit Map",
+        "fileLabel": "Select GeoJSON file",
+        "OK": "OK",
+        "download": "Download GeoJSON",
+        "Clean": "クリーンアップ",
+        "save": "保存",
+        "inputName": {
+            "label": "地図名",
+            "placeholder": "お気に入りの場所"
+        }
     },
-    "Sections": {
-      "areasTitle": "Areas",
-      "mapsTitle": "Maps",
-      "pleaseSelectLabel": "失われたようです。タイプを選択するか、可能です。 ",
-      "barrelRoll": "バレルロールを使って"
-    }
-  },
-  "StreetView": {
-    "nearby": {
-      "title": "近くの位置",
-      "message": "残念ながら、定義された場所にランダムな位置を見つけることができませんでした。しかし、私たちは近くに見つけました 😉"
+    "History": {
+        "title": "History",
+        "date": "Date",
+        "mode": "Mode",
+        "mapName": "地図名",
+        "time": "Time",
+        "distance": "Distance",
+        "points": "Points",
+        "rank": "Rank",
+        "actions": "Actions",
+        "search": "Search",
+        "exportGeoSave": "Export GeoSave",
+        "importGeoSave": "Import GeoSave",
+        "exportCSV": "Export CSV",
+        "total": "Total",
+        "nbRound": "ラウンドなし"
     },
-    "waitForOtherPlayers": "他のプレーヤーを待っています...",
-    "redirectToHomePage": "ホーム画面にリダイレクトします...",
-    "exitGame": "ゲームを強制終了しました。5秒後にリダイレクトします...",
-    "waitForOtherPlayersToFinish": "他のプレーヤーが終了するのを待っています...",
-    "confirmExit": "Are you sure to leave the current game? This will abort the game!",
-    "countdownAlert": "Countdown started : {count} second remaining | Countdown started : {count} seconds remaining"
-  },
-  "Maps": {
-    "makeGuess": "推測する",
-    "guess": "決定",
-    "nextRound": "進む",
-    "viewSummary": "結果を見る",
-    "exit": "終了する",
-    "reset": "リセット",
-    "playAgain": "もう一度遊ぶ",
-    "infoWindow": {
-      "Distance": "距離",
-      "Points": "ポイント"
+    "DialogRoom": {
+        "singlePlayer": "一人で遊ぶ",
+        "withFriends": "友達と遊ぶ",
+        "invalidRoomName": "無効な名前です。別の名前を入力して下さい。",
+        "inProgress": "最初のプレーヤーが部屋を作っています。再度試して下さい。",
+        "roomIsFull": "この部屋は既に満員です。",
+        "alreadyStarted": "This room has already started.  Please try another."
     },
-    "leaderboard": {
-      "notGuessed": "Not Guessed",
-      "guessed": "Guessed"
-    }
-  },
-  "Header": {
-    "language": "言語",
-    "about": "このサイトについて",
-    "limitation": "制限",
-    "contact": "お問い合わせ"
-  },
-  "HeaderGame": {
-    "room": "ルーム",
-    "round": "ラウンド",
-    "distance": "距離",
-    "kmaway": "{value} km離れた",
-    "score": "スコア"
-  },
-  "next": "進む",
-  "cancel": "キャンセル",
-  "DialogCustomMap": {
-    "title": "カスタムマップ",
-    "invalid": "無効なGeoJSON",
-    "text": "Text",
-    "url": "Url",
-    "file": "File",
-    "edit": "Edit Map",
-    "fileLabel": "Select GeoJSON file",
+    "CardRoomName": {
+        "title": "Type a room name to create a new room or join a existing room"
+    },
+    "CardRoomPlayerName": {
+        "title": "Room:",
+        "input": "Type a player name.",
+        "anonymousPlayerName": "Anonymous 🕵",
+        "players": "1 player | {count} players"
+    },
+    "CardRoomSize": {
+        "title": "部屋の人数を選択して下さい。"
+    },
+    "CardRoomTime": {
+        "title": "1ラウンドの制限時間を選択して下さい。",
+        "infinite": "無制限"
+    },
+    "CardRoomMap": {
+        "title": "地図を定義する",
+        "loadBtn": "MAP を読み込む",
+        "reset": "Reset",
+        "cantPlayGeoJson": "ジオJSONが無効です。5つ以上のポジションが必要です。"
+    },
+    "CardRoomSettings": {
+        "title": "Game Settings",
+        "modeLabel": "Select game mode",
+        "includePhotopheres": "Include Photospheres",
+        "timeAttackLabel": "TimeAttack",
+        "timeattackInfos": "In TimeAttack mode, only the player who guesses the country first gets the point. Be quick and win!",
+        "allowMove": "Allow Move",
+        "allowZoom": "Allow Zoom",
+        "allowPan": "Allow Pan",
+        "guessedLeaderboard": "Display whether players have guessed",
+        "scoreLeaderboard": "Display score leaderboard",
+        "countDownLabel": "CountDown (seconds)",
+        "scoreModeLabel": "Score formula",
+        "scoreModes": {
+            "normal": "normal",
+            "time": "time"
+        },
+        "selectAreas": "Select Areas",
+        "moreSettings": "More settings",
+        "optimiseStreetView": "StreetViewの最適化 (公式のみ)",
+        "nbRound": "ラウンド数"
+    },
+    "CardRoomDifficulty": {
+        "title": "Set a difficulty level.",
+        "easy": "easy (world)",
+        "medium": "medium (country)",
+        "hard": "hard (city)"
+    },
+    "DialogSummary": {
+        "summaryMsgSinglePoints": "Your score is <strong>{points}</strong> points! ",
+        "summaryMsgSingleDistance": "You are <strong>{distance}</strong> km away!",
+        "summaryMsgMultiPoints": "<strong>{playerName}</strong> score is <strong>{points}</strong> ! ",
+        "summaryMsgMultiDistance": "(<strong>{distance}</strong> km away)",
+        "viewDetails": "View details"
+    },
+    "Footer": {
+        "under": "under",
+        "privacyPolicy": "プライバシーポリシー"
+    },
+    "urlCopied": "Url copied",
+    "DetailsMap": {
+        "moreInfo": "More information"
+    },
+    "modes": {
+        "classic": "Classic",
+        "country": "Pick country",
+        "custom_area": "Pick"
+    },
+    "Demo": {
+        "message": "If you want to contribute to a project and make it better, your help is very welcome :  Translation 🔠, Mapper 🌍, Code 💻, Idea 💡, Beta test 👀.",
+        "btn": "Join Us"
+    },
     "OK": "OK",
-    "download": "Download GeoJSON",
-    "Clean": "クリーンアップ",
-    "save": "保存",
-    "inputName": {
-      "label": "地図名",
-      "placeholder": "お気に入りの場所"
+    "yes": "yes",
+    "no": "no",
+    "AlertUpdate": {
+        "label": "新しいバージョンが利用可能です。ボタンをクリックして入手してください。",
+        "btn": "更新"
     }
-  },
-  "History": {
-    "title": "History",
-    "date": "Date",
-    "mode": "Mode",
-    "mapName": "地図名",
-    "time": "Time",
-    "distance": "Distance",
-    "points": "Points",
-    "rank": "Rank",
-    "actions": "Actions",
-    "search": "Search",
-    "exportGeoSave": "Export GeoSave",
-    "importGeoSave": "Import GeoSave",
-    "exportCSV": "Export CSV",
-    "total": "Total",
-    "nbRound": "ラウンドなし"
-  },
-  "DialogRoom": {
-    "singlePlayer": "一人で遊ぶ",
-    "withFriends": "友達と遊ぶ",
-    "invalidRoomName": "無効な名前です。別の名前を入力して下さい。",
-    "inProgress": "最初のプレーヤーが部屋を作っています。再度試して下さい。",
-    "roomIsFull": "この部屋は既に満員です。",
-    "alreadyStarted": "This room has already started.  Please try another."
-  },
-  "CardRoomName": {
-    "title": "Type a room name to create a new room or join a existing room"
-  },
-  "CardRoomPlayerName": {
-    "title": "Room:",
-    "input": "Type a player name.",
-    "anonymousPlayerName": "Anonymous 🕵",
-    "players": "1 player | {count} players"
-  },
-  "CardRoomSize": {
-    "title": "部屋の人数を選択して下さい。"
-  },
-  "CardRoomTime": {
-    "title": "1ラウンドの制限時間を選択して下さい。",
-    "infinite": "無制限"
-  },
-  "CardRoomMap": {
-    "title": "地図を定義する",
-    "loadBtn": "MAP を読み込む",
-    "reset": "Reset",
-    "cantPlayGeoJson": "ジオJSONが無効です。5つ以上のポジションが必要です。"
-  },
-  "CardRoomSettings": {
-    "title": "Game Settings",
-    "modeLabel": "Select game mode",
-    "includePhotopheres": "Include Photospheres",
-    "timeAttackLabel": "TimeAttack",
-    "timeattackInfos": "In TimeAttack mode, only the player who guesses the country first gets the point. Be quick and win!",
-    "allowMove": "Allow Move",
-    "allowZoom": "Allow Zoom",
-    "allowPan": "Allow Pan",
-    "guessedLeaderboard": "Display whether players have guessed",
-    "scoreLeaderboard": "Display score leaderboard",
-    "countDownLabel": "CountDown (seconds)",
-    "scoreModeLabel": "Score formula",
-    "scoreModes": {
-      "normal": "normal",
-      "time": "time"
-    },
-    "selectAreas": "Select Areas",
-    "moreSettings": "More settings",
-    "optimiseStreetView": "StreetViewの最適化 (公式のみ)",
-    "nbRound": "ラウンド数"
-  },
-  "CardRoomDifficulty": {
-    "title": "Set a difficulty level.",
-    "easy": "easy (world)",
-    "medium": "medium (country)",
-    "hard": "hard (city)"
-  },
-  "DialogSummary": {
-    "summaryMsgSinglePoints": "Your score is <strong>{points}</strong> points! ",
-    "summaryMsgSingleDistance": "You are <strong>{distance}</strong> km away!",
-    "summaryMsgMultiPoints": "<strong>{playerName}</strong> score is <strong>{points}</strong> ! ",
-    "summaryMsgMultiDistance": "(<strong>{distance}</strong> km away)",
-    "viewDetails": "View details"
-  },
-  "Footer": {
-    "under": "under",
-    "privacyPolicy": "プライバシーポリシー"
-  },
-  "urlCopied": "Url copied",
-  "DetailsMap": {
-    "moreInfo": "More information"
-  },
-  "modes": {
-    "classic": "Classic",
-    "country": "Pick country",
-    "custom_area": "Pick"
-  },
-  "Demo": {
-    "message": "If you want to contribute to a project and make it better, your help is very welcome :  Translation 🔠, Mapper 🌍, Code 💻, Idea 💡, Beta test 👀.",
-    "btn": "Join Us"
-  },
-  "OK": "OK",
-  "yes": "yes",
-  "no": "no",
-  "AlertUpdate": {
-    "label": "新しいバージョンが利用可能です。ボタンをクリックして入手してください。",
-    "btn": "更新"
-  }
 }

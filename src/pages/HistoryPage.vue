@@ -1,7 +1,7 @@
 <template>
     <ContentPage>
         <div class="content">
-            <Stats/>
+            <Stats />
             <HistoryTable />
         </div>
     </ContentPage>
@@ -17,7 +17,7 @@ export default {
     components: {
         HistoryTable,
         ContentPage,
-        Stats
+        Stats,
     },
 };
 </script>

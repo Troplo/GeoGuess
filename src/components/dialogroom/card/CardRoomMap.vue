@@ -10,7 +10,7 @@
                     id="search-input"
                     v-model="place"
                     :items="items"
-                    :search.sync="search"
+                    v-model:search="search"
                     :loading="isLoading"
                     autofocus
                     :placeholder="$t('Home.searchBar.enterCity')"
@@ -126,7 +126,9 @@ export default {
                         );
                     }
                 })
-                .catch(() => {})
+                .catch(() => {
+                    //
+                })
                 .finally(() => (this.isLoading = false));
         },
         geoJson(val) {
