@@ -1,5 +1,4 @@
 import * as GmapVue from 'gmap-vue';
-import Vue from 'vue';
 import VueClipboard from 'vue-clipboard2';
 import VueI18n from 'vue-i18n';
 import Router from 'vue-router';

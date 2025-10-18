@@ -31,7 +31,7 @@
                     {{ $t('CardRoomMap.loadBtn') }}
                 </v-btn>
             </v-row>
-            <GmapMap
+            <GoogleMap
                 ref="mapRef"
                 :center="{ lat: 10, lng: 10 }"
                 :zoom="1"
@@ -41,9 +41,6 @@
                     mapTypeControl: false,
                     fullscreenControl: false,
                     gestureHandling: 'greedy',
-                    styles: $vuetify.theme.dark
-                        ? $vuetify.theme.themes.dark.gmap
-                        : $vuetify.theme.themes.light.gmap,
                 }"
             />
             <v-row justify="space-around">
@@ -83,8 +80,10 @@
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 import { SETTINGS_SET_STEP_DIALOG_ROOM } from '@/store/mutation-types';
 import CardRoomMixin from './mixins/CardRoomMixin';
+import GoogleMap from '@/components/game/GoogleMap.vue';
 export default {
     name: 'CardRoomMap',
+    components: { GoogleMap },
     mixins: [CardRoomMixin],
     data() {
         return {
@@ -130,7 +129,9 @@ export default {
                         );
                     }
                 })
-                .catch(() => {})
+                .catch(() => {
+                    //
+                })
                 .finally(() => (this.isLoading = false));
         },
         geoJson(val) {
@@ -143,7 +144,7 @@ export default {
             this.addGeoJson(this.geoJson);
         }
 
-        this.$refs.mapRef.$mapPromise.then((map) => {
+        this.$refs.mapRef.map.$mapPromise.then((map) => {
             const streetViewLayer = new google.maps.StreetViewCoverageLayer();
             streetViewLayer.setMap(map);
         });
@@ -155,7 +156,7 @@ export default {
         }),
         ...mapActions(['loadPlaceGeoJSON', 'setGeoJson']),
         addGeoJson(val) {
-            this.$refs.mapRef.$mapPromise.then((map) => {
+            this.$refs.mapRef.map.$mapPromise.then((map) => {
                 map.data.setMap(null);
                 let data = new google.maps.Data({
                     map: map,

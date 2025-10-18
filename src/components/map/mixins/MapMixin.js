@@ -1,5 +1,4 @@
 export const MapMixin = {
-   
     props: ['bbox'],
     watch: {
         bbox() {
@@ -18,13 +17,17 @@ export const MapMixin = {
                     });
                 } else {
                     this.map.setZoom(0);
-                    this.map.setCenter({lat: 0, lng: 0});
+                    this.map.setCenter({ lat: 0, lng: 0 });
                 }
             }
-        },        
-        drawPolyline() {},
-        removePolylines() {},
-    }
+        },
+        drawPolyline() {
+            //
+        },
+        removePolylines() {
+            //
+        },
+    },
 };
 
 export default MapMixin;

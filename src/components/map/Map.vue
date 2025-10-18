@@ -1,6 +1,6 @@
 <template>
     <div id="map">
-        <GmapMap
+        <GoogleMap
             id="mapClassic"
             ref="mapRef"
             :center="{ lat: 37.86926, lng: -122.254811 }"
@@ -12,19 +12,19 @@
                 streetViewControl: false,
                 draggableCursor: 'crosshair',
                 clickableIcons: false,
-                styles: $vuetify.theme.dark
-                    ? $vuetify.theme.themes.dark.gmap
-                    : $vuetify.theme.themes.light.gmap,
             }"
+            @onReady="ready()"
         />
     </div>
 </template>
 <script>
 import { STROKE_COLORS } from '../../constants';
 import MapMixin from './mixins/MapMixin';
+import GoogleMap from '@/components/game/GoogleMap.vue';
 
 export default {
     name: 'Map',
+    components: { GoogleMap },
     mixins: [MapMixin],
     data() {
         return {
@@ -35,15 +35,24 @@ export default {
             strokeColors: STROKE_COLORS,
         };
     },
+    computed: {
+        mapRef() {
+            return this.$refs.mapRef.map;
+        },
+    },
     async mounted() {
+        console.log(this.mapRef);
         await this.$gmapApiPromiseLazy();
-        this.$refs.mapRef.$mapPromise.then((map) => {
-            this.map = map;
-
-            this.centerOnBbox();
-        });
     },
     methods: {
+        ready() {
+            console.log(this.mapRef, 'ready');
+            this.mapRef.$mapPromise.then((map) => {
+                this.map = map;
+
+                this.centerOnBbox();
+            });
+        },
         putMarker(position, isRandomLocation, label) {
             let info = {};
             if (isRandomLocation) {
@@ -142,7 +151,7 @@ export default {
             }
         },
         startNextRound() {
-            this.$refs.mapRef.$mapPromise.then(() => {
+            this.mapRef.$mapPromise.then(() => {
                 this.map.addListener('click', (e) => {
                     // Clear the previous marker when clicking the map
                     this.removeMarkers();

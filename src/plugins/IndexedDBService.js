@@ -36,7 +36,7 @@ class IndexedDBService {
         return new Promise((resolve, reject) => {
             let transaction = this.db.transaction(['maps'], 'readonly');
             let store = transaction.objectStore('maps');
-            const maps = new Array();
+            const maps = [];
 
             const request = store.openCursor(null, 'prev');
             request.onsuccess = function (e) {

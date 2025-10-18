@@ -1,6 +1,7 @@
 export default function install(app) {
-    app.$countryNameLocale = (isoA2) => {
-        return new Intl.DisplayNames([app.prototype.i18n.locale], {
+    app.config.globalProperties.$countryNameLocale = (isoA2) => {
+        console.log(app.config.globalProperties.$i18n.global.locale);
+        return new Intl.DisplayNames([app.config.globalProperties.$i18n.global.locale], {
             type: 'region',
         }).of(isoA2);
     };

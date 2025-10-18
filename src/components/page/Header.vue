@@ -1,25 +1,36 @@
 <template>
     <div>
         <v-app-bar class="header" height="100">
-            <router-link to="/">
-                <img
-                    class="header__logo mt-1"
-                    src="@/assets/geoguessLogo.png"
-                    alt="logo"
-                />
-                <img
-                    class="header__logo-min"
-                    src="/img/icons/android-icon-72x72.png"
-                    alt="logo"
-                />
-            </router-link>
-
-            <div class="flex-grow-1" />
+            <div
+                style="
+                    padding-left: 25px;
+                    display: flex;
+                    height: 100%;
+                    justify-content: center;
+                    align-items: center;
+                "
+            >
+                <router-link to="/">
+                    <StreetGuessLogo
+                        alt="logo"
+                        class="header__logo"
+                        style="height: 60px"
+                    />
+                    <img
+                        class="header__logo-min"
+                        src="/img/icons/android-icon-72x72.png"
+                        alt="logo"
+                    />
+                </router-link>
+            </div>
 
             <v-app-bar-nav-icon
                 class="header__nav-icon"
                 @click="menuMobile = !menuMobile"
             ></v-app-bar-nav-icon>
+
+            <v-spacer />
+
             <nav class="header__nav" :class="{ visible: menuMobile }">
                 <v-btn id="historyBtn" text link to="/history">
                     {{ $t('Home.historyBtn') }}
@@ -140,9 +151,11 @@ import About from '@/components/page/About.vue';
 import { languages, RTL_LANGUAGES } from '@/lang';
 import { mapActions, mapState } from 'vuex';
 import HeaderAlert from './HeaderAlert.vue';
+import StreetGuessLogo from '@/components/brand/StreetGuessLogo.vue';
 
 export default {
     components: {
+        StreetGuessLogo,
         About,
         HeaderAlert,
     },
@@ -155,7 +168,7 @@ export default {
     },
     computed: {
         clientId() {
-            return process.env.VUE_APP_TPU_CLIENT_ID;
+            return import.meta.env.VITE_APP_TPU_CLIENT_ID;
         },
         ...mapState({
             streamerMode: (state) => state.homeStore.streamerMode,
@@ -197,7 +210,6 @@ export default {
 <style lang="scss" scoped>
 .header {
     z-index: 1;
-    padding: 0 5%;
     background-color: var(--v-header-base) !important;
     .header__nav,
     .header__nav__btns {

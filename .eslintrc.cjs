@@ -9,18 +9,16 @@ module.exports = {
             ? ['eslint:recommended']
             : []),
         'plugin:vue/essential',
+        'plugin:@typescript-eslint/recommended', // add this
+        'prettier', // optional, for Prettier integration
     ],
-    globals: {
-        launchQueue: 'readonly',
-        google: 'readonly',
-        Atomics: 'readonly',
-        SharedArrayBuffer: 'readonly',
-    },
+    parser: 'vue-eslint-parser', // required for <script setup>
     parserOptions: {
+        parser: '@typescript-eslint/parser', // add this
         ecmaVersion: 2020,
         sourceType: 'module',
     },
-    plugins: ['vue', 'prettier', 'vitest'],
+    plugins: ['vue', '@typescript-eslint', 'prettier', 'vitest'],
     rules: {
         'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
         'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
@@ -30,12 +28,10 @@ module.exports = {
     },
     overrides: [
         {
-          "files": [
-            "**/*.spec.js"
-          ],
-          "env": {
-            "jest": true
-          }
-        }
-    ]
+            files: ['**/*.spec.js'],
+            env: {
+                jest: true,
+            },
+        },
+    ],
 };

@@ -14,19 +14,32 @@ class StreetViewService {
         settingsPanorama,
         settingsGame,
         placeGeoJson,
-        roundsPredefined
+        roundsPredefined,
+        knownPanoramaLocation = null
     ) {
         this.settingsPanorama = settingsPanorama;
         this.settingsGame = settingsGame;
         this.placeGeoJson = placeGeoJson;
         this.roundsPredefined = roundsPredefined;
+        this.knownPanoramaLocation = knownPanoramaLocation;
         this.service = new google.maps.StreetViewService();
         this.alreadyVisited = [];
     }
 
     async getStreetView(round, cptNotFoundLocation = 0) {
         let radius, position, randomFeatureProperties;
-        if (this.roundsPredefined) {
+
+        // Use known good location if provided
+        if (this.knownPanoramaLocation) {
+            position = new google.maps.LatLng(
+                this.knownPanoramaLocation.lat,
+                this.knownPanoramaLocation.lng
+            );
+            radius = 50;
+            randomFeatureProperties =
+                this.knownPanoramaLocation.properties || null;
+            this.knownPanoramaLocation = null;
+        } else if (this.roundsPredefined) {
             radius = 50;
             const positions = this.roundsPredefined[round - 1];
             position = new google.maps.LatLng(positions[0], positions[1]);

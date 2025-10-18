@@ -4,7 +4,7 @@ import i18n from './lang';
 import store from './store/index';
 import App from '@/App.vue';
 import axios from '@/plugins/axios';
-// import vuetify from '@/plugins/vuetify.js';
+import vuetify from '@/plugins/vuetify.js';
 import VueGoogleMaps from '@fawmi/vue-google-maps';
 import VueAxios from 'vue-axios';
 import 'firebase/analytics';
@@ -46,22 +46,22 @@ window.addEventListener('resize', () => {
 });
 
 const firebaseConfig = {
-    apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
+    apiKey: import.meta.env.VITE_APP_FIREBASE_API_KEY,
     authDomain:
-        process.env.VUE_APP_FIREBASE_AUTH_DOMAIN ||
-        process.env.VUE_APP_FIREBASE_PROJECT_ID + '.firebaseapp.com',
+        import.meta.env.VITE_APP_FIREBASE_AUTH_DOMAIN ||
+        import.meta.env.VITE_APP_FIREBASE_PROJECT_ID + '.firebaseapp.com',
     databaseURL:
-        process.env.VUE_APP_FIREBASE_DATABASE_URL ||
+        import.meta.env.VITE_APP_FIREBASE_DATABASE_URL ||
         'https://' +
-            process.env.VUE_APP_FIREBASE_PROJECT_ID +
+            import.meta.env.VITE_APP_FIREBASE_PROJECT_ID +
             '.firebaseio.com',
-    projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID,
+    projectId: import.meta.env.VITE_APP_FIREBASE_PROJECT_ID,
     storageBucket:
-        process.env.VUE_APP_STORAGE_BUCKET ||
-        process.env.VUE_APP_FIREBASE_PROJECT_ID + '.appspot.com',
-    messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.VUE_APP_FIREBASE_APP_ID,
-    measurementId: process.env.VUE_APP_FIREBASE_MEASUREMENT_ID,
+        import.meta.env.VITE_APP_STORAGE_BUCKET ||
+        import.meta.env.VITE_APP_FIREBASE_PROJECT_ID + '.appspot.com',
+    messagingSenderId: import.meta.env.VITE_APP_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_APP_FIREBASE_APP_ID,
+    measurementId: import.meta.env.VITE_APP_FIREBASE_MEASUREMENT_ID,
 };
 
 // Initialize Firebase
@@ -69,9 +69,9 @@ firebase.initializeApp(firebaseConfig);
 if (firebaseConfig.measurementId) firebase.analytics();
 
 app.use(i18n);
+app.config.globalProperties.$i18n = i18n;
 app.use(store);
 
-const vuetify = createVuetify({});
 app.use(vuetify);
 
 app.mount('#app');

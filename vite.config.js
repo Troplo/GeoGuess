@@ -19,6 +19,12 @@ export default defineConfig({
             '@': path.resolve(__dirname, './src'),
         },
     },
+    optimizeDeps: {
+        include: [
+            "@fawmi/vue-google-maps",
+            "fast-deep-equal",
+        ],
+    },
     plugins: [
         vue({ template: { transformAssetUrls } }),
         eslintPlugin(),

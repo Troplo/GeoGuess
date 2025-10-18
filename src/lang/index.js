@@ -2,19 +2,22 @@ import { createI18n } from 'vue-i18n';
 
 // Load all modules.
 function loadTranslations() {
-    if (process.env.NODE_ENV === 'test') return {};
-    const context = require.context('./locale', false, /([a-z_]+)\.json$/i);
+    if (import.meta.env.NODE_ENV === 'test') return {};
 
-    return context
-        .keys()
-        .map((key) => ({ key, name: key.match(/([a-z_]+)\.json$/i)[1] }))
-        .reduce(
-            (modules, { key, name }) => ({
-                ...modules,
-                [name]: context(key),
-            }),
-            {}
-        );
+    const modules = import.meta.glob('./locale/([a-z_]+).json', {
+        eager: true,
+    });
+    const translations = {};
+
+    for (const path in modules) {
+        const match = path.match(/([a-z_]+)\.json$/i);
+        if (match) {
+            const name = match[1];
+            translations[name] = modules[path];
+        }
+    }
+
+    return translations;
 }
 
 export const translations = loadTranslations();
@@ -50,6 +53,7 @@ const i18n = createI18n({
     locale: locale,
     fallbackLocale: 'en',
     messages: translations,
+    globalInjection: true,
 });
 
 export default i18n;

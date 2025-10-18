@@ -215,7 +215,7 @@ export default {
         'pathKey',
         'mapDetails',
         'scoreLeaderboard',
-        'guessedLeaderboard'
+        'guessedLeaderboard',
         'leaderboardShown',
         'guessString',
     ],
@@ -248,6 +248,9 @@ export default {
         };
     },
     computed: {
+        mapRef() {
+            return this.$refs.mapRef.map;
+        },
         isNextButtonEnabled() {
             if (this.playerNumber == 1 || !this.room) {
                 return true;
