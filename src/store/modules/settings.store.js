@@ -22,8 +22,8 @@ export class GameSettings {
         _nbRound = 5,
         _scoreLeaderboard = true,
         _guessedLeaderboard = true,
-        _allowReRoll = true,
-) {
+        _allowReRoll = true
+    ) {
         this.allPanorama = _allPanorama;
         this.time = _timeLimitation;
         this.modeSelected = _mode;
@@ -225,7 +225,9 @@ export default {
                 commit(MutationTypes.SETTINGS_SET_ROOM, roomName);
             }
 
+            console.log(commit, dispatch, state, roomName);
             state.room.on('value', (snapshot) => {
+                console.log(snapshot);
                 if (snapshot.child('playerName').exists())
                     state.players = Object.values(
                         snapshot.child('playerName').val()

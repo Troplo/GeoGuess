@@ -81,6 +81,7 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import { getCountdownText } from "../../utils";
+
 export default {
     name: 'HistoryTable',
     computed: {

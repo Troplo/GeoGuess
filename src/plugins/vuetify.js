@@ -1,6 +1,7 @@
 import { createVuetify } from 'vuetify';
 import { RTL_LANGUAGES } from '@/lang';
 import '../scss/variables.scss';
+import 'vuetify/styles';
 
 import {
     cs,

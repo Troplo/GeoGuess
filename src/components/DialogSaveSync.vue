@@ -1,5 +1,5 @@
 <template>
-    <v-dialog :persistent="true" :value="dialogSaveSync" max-width="700">
+    <v-dialog :persistent="true" :model-value="dialogSaveSync" max-width="700">
         <v-card v-if="user">
             <v-card-title>
                 <span class="dialog-save-sync__title">Cloud sync conflict</span>

@@ -10,18 +10,11 @@
             printMapFull ? 'container-map--full' : '',
             `container-map--size-${size}`,
         ]"
-        v-on:click="
-            $viewport.width >= 450 // Only on tablet and desktop Issue #104
-                ? {
-                      mouseover: () => {
-                          activeMap = true;
-                      },
-                      mouseleave: () => {
-                          activeMap = false;
-                      },
-                  }
-                : {}
-        "
+        @click.stop
+        @mouseover="() => {
+          if ($viewport.width >= 450) activeMap = true // Only on tablet and desktop Issue #104
+        }"
+        @mouseleave="() => { if ($viewport.width >= 450) activeMap = false }"
     >
         <div class="container-map_details">
             <div class="alert-container">
@@ -654,19 +647,26 @@ export default {
         }
     }
     &.container-map--full {
-        transition: none;
-        opacity: 1;
-        --active-width: 85vw;
-        --inactive-width: 85vw;
+      transition: none;
+      opacity: 1;
+      --active-width: 85vw;
+      --inactive-width: 85vw;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: var(--active-width);
+      height: auto;
+      z-index: 999;
+      margin: 0;
+
+      .container-map_controls {
+        display: none;
+      }
+      .container-map_details {
+        display: block;
         position: relative;
-        margin: auto;
-        .container-map_controls {
-            display: none;
-        }
-        .container-map_details {
-            display: block;
-            position: relative;
-        }
+      }
     }
 
     .container-map_details {

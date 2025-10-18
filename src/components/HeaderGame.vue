@@ -17,12 +17,14 @@
             >
                 <v-icon>mdi-scoreboard-outline</v-icon>
             </v-btn>
-            <div v-if="remainingTime != null && remainingTime > 0">
-                <span id="countdown-text">{{ countdownText }}</span>
-            </div>
+            <div class="ml-4">
+                <div v-if="remainingTime != null && remainingTime > 0">
+                    <span id="countdown-text">{{ countdownText }}</span>
+                </div>
 
-            <div v-else>
-                <span id="countdown-text">{{ timerText }}</span>
+                <div v-else>
+                    <span id="countdown-text">{{ timerText }}</span>
+                </div>
             </div>
             <div
                 v-if="roomName && !streamerMode"
@@ -33,23 +35,30 @@
                     {{ roomName }}
                 </span>
             </div>
-            <div class="flex-grow-1" />
-            <v-tooltip bottom v-if="allowReRoll">
-                <template v-slot:activator="{ on, attrs }">
-                    <span v-on="on" v-bind="attrs">
-                        <v-btn icon @click="reRollGame()" :disabled="reRollVoted">
-                            <v-icon v-if="!reRollVoted">mdi-dice-multiple</v-icon>
+            <v-spacer />
+            <v-tooltip location="bottom" v-if="allowReRoll">
+                <template v-slot:activator="{ props }">
+                    <span v-bind="props">
+                        <v-btn
+                            icon
+                            @click="reRollGame()"
+                            :disabled="reRollVoted"
+                        >
+                            <v-icon v-if="!reRollVoted"
+                                >mdi-dice-multiple</v-icon
+                            >
                             <v-icon v-else>mdi-check</v-icon>
                         </v-btn>
                     </span>
                 </template>
                 <span v-if="!multiplayer">{{ $t('HeaderGame.reRoll') }}</span>
-                <span v-else>{{ $t('HeaderGame.reRollMultiplayer', {
-                    count: votedCount,
-                    total: playerCount
-                })}}</span>
+                <span v-else>{{
+                    $t('HeaderGame.reRollMultiplayer', {
+                        count: votedCount,
+                        total: playerCount,
+                    })
+                }}</span>
             </v-tooltip>
-            <v-spacer />
             <div class="round-score-container">
                 <span class="sub-text">{{ $t('HeaderGame.round') }}: </span>
                 <span id="roundLabel" class="main-text">
@@ -67,7 +76,7 @@
                     })
                 }}</span>
             </div>
-            <div class="round-points-container">
+            <div class="round-points-container mr-2">
                 <span class="sub-text">{{ $t('HeaderGame.score') }}: </span>
 
                 <span class="main-text">{{ points }}</span>

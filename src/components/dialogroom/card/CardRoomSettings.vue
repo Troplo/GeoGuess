@@ -167,8 +167,8 @@
                                 :disabled="gameSettings.scoreLeaderboard"
                             />
                             <v-checkbox
-                                :input-value="gameSettings.allowReRoll"
-                                @change="
+                                :model-value="gameSettings.allowReRoll"
+                                @update:model-value="
                                     (allowReRoll) =>
                                         setGameSettings({ allowReRoll })
                                 "
@@ -278,7 +278,7 @@
                                     :label="
                                         $t('CardRoomSettings.scoreModeLabel')
                                     "
-                                    :input-value="gameSettings.scoreMode"
+                                    :model-value="gameSettings.scoreMode"
                                     :items="scoreModes"
                                     @update:model-value="
                                         (scoreMode) =>

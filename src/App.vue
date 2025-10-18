@@ -3,17 +3,16 @@
         <DialogSaveSync></DialogSaveSync>
         <router-view />
         <v-snackbar
-            :value="syncError"
-            top
-            right
-            color="rounded-xl red accent-2"
+            :model-value="syncError"
+            location="top right"
+            color="red-accent-2"
             :timeout="saving ? -1 : 6000"
         >
             {{ $t('SyncError.label') }}
-            <template v-slot:action="{ attrs }">
+            <template v-slot:actions="{ attrs }">
                 <v-btn
                     color="white"
-                    text
+                    variant="text"
                     v-bind="attrs"
                     @click="save(history)"
                     :loading="saving"
@@ -58,7 +57,7 @@ export default {
             updateAvailable: false,
         };
     },
-    created() {
+    mounted() {
         // Listen for our custom event from the SW registration
         document.addEventListener('swUpdated', this.setUpdate, { once: true });
         if (navigator.serviceWorker)

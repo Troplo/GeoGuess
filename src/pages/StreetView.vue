@@ -1,28 +1,32 @@
 <template>
-    <div id="game-page">
-        <div id="street-view-container">
-            <HeaderGame
-                ref="header"
-                :distance="scoreHeader"
-                :points="pointsHeader"
-                :round="round"
-                :room-name="roomName"
-                :nb-round="nbRound"
-                :remaining-time="remainingTime"
-                :mode="mode"
-                :multiplayer="multiplayer"
-                :re-roll-game="reRollGame"
-                :re-roll-voted="reRollVoted"
-                :player-count="playerCount"
-                :voted-count="votedCount"
-                :allow-re-roll="allowReRoll"
-                :guess-string="guessString"
-                :leaderboard-shown="leaderboardShown"
-            />
+    <div>
+        <div id="game-page">
+            <div id="street-view-container">
+                <HeaderGame
+                    ref="header"
+                    :distance="scoreHeader"
+                    :points="pointsHeader"
+                    :round="round"
+                    :room-name="roomName"
+                    :nb-round="nbRound"
+                    :remaining-time="remainingTime"
+                    :mode="mode"
+                    :multiplayer="multiplayer"
+                    :re-roll-game="reRollGame"
+                    :re-roll-voted="reRollVoted"
+                    :player-count="playerCount"
+                    :voted-count="votedCount"
+                    :allow-re-roll="allowReRoll"
+                    :guess-string="guessString"
+                    :leaderboard-shown="leaderboardShown"
+                />
 
-            <div id="game-interface">
-                <v-overlay :model-value="!isReady && multiplayer" opacity="1" />
-                <div id="street-view" ref="streetView" />
+                <div id="game-interface">
+                    <v-overlay
+                        :model-value="!isReady && multiplayer"
+                        opacity="1"
+                    />
+                    <div id="street-view" ref="streetView" />
                     <v-tooltip location="top">
                         <template v-slot:activator="{ props }">
                             <v-btn
@@ -75,7 +79,12 @@
                 </div>
             </div>
         </div>
-        <v-overlay :model-value="overlay" opacity="0.8" z-index="1" />
+        <v-overlay
+            persistent
+            :model-value="overlay"
+            opacity="0.8"
+            z-index="1"
+        />
         <DialogMessage
             :dialog-message="dialogMessage"
             :dialog-title="dialogTitle"
@@ -89,12 +98,14 @@
             ></Leaderboard>
             <v-alert
                 id="leaderboard-alert"
-                transition="slide-x-transition"
                 icon="mdi-scoreboard-outline"
                 width="400"
-                dark
                 class="mt-2 mr-2"
-                v-if="guessString && !$vuetify.breakpoint.mobile && leaderboardShown"
+                v-if="
+                    guessString &&
+                    !$vuetify.breakpoint.mobile &&
+                    leaderboardShown
+                "
             >
                 {{ guessString }}
             </v-alert>
@@ -298,6 +309,7 @@ export default {
             leaderboard: [],
             leaderboardShown: this.guessedLeaderboard || this.scoreLeaderboard,
             printMapFull: false,
+            isDev: false,
         };
     },
     computed: {
@@ -333,20 +345,20 @@ export default {
         },
         countdownPercentage() {
             return (this.remainingTime * 100) / this.timeCountdown;
-        }
+        },
     },
     async mounted() {
         if (
-                (this.areaParams && this.areaParams.data.urlArea) ||
-                this.mode === GAME_MODE.COUNTRY
+            (this.areaParams && this.areaParams.data.urlArea) ||
+            this.mode === GAME_MODE.COUNTRY
         ) {
             await this.loadAreas(
-                    this.areaParams && this.areaParams.data.urlArea
+                this.areaParams && this.areaParams.data.urlArea
             );
         }
         await this.$gmapApiPromiseLazy();
         this.panorama = new google.maps.StreetViewPanorama(
-                this.$refs.streetView
+            this.$refs.streetView
         );
 
         if (!this.streetViewService) {
@@ -393,19 +405,11 @@ export default {
                 const reRoll = snapshot.child('reRoll').val();
                 // Generate the lat and lng to test whether the game needs to be refreshed from the host.
                 const randomLat = snapshot
-                        .child(
-                                'streetView/round' +
-                                this.round +
-                                '/latitude'
-                        )
-                        .val();
+                    .child('streetView/round' + this.round + '/latitude')
+                    .val();
                 const randomLng = snapshot
-                        .child(
-                                'streetView/round' +
-                                this.round +
-                                '/longitude'
-                        )
-                        .val();
+                    .child('streetView/round' + this.round + '/longitude')
+                    .val();
                 const lngLat = `${randomLng},${randomLat}`;
                 // Update counts for UI.
                 this.playerCount = snapshot.child('size').val();
@@ -413,7 +417,10 @@ export default {
                     this.votedCount = Object.keys(reRoll).length;
 
                     // Check if the length of the voted players are equal to the number of players to assume a re-roll.
-                    if (Object.keys(reRoll).length === this.playerCount && this.playerNumber === 1) {
+                    if (
+                        Object.keys(reRoll).length === this.playerCount &&
+                        this.playerNumber === 1
+                    ) {
                         this.room.child('reRoll').remove();
                         this.reRollGame(snapshot);
                     }
@@ -505,14 +512,14 @@ export default {
 
                     // Put the player into the current round node if the player is not put yet
                     if (
-                            !snapshot
-                                    .child('round' + this.round)
-                                    .hasChild('player' + this.playerNumber)
+                        !snapshot
+                            .child('round' + this.round)
+                            .hasChild('player' + this.playerNumber)
                     ) {
                         this.room
-                                .child('round' + this.round)
-                                .child('player' + this.playerNumber)
-                                .set(0);
+                            .child('round' + this.round)
+                            .child('player' + this.playerNumber)
+                            .set(0);
 
                         // Other players load the streetview the first player loaded earlier
                         if (this.playerNumber !== 1) {
@@ -523,15 +530,18 @@ export default {
                         this.room.child('reRoll').remove();
                         this.votedCount = 0;
                         this.reRollVoted = false;
-                    } else if(this.lngLat !== lngLat && this.playerNumber !== 1) {
+                    } else if (
+                        this.lngLat !== lngLat &&
+                        this.playerNumber !== 1
+                    ) {
                         // If the Longitude and Latitude have been changed during a round, we can assume a re-roll has been taken place.
                         this.reRollGame(snapshot);
                     }
                     // Enable guess button when every players are put into the current round's node
                     if (
-                            snapshot.child('round' + this.round).numChildren() ===
+                        snapshot.child('round' + this.round).numChildren() ===
                             snapshot.child('size').val() &&
-                            !this.isReady
+                        !this.isReady
                     ) {
                         // Close the dialog when everyone is ready
                         this.dialogMessage = false;
@@ -542,8 +552,8 @@ export default {
 
                         // Countdown timer starts
                         this.timeLimitation = snapshot
-                                .child('timeLimitation')
-                                .val();
+                            .child('timeLimitation')
+                            .val();
 
                         if (this.timeLimitation != 0) {
                             if (!this.hasTimerStarted) {
@@ -555,8 +565,8 @@ export default {
 
                     // Delete the room when everyone finished the game
                     if (
-                            snapshot.child('isGameDone').numChildren() ==
-                            snapshot.child('size').val()
+                        snapshot.child('isGameDone').numChildren() ==
+                        snapshot.child('size').val()
                     ) {
                         this.room.child('active').remove();
                         this.room.off();
@@ -570,19 +580,24 @@ export default {
         }
 
         this.$refs.header.startTimer();
+
+        this.devScan();
+        setTimeout(() => {
+            this.devScan();
+        }, 200);
     },
     beforeDestroy() {
         if (document.querySelector('.widget-scene')) {
             document
-                    .querySelector('.widget-scene')
-                    .removeEventListener('keydown', this.onUserEventPanoramaKey);
+                .querySelector('.widget-scene')
+                .removeEventListener('keydown', this.onUserEventPanoramaKey);
 
             document
-                    .querySelector('.widget-scene')
-                    .removeEventListener(
-                            'mousedown',
-                            this.onUserEventPanoramaMouse
-                    );
+                .querySelector('.widget-scene')
+                .removeEventListener(
+                    'mousedown',
+                    this.onUserEventPanoramaMouse
+                );
         }
         window.removeEventListener('beforeunload', this.beforeUnload);
         if (this.room) {
@@ -596,52 +611,33 @@ export default {
         ...mapActions(['loadAreas']),
         async loadStreetViewFromHost(snapshot) {
             let randomLat = snapshot
-                    .child(
-                            'streetView/round' +
-                            this.round +
-                            '/latitude'
-                    )
-                    .val();
+                .child('streetView/round' + this.round + '/latitude')
+                .val();
             let randomLng = snapshot
-                    .child(
-                            'streetView/round' +
-                            this.round +
-                            '/longitude'
-                    )
-                    .val();
+                .child('streetView/round' + this.round + '/longitude')
+                .val();
 
             this.area = snapshot
-                    .child(
-                            'streetView/round' + this.round + '/area'
-                    )
-                    .val();
+                .child('streetView/round' + this.round + '/area')
+                .val();
             this.isVisibleDialog = snapshot
-                    .child(
-                            'streetView/round' + this.round + '/warning'
-                    )
-                    .val();
+                .child('streetView/round' + this.round + '/warning')
+                .val();
             this.randomFeatureProperties = snapshot
-                    .child(
-                            'streetView/round' +
-                            this.round +
-                            '/roundInfo'
-                    )
-                    .val();
+                .child('streetView/round' + this.round + '/roundInfo')
+                .val();
             this.lngLat = `${randomLng},${randomLat}`;
-            this.randomLatLng = new google.maps.LatLng(
-                    randomLat,
-                    randomLng
-            );
+            this.randomLatLng = new google.maps.LatLng(randomLat, randomLng);
 
             this.resetLocation();
         },
         async reRollGame(snapshot = null) {
-            if(!this.allowReRoll) return;
-            if(this.multiplayer && !snapshot) {
+            if (!this.allowReRoll) return;
+            if (this.multiplayer && !snapshot) {
                 // This casts the player's vote to re-roll the round.
                 this.room.child('reRoll/player' + this.playerNumber).set(true);
                 this.reRollVoted = true;
-            } else if(this.playerNumber === 1 || !this.multiplayer) {
+            } else if (this.playerNumber === 1 || !this.multiplayer) {
                 // If the player is a host a new position will be generated when all players have voted.
                 await this.$refs.mapContainer.goToNextRound(false, false);
                 await this.$refs.header.startTimer();
@@ -673,17 +669,39 @@ export default {
                     warning,
                 });
             }
+            this.devScan();
+        },
+        devScan() {
+            document.querySelectorAll('*').forEach((el) => {
+                const directText = Array.from(el.childNodes)
+                    .filter((node) => node.nodeType === Node.TEXT_NODE)
+                    .map((node) => node.textContent.trim())
+                    .join('');
+
+                if (directText === 'For development purposes only') {
+                    el.style.display = 'none';
+                }
+
+                if (
+                    directText === "This page can't load Google Maps correctly."
+                ) {
+                    console.log("This page can't load Google Maps correctly.");
+                    const secondParent = el.parentElement?.parentElement;
+                    secondParent.style.display = 'none';
+                    this.$refs.streetView.style.filter = 'invert(99%)';
+                }
+            });
         },
         resetLocation() {
             const service = new google.maps.StreetViewService();
             service.getPanorama(
-                    {
-                        location: this.randomLatLng,
-                        preference: 'nearest',
-                        radius: 50,
-                        source: this.allPanorama ? 'default' : 'outdoor',
-                    },
-                    this.setPosition
+                {
+                    location: this.randomLatLng,
+                    preference: 'nearest',
+                    radius: 50,
+                    source: this.allPanorama ? 'default' : 'outdoor',
+                },
+                this.setPosition
             );
         },
         setPosition(data) {
@@ -703,46 +721,87 @@ export default {
             // Remove google streetview link
             if (document.querySelector('#street-view a[href^="https://maps"]'))
                 document
-                        .querySelector('#street-view a[href^="https://maps"]')
-                        .remove();
+                    .querySelector('#street-view a[href^="https://maps"]')
+                    .remove();
             setTimeout(() => {
                 if (document.querySelector('.widget-scene')) {
                     document
-                            .querySelector('.widget-scene')
-                            .addEventListener(
-                                    'keydown',
-                                    this.onUserEventPanoramaKey
-                            );
+                        .querySelector('.widget-scene')
+                        .addEventListener(
+                            'keydown',
+                            this.onUserEventPanoramaKey
+                        );
 
                     document
-                            .querySelector('.widget-scene')
-                            .addEventListener(
-                                    'mousedown',
-                                    this.onUserEventPanoramaMouse
-                            );
+                        .querySelector('.widget-scene')
+                        .addEventListener(
+                            'mousedown',
+                            this.onUserEventPanoramaMouse
+                        );
                     document
-                            .querySelector('.widget-scene')
-                            .addEventListener(
-                                    'touchstart',
-                                    this.onUserEventPanoramaMouse
-                            );
+                        .querySelector('.widget-scene')
+                        .addEventListener(
+                            'touchstart',
+                            this.onUserEventPanoramaMouse
+                        );
                     document
-                            .querySelector('.widget-scene')
-                            .addEventListener(
-                                    'pointerdown',
-                                    this.onUserEventPanoramaMouse
-                            );
+                        .querySelector('.widget-scene')
+                        .addEventListener(
+                            'pointerdown',
+                            this.onUserEventPanoramaMouse
+                        );
                 }
             }, 50);
 
-            if (data && data.location)
-                this.panorama.setPano(data.location.pano);
-            this.panorama.setPov({
-                heading: 270,
-                pitch: 0,
-            });
+            // console.log(this.panorama, this.panorama.getPano(), this.panorama.getStatus());
+            // for(const func of Object.keys(this.panorama.__proto__)) {
+            //   try {
+            //     if(func.startsWith("get")) {
+            //       console.log(func);
+            //       console.log(`${func}: ${this.panorama[func]?.()}`);
+            //     } else if(func.startsWith("set")) {
+            //       console.log(`${func}: ${this.panorama[func]?.(true)}`);
+            //       console.log(`${func}: ${this.panorama[func]?.(1)}`);
+            //       console.log(`${func}: ${this.panorama[func]?.("QsbrYZkm3ValDWLtQkU7yw")}`);
+            //       console.log(`${func}: ${this.panorama[func]?.(["str"])}`);
+            //     }
+            //   } catch {
+            //     //
+            //   }
+            // }
+            try {
+                if (data && data.location) {
+                    // I don't know why this works.
+                    // If you use this.panorama.setPano, the Google JS library will error and it will
+                    // be in a bugged state with a black screen.
+                    const streetView = new google.maps.StreetViewPanorama(
+                        this.$refs.streetView
+                    );
+                    streetView.setOptions({
+                        addressControl: false,
+                        fullscreenControl: false,
+                        motionTracking: false,
+                        motionTrackingControl: false,
+                        showRoadLabels: false,
+                        panControl: this.panControl,
+                        zoomControl: this.zoomControl,
+                        scrollwheel: this.zoomControl,
+                        disableDoubleClickZoom: !this.zoomControl,
+                        linksControl: this.moveControl,
+                        clickToGo: this.moveControl,
+                    });
+                    streetView.setPano(data.location.pano);
+                    streetView.setPov({
+                        heading: 270,
+                        pitch: 0,
+                    });
+                    streetView.setZoom(0);
+                }
+            } catch (e) {
+                console.error(e);
+            }
 
-            this.panorama.setZoom(0);
+            this.devScan();
         },
         initTimer(time, printAlert) {
             const endDate = new Date();
@@ -761,8 +820,8 @@ export default {
         startTimer(round = this.round) {
             if (round === this.round) {
                 this.remainingTime = Math.max(
-                        0,
-                        Math.round((this.endTime - Date.now()) / 1000)
+                    0,
+                    Math.round((this.endTime - Date.now()) / 1000)
                 );
                 if (this.remainingTime > 0) {
                     setTimeout(() => {
@@ -772,17 +831,17 @@ export default {
                     this.timerInProgress = false;
                     if (!this.hasLocationSelected) {
                         if (
-                                [GAME_MODE.COUNTRY, GAME_MODE.CUSTOM_AREA].includes(
-                                        this.mode
-                                )
+                            [GAME_MODE.COUNTRY, GAME_MODE.CUSTOM_AREA].includes(
+                                this.mode
+                            )
                         ) {
                             this.$refs.mapContainer.selectRandomLocation(
-                                    getRandomArea(
-                                            this.areasJson,
-                                            this.areaParams
-                                                    ? this.areaParams.data.pathKey
-                                                    : 'iso_a2'
-                                    )
+                                getRandomArea(
+                                    this.areasJson,
+                                    this.areaParams
+                                        ? this.areaParams.data.pathKey
+                                        : 'iso_a2'
+                                )
                             );
                         } else {
                             // Set a random location if the player didn't select a location in time
@@ -806,11 +865,11 @@ export default {
 
             if (this.multiplayer) {
                 this.room
-                        .child('finalScore/player' + this.playerNumber)
-                        .set(this.score);
+                    .child('finalScore/player' + this.playerNumber)
+                    .set(this.score);
                 this.room
-                        .child('finalPoints/player' + this.playerNumber)
-                        .set(this.points);
+                    .child('finalPoints/player' + this.playerNumber)
+                    .set(this.points);
 
                 // Wait for other players to guess locations
                 this.dialogTitle = this.$t('StreetView.waitForOtherPlayers');
@@ -855,7 +914,7 @@ export default {
             }
 
             // Update the round, if the round is regenerated we do not increment it.
-            if(incrementRound) this.round += 1;
+            if (incrementRound) this.round += 1;
 
             if (this.playerNumber == 1 || !this.multiplayer) {
                 await this.loadStreetView();
@@ -865,8 +924,8 @@ export default {
             } else {
                 // Trigger listener and load the next streetview
                 this.room
-                        .child('trigger/player' + this.playerNumber)
-                        .set(this.round);
+                    .child('trigger/player' + this.playerNumber)
+                    .set(this.round);
             }
             this.$refs.mapContainer.startNextRound();
         },
@@ -891,7 +950,7 @@ export default {
             } else {
                 // Open the dialog while waiting for other players to finsih the game
                 this.dialogTitle = this.$t(
-                        'StreetView.waitForOtherPlayersToFinish'
+                    'StreetView.waitForOtherPlayersToFinish'
                 );
                 this.dialogText = '';
                 this.dialogMessage = true;
@@ -899,12 +958,12 @@ export default {
         },
         onUserEventPanoramaKey(e) {
             if (
-                    (!this.moveControl &&
-                            [38, 40, 87, 83, 90].includes(e.keyCode)) ||
-                    (!this.zoomControl &&
-                            [107, 109, 187, 189].includes(e.keyCode)) ||
-                    (!this.panControl &&
-                            [37, 39, 65, 68, 100, 102].includes(e.keyCode))
+                (!this.moveControl &&
+                    [38, 40, 87, 83, 90].includes(e.keyCode)) ||
+                (!this.zoomControl &&
+                    [107, 109, 187, 189].includes(e.keyCode)) ||
+                (!this.panControl &&
+                    [37, 39, 65, 68, 100, 102].includes(e.keyCode))
             ) {
                 e.stopPropagation();
             }
@@ -996,5 +1055,16 @@ export default {
     #reset-button {
         bottom: 120px;
     }
+}
+</style>
+
+<style>
+#street-view
+    div.gm-style:nth-child(1)
+    > div:nth-child(2)
+    > div:nth-child(1)
+    > div:nth-child(9)
+    > div:nth-child(1) {
+    display: none !important;
 }
 </style>

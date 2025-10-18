@@ -70,10 +70,10 @@
                     ></v-progress-circular>
                     <template v-else>
                         <template v-if="user">
-                            <v-menu offset-y>
-                                <template v-slot:activator="{ on }">
-                                    <v-btn text link icon>
-                                        <v-avatar v-on="on">
+                            <v-menu>
+                                <template v-slot:activator="{ props }">
+                                    <v-btn variant="text" icon>
+                                        <v-avatar v-bind="props">
                                             <v-img
                                                 :src="user.avatar"
                                                 :alt="user.username"
@@ -101,8 +101,7 @@
                         <template v-else>
                             <v-btn
                                 id="loginBtn"
-                                text
-                                link
+                                variant="text"
                                 :href="
                                     'https://privateuploader.com/oauth/' +
                                     clientId
@@ -155,7 +154,7 @@ export default {
     },
     computed: {
         clientId() {
-            return process.env.VUE_APP_TPU_CLIENT_ID;
+            return import.meta.env.VITE_APP_TPU_CLIENT_ID;
         },
         ...mapState({
             streamerMode: (state) => state.homeStore.streamerMode,
@@ -164,7 +163,7 @@ export default {
         }),
         demoMode() {
             return !!import.meta.env.VITE_APP_DEMO_MODE;
-        }
+        },
     },
     methods: {
         ...mapActions(['setStreamerMode']),
@@ -198,8 +197,6 @@ export default {
 <style lang="scss" scoped>
 .header {
     z-index: 1;
-    padding: 4px calc(16px + 5%) !important;
-    width: 90% !important;
     background-color: rgb(var(--v-theme-header)) !important;
     .header__nav,
     .header__nav__btns {

@@ -21,7 +21,7 @@
         "@turf/distance": "^6.5.0",
         "@turf/helpers": "^6.1.4",
         "@vitejs/plugin-vue": "^4.4.0",
-        "axios": "^0.21.4",
+        "axios": "0.21.4",
         "axios-cache-adapter": "^2.7.3",
         "dotenv": "^16.3.1",
         "firebase": "^8.10.1",
@@ -29,18 +29,19 @@
         "jsdom": "^22.1.0",
         "patch-package": "^8.0.0",
         "random-position-in-polygon": "^1.0.6",
+        "regenerator-runtime": "^0.14.1",
         "register-service-worker": "^1.7.2",
         "vite": "^4.5.0",
         "vite-plugin-eslint": "^1.8.1",
-        "vite-plugin-vuetify": "^1.0.2",
-        "vue": "^3.4.26",
+        "vite-plugin-vuetify": "^2.1.2",
+        "vue": "^3.5.22",
         "vue-axios": "^3.5.2",
         "vue-clipboard2": "^0.3.3",
         "vue-country-flag-next": "^2.3.2",
         "vue-google-maps-community-fork": "^0.3.1",
         "vue-i18n": "9.6.5",
-        "vue-router": "^4.2.5",
-        "vuetify": "^3.5.17",
+        "vue-router": "^4.6.3",
+        "vuetify": "^3.10.5",
         "vuex": "^4.1.0"
     },
     "devDependencies": {
@@ -58,7 +59,7 @@
         "eslint-plugin-vue": "^8.7.1",
         "eslint-plugin-vuetify": "^2.4.0",
         "react-is": "^18.2.0",
-        "sass": "1.32",
+        "sass": "^1.93.2",
         "vitest": "^0.34.6",
         "vue-template-compiler": "^2.7.15"
     },
@@ -81,5 +82,6 @@
     "repository": {
         "type": "git",
         "url": "git+https://github.com/GeoGuess/GeoGuess.git"
-    }
+    },
+    "packageManager": "yarn@1.22.22"
 }

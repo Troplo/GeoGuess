@@ -26,9 +26,9 @@
             </v-card>
         </v-dialog>
         <div class="history-table__btns">
-            <v-tooltip top v-if="!saving">
-                <template v-slot:activator="{ on, attrs }">
-                    <div v-bind="attrs" v-on="on">
+            <v-tooltip location="top" v-if="!saving">
+                <template v-slot:activator="{ props }">
+                    <div v-bind="props">
                         <v-btn icon @click="cloudConflict(true)">
                             <v-icon> mdi-sync </v-icon>
                         </v-btn>
@@ -36,9 +36,9 @@
                 </template>
                 <span>{{ $t('History.forceCloudConflict') }}</span>
             </v-tooltip>
-            <v-tooltip top v-else>
-                <template v-slot:activator="{ on, attrs }">
-                    <div v-bind="attrs" v-on="on">
+            <v-tooltip location="top" v-else>
+                <template v-slot:activator="{ props }">
+                    <div v-bind="props" v-on="on">
                         <v-btn icon disabled>
                             <v-progress-circular
                                 size="20"

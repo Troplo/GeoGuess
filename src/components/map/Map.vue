@@ -16,6 +16,7 @@
                     $vuetify.theme.global.name === 'dark'
                         ? $vuetify.theme.themes.dark.gmap
                         : $vuetify.theme.themes.light.gmap,
+                gestureHandling: 'greedy'
             }"
         />
     </div>
@@ -184,5 +185,9 @@ export default {
 
 .gm-style-iw {
     color: black;
+}
+
+.vue-map-container {
+  height: 100%;
 }
 </style>
