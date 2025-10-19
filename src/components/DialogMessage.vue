@@ -1,5 +1,6 @@
 <template>
     <v-dialog
+        style="z-index: 99999"
         :model-value="dialogMessage"
         max-width="600"
         persistent

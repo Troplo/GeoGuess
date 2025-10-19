@@ -7,21 +7,21 @@ html {
 }
 * {
     scrollbar-width: thin;
-    scrollbar-color: var(--v-background-base) var(--v-scrollbar-base);
+    scrollbar-color: rgb(var(--v-theme-background)) rgb(var(--v-theme-scrollbar));
 }
 
 *::-webkit-scrollbar-track {
-    background-color: var(--v-background-base);
+    background-color: rgb(var(--v-theme-background));
 }
 
 *::-webkit-scrollbar {
     width: 10px;
-    background-color: var(--v-background-base);
+    background-color: rgb(var(--v-theme-background));
 }
 
 *::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    background-color: var(--v-scrollbar-base);
+    background-color: var(--v-theme-scrollbar);
 }
 .v-application {
     .v-card {

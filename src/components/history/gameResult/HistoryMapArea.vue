@@ -106,7 +106,7 @@ export default {
         }
         height: 100%;
         width: 15%;
-        background: rgb(var(--v-card-base));
+        background: rgb(var(--v-theme-card));
         display: flex;
         flex-direction: column;
         overflow-y: auto;

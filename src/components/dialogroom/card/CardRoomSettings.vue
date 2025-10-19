@@ -317,73 +317,78 @@
         </v-card-actions>
     </v-card>
 </template>
-<script>
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue';
+import { useStore } from 'vuex';
+import { useGameStore } from '@/modernStores/game.store.js';
 import TimePicker from '@/components/shared/TimePicker.vue';
 import { GAME_MODE, SCORE_MODE } from '@/constants';
 import CardRoomMixin from './mixins/CardRoomMixin';
-import { mapActions, mapGetters, mapState, mapMutations } from 'vuex';
 import bbox from '@turf/bbox';
-import { SETTINGS_SET_GAME_SETTINGS } from '@/store/mutation-types.js';
 
-export default {
-    components: {
-        TimePicker,
-    },
-    mixins: [CardRoomMixin],
-    props: ['singlePlayer'],
-    data() {
-        return {
-            invalidAreas: false,
-            loadingAreas: false,
-        };
-    },
-    computed: {
-        ...mapGetters(['areasJson', 'areasList']),
-        ...mapState({
-            placeGeoJson: (state) => state.homeStore.map.geojson,
-        }),
-        ...mapState('settingsStore', ['gameSettings']),
-        optionsArea() {
-            return this.areasList
-                .filter((a) => {
-                    if (!a.data.bbox) {
-                        return true;
-                    }
-                    if (this.placeGeoJson) {
-                        const bboxPlace = bbox(this.placeGeoJson);
-                        return a.data.bbox.every((v, index) =>
-                            index < 2
-                                ? v <= bboxPlace[index]
-                                : v >= bboxPlace[index]
-                        );
-                    }
-                })
-                .map((a) => ({ text: a.nameLocate, value: a }));
-        },
-        scoreModes() {
-            return Object.values(SCORE_MODE).map((a) => ({
-                value: a,
-                text: this.$t('CardRoomSettings.scoreModes.' + a),
-            }));
-        },
-        gameMode() {
-            return GAME_MODE;
-        },
-    },
-    async mounted() {
-        await this.$gmapApiPromiseLazy();
-    },
-    methods: {
-        ...mapMutations('settingsStore', {
-            setGameSettings: SETTINGS_SET_GAME_SETTINGS,
-        }),
-        ...mapActions('settingsStore', ['setSettings']),
-        onClickNext() {
-            this.setSettings();
-        },
-    },
-};
+// Pinia store for settings
+const gameStore = useGameStore();
+
+// Vuex store
+const store = useStore();
+
+// Props
+defineProps<{ singlePlayer?: boolean }>();
+
+// Reactive state
+const invalidAreas = ref(false);
+const loadingAreas = ref(false);
+
+// Computed
+const areasJson = computed(() => store.getters.areasJson);
+const areasList = computed(() => store.getters.areasList);
+const placeGeoJson = computed(() => store.state.homeStore.map.geojson);
+const gameSettings = computed(() => gameStore.gameSettings);
+
+const optionsArea = computed(() => {
+    return areasList.value
+        .filter((a: any) => {
+            if (!a.data.bbox) return true;
+            if (placeGeoJson.value) {
+                const bboxPlace = bbox(placeGeoJson.value);
+                return a.data.bbox.every((v: number, index: number) =>
+                    index < 2 ? v <= bboxPlace[index] : v >= bboxPlace[index]
+                );
+            }
+            return false;
+        })
+        .map((a: any) => ({ text: a.nameLocate, value: a }));
+});
+
+const scoreModes = computed(() =>
+    Object.values(SCORE_MODE).map((mode) => ({
+        value: mode,
+        text:
+            (window as any).$t?.('CardRoomSettings.scoreModes.' + mode) || mode,
+    }))
+);
+
+const gameMode = computed(() => GAME_MODE);
+
+// Methods
+function setGameSettings(settings: any) {
+    gameStore.room.config = {
+        ...config,
+        ...settings,
+    };
+}
+
+function setSettings() {
+    gameStore.saveSettings();
+}
+
+function onClickNext() {
+    setSettings();
+}
+
+CardRoomMixin;
 </script>
+
 <style lang="scss" scoped>
 #card-settings {
     &.blur {

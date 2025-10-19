@@ -63,8 +63,8 @@ const vuetify = createVuetify({
                     content: '#202020',
                     footer: '#202020',
                     scrollbar: '#3e3e3e',
+                    gmapBg: '#242f3e',
                 },
-                gmapBg: '#242f3e',
                 gmap: [
                     {
                         elementType: 'geometry',

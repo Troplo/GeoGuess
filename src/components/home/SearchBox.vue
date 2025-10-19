@@ -1,26 +1,36 @@
 <template>
-    <div class="search-box">
-        <h2>{{ $tc('Home.placeVisited', nbPlaceVisits) }}</h2>
+    <div class="d-flex flex-column align-center">
+        <h2>{{ $t('Home.placeVisited', nbPlaceVisits) }}</h2>
 
-        <div class="search-box__btns">
+        <div class="ga-2 d-flex flex-column align-center">
+            <div class="d-flex ga-2">
+                <v-btn
+                    rounded
+                    color="primary"
+                    size="large"
+                    @click="openDialog()"
+                >
+                    {{ $t('DialogRoom.singlePlayer') }}
+                </v-btn>
+
+                <v-btn
+                    rounded
+                    color="secondary"
+                    size="large"
+                    @click="openDialog(false)"
+                >
+                    {{ $t('DialogRoom.withFriends') }}
+                </v-btn>
+            </div>
             <v-btn
                 class="search-box__btns__btn"
                 rounded
-                color="primary"
-                size="large"
-                @click="openDialog()"
-            >
-                {{ $t('DialogRoom.singlePlayer') }}
-            </v-btn>
-
-            <v-btn
-                class="search-box__btns__btn"
-                rounded
-                color="secondary"
+                variant="tonal"
+                color="yellow"
                 size="large"
                 @click="openDialog(false)"
             >
-                {{ $t('DialogRoom.withFriends') }}
+                {{ $t('DialogRoom.matchmaking') }}
             </v-btn>
             <DialogRoom />
         </div>

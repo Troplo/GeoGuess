@@ -284,7 +284,7 @@ export default {
                 text-overflow: ellipsis;
                 white-space: nowrap;
                 overflow: hidden;
-                background: var(--v-primary-base);
+                background: rgb(var(--v-theme-primary));
                 margin-top: 0.2rem;
                 padding: 0.1% 5%;
                 border-radius: 5px;

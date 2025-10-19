@@ -30,8 +30,8 @@
                 <h3>{{ $tc('CardRoomPlayerName.players', players.length) }}</h3>
                 <v-chip-group column>
                     <v-chip
-                        v-for="(name, i) in players"
-                        :key="'player' + i"
+                        v-for="roomPlayer in players"
+                        :key="'player' + roomPlayer.player.id"
                         color="#424242"
                     >
                         <v-avatar
@@ -46,9 +46,8 @@
                             "
                             start
                         >
-                            {{ name.slice(0, 2).toUpperCase() }}
                         </v-avatar>
-                        {{ name }}
+                        {{ roomPlayer.player.name }}
                     </v-chip>
                 </v-chip-group>
             </v-container>
@@ -72,36 +71,50 @@
     </v-card>
 </template>
 
-<script>
-import { mapState, mapActions } from 'vuex';
+<script setup lang="ts">
+import { computed, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useGameStore } from '@/modernStores/game.store.js';
 import CardRoomMixin from './mixins/CardRoomMixin';
-export default {
-    mixins: [CardRoomMixin],
-    computed: {
-        ...mapState('settingsStore', [
-            'playerNumber',
-            'roomName',
-            'players',
-            'name',
-            'invalidName',
-        ]),
-        ...mapState({
-            streamerMode: (state) => state.homeStore.streamerMode,
-        }),
-        roomUrl() {
-            return window.origin + '/room/' + this.roomName;
-        },
-        canNext() {
-            return !this.players.some((name) => name === '');
-        },
-    },
-    methods: {
-        ...mapActions('settingsStore', ['startGame', 'setPlayerName']),
-        copy() {
-            this.$copyText(this.roomUrl, this.$refs.roomUrl);
-        },
-    },
-};
+
+const gameStore = useGameStore();
+
+const store = useStore();
+
+const roomUrlRef = ref<HTMLElement | null>(null);
+
+const playerNumber = computed(() => gameStore.playerNumber);
+const roomName = computed(() => gameStore.roomName);
+const players = computed(() => gameStore.players);
+const name = computed(() => gameStore.name);
+const invalidName = computed(() => gameStore.invalidName);
+
+const streamerMode = computed(() => store.state.homeStore.streamerMode);
+
+const roomUrl = computed(() => `${window.origin}/room/${roomName.value}`);
+
+const canNext = computed(
+    () => !players.value.some((player: string) => player === '')
+);
+
+function startGame() {
+    gameStore.startGame();
+}
+
+function setPlayerName(playerName: string) {
+    gameStore.name = playerName;
+}
+
+function copy() {
+    if (roomUrlRef.value) {
+        // Use the clipboard API for Vue 3 instead of this.$copyText
+        navigator.clipboard.writeText(roomUrl.value).catch((err) => {
+            console.error('Failed to copy: ', err);
+        });
+    }
+}
+
+CardRoomMixin;
 </script>
 
 <style scoped>

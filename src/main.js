@@ -15,6 +15,7 @@ import VueClipboard from 'vue-clipboard2';
 import CountryNamePlugin from './plugins/countryNamePlugin';
 import './registerServiceWorker.js';
 import { setupLegacyPiniaCompat } from '@/plugins/legacyPiniaCompat';
+import { init } from '@/plugins/debugOverlay/index.js';
 
 const pinia = createPinia();
 export const app = createApp(App);
@@ -73,9 +74,13 @@ if (firebaseConfig.measurementId) firebase.analytics();
 
 app.use(i18n);
 app.config.globalProperties.$i18n = i18n;
+app.config.globalProperties.$t = i18n.global.t;
+app.config.globalProperties.$tc = i18n.global.t;
 app.use(store);
 
 app.use(vuetify);
 setupLegacyPiniaCompat(app);
+import '@troplo/debug-overlay/dist/debug-overlay.css';
+init(app);
 
 app.mount('#app');

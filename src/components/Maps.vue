@@ -277,165 +277,164 @@ export default {
         this.game.playerName = this.playerName;
         let size = 0;
 
-        if (this.roomName) {
-            this.room = firebase.database().ref(this.roomName);
-
-            this.room.on('value', (snapshot) => {
-                if (snapshot.hasChild('active')) {
-                    size = snapshot.child('size').val();
-                    if (size === 1) {
-                        this.room.onDisconnect().remove();
-                    } else {
-                        this.room.onDisconnect().update({ size: size - 1 });
-                    }
-                    if (
-                        // If Time Attack and 1st true guess finish round
-                        (this.timeAttack &&
-                            this.countdown === 0 &&
-                            snapshot.child('guess').numChildren() >= 1 &&
-                            snapshot
-                                .child('guess')
-                                .forEach(
-                                    (guess) =>
-                                        guess.child('area').val() === this.area
-                                )) ||
-                        // Allow players to move on to the next round when every players guess locations
-                        snapshot.child('guess').numChildren() === size
-                    ) {
-                        this.game.timeLimitation = this.timeLimitation;
-                        this.isNextStreetViewReady = false;
-
-                        this.$emit('showResult');
-
-                        // Put markers and draw polylines on the map
-                        let i = 0;
-                        let players = {};
-                        snapshot.child('guess').forEach((childSnapshot) => {
-                            let posGuess;
-                            if (this.mode === GAME_MODE.CLASSIC) {
-                                const lat = childSnapshot
-                                    .child('latitude')
-                                    .val();
-                                const lng = childSnapshot
-                                    .child('longitude')
-                                    .val();
-                                posGuess = new google.maps.LatLng({
-                                    lat: lat,
-                                    lng: lng,
-                                });
-                            } else {
-                                posGuess = childSnapshot.child('area').val();
-                            }
-
-                            const playerName = snapshot
-                                .child('playerName')
-                                .child(childSnapshot.key)
-                                .val();
-                            const roundValues = snapshot
-                                .child(
-                                    'round' +
-                                        this.round +
-                                        '/' +
-                                        childSnapshot.key
-                                )
-                                .exportVal();
-
-                            const { points, distance } = roundValues;
-
-                            players[playerName] = {
-                                ...roundValues,
-                                guess: posGuess,
-                            };
-                            this.$refs.map.drawPolyline(
-                                posGuess,
-                                i,
-                                this.randomLatLng
-                            );
-                            this.$refs.map.putMarker(
-                                posGuess,
-                                false,
-                                playerName && playerName.length > 0
-                                    ? playerName[0].toUpperCase()
-                                    : ''
-                            );
-                            this.$refs.map.setInfoWindow(
-                                playerName,
-                                distance,
-                                points,
-                                false,
-                                posGuess
-                            );
-                            i++;
-                        });
-                        this.$refs.map.fitBounds();
-                        this.game.rounds.push({
-                            position: {
-                                ...this.randomLatLng.toJSON(),
-                                area: this.area,
-                            },
-                            players,
-                        });
-                        this.$refs.map.putMarker(this.randomLatLng, true);
-
-                        this.printMapFull = true;
-                        // Remove guess node every time the round is done
-                        this.room.child('guess').remove();
-
-                        if (this.round >= this.nbRound) {
-                            // Show summary button
-                            snapshot
-                                .child('finalPoints')
-                                .forEach((childSnapshot) => {
-                                    const playerName = snapshot
-                                        .child('playerName')
-                                        .child(childSnapshot.key)
-                                        .val();
-                                    const finalScore = snapshot
-                                        .child('finalScore')
-                                        .child(childSnapshot.key)
-                                        .val();
-                                    const finalPoints = childSnapshot.val();
-                                    this.summaryTexts.push({
-                                        playerName: playerName,
-                                        finalScore: finalScore,
-                                        finalPoints: finalPoints,
-                                    });
-                                });
-
-                            this.summaryTexts.sort(
-                                (a, b) =>
-                                    parseInt(b.finalPoints) -
-                                    parseInt(a.finalPoints)
-                            );
-
-                            this.isSummaryButtonVisible = true;
-                        } else {
-                            // Show next button
-                            this.isNextButtonVisible = true;
-                        }
-                    }
-
-                    // Allow other players to move on to the next round when the next street view is set
-                    if (
-                        snapshot.child('streetView').numChildren() ==
-                        this.round + 1
-                    ) {
-                        this.isNextStreetViewReady = true;
-                    }
-
-                    if (
-                        !this.countdownStarted &&
-                        !this.printMapFull &&
-                        this.countdown > 0 &&
-                        snapshot.child('guess').numChildren() >= 1
-                    ) {
-                        this.$parent.initTimer(this.countdown, true);
-
-                        this.countdownStarted = true;
-                    }
-                }
-            });
-        }
+        // if (this.roomName) {
+        //     this.room = firebase.database().ref(this.roomName);
+        //
+        //     this.room.on('value', (snapshot) => {
+        //         if (snapshot.hasChild('active')) {
+        //             size = snapshot.child('size').val();
+        //             if (size === 1) {
+        //                 this.room.onDisconnect().remove();
+        //             } else {
+        //                 this.room.onDisconnect().update({ size: size - 1 });
+        //             }
+        //             if (
+        //                 // If Time Attack and 1st true guess finish round
+        //                 (this.timeAttack &&
+        //                     this.countdown === 0 &&
+        //                     snapshot.child('guess').numChildren() >= 1 &&
+        //                     snapshot
+        //                         .child('guess')
+        //                         .forEach(
+        //                             (guess) =>
+        //                                 guess.child('area').val() === this.area
+        //                         )) ||
+        //                 // Allow players to move on to the next round when every players guess locations
+        //                 snapshot.child('guess').numChildren() === size
+        //             ) {
+        //                 this.game.timeLimitation = this.timeLimitation;
+        //                 this.isNextStreetViewReady = false;
+        //
+        //                 this.$emit('showResult');
+        //
+        //                 // Put markers and draw polylines on the map
+        //                 let i = 0;
+        //                 let players = {};
+        //                 snapshot.child('guess').forEach((childSnapshot) => {
+        //                     let posGuess;
+        //                     if (this.mode === GAME_MODE.CLASSIC) {
+        //                         const lat = childSnapshot
+        //                             .child('latitude')
+        //                             .val();
+        //                         const lng = childSnapshot
+        //                             .child('longitude')
+        //                             .val();
+        //                         posGuess = new google.maps.LatLng({
+        //                             lat: lat,
+        //                             lng: lng,
+        //                         });
+        //                     } else {
+        //                         posGuess = childSnapshot.child('area').val();
+        //                     }
+        //
+        //                     const playerName = snapshot
+        //                         .child('playerName')
+        //                         .child(childSnapshot.key)
+        //                         .val();
+        //                     const roundValues = snapshot
+        //                         .child(
+        //                             'round' +
+        //                                 this.round +
+        //                                 '/' +
+        //                                 childSnapshot.key
+        //                         )
+        //                         .exportVal();
+        //
+        //                     const { points, distance } = roundValues;
+        //
+        //                     players[playerName] = {
+        //                         ...roundValues,
+        //                         guess: posGuess,
+        //                     };
+        //                     this.$refs.map.drawPolyline(
+        //                         posGuess,
+        //                         i,
+        //                         this.randomLatLng
+        //                     );
+        //                     this.$refs.map.putMarker(
+        //                         posGuess,
+        //                         false,
+        //                         playerName && playerName.length > 0
+        //                             ? playerName[0].toUpperCase()
+        //                             : ''
+        //                     );
+        //                     this.$refs.map.setInfoWindow(
+        //                         playerName,
+        //                         distance,
+        //                         points,
+        //                         false,
+        //                         posGuess
+        //                     );
+        //                     i++;
+        //                 });
+        //                 this.$refs.map.fitBounds();
+        //                 this.game.rounds.push({
+        //                     position: {
+        //                         ...this.randomLatLng.toJSON(),
+        //                         area: this.area,
+        //                     },
+        //                     players,
+        //                 });
+        //                 this.$refs.map.putMarker(this.randomLatLng, true);
+        //
+        //                 this.printMapFull = true;
+        //                 // Remove guess node every time the round is done
+        //                 this.room.child('guess').remove();
+        //
+        //                 if (this.round >= this.nbRound) {
+        //                     // Show summary button
+        //                     snapshot
+        //                         .child('finalPoints')
+        //                         .forEach((childSnapshot) => {
+        //                             const playerName = snapshot
+        //                                 .child('playerName')
+        //                                 .child(childSnapshot.key)
+        //                                 .val();
+        //                             const finalScore = snapshot
+        //                                 .child('finalScore')
+        //                                 .child(childSnapshot.key)
+        //                                 .val();
+        //                             const finalPoints = childSnapshot.val();
+        //                             this.summaryTexts.push({
+        //                                 playerName: playerName,
+        //                                 finalScore: finalScore,
+        //                                 finalPoints: finalPoints,
+        //                             });
+        //                         });
+        //
+        //                     this.summaryTexts.sort(
+        //                         (a, b) =>
+        //                             parseInt(b.finalPoints) -
+        //                             parseInt(a.finalPoints)
+        //                     );
+        //
+        //                     this.isSummaryButtonVisible = true;
+        //                 } else {
+        //                     // Show next button
+        //                     this.isNextButtonVisible = true;
+        //                 }
+        //             }
+        //
+        //             // Allow other players to move on to the next round when the next street view is set
+        //             if (
+        //                 snapshot.child('streetView').numChildren() ==
+        //                 this.round + 1
+        //             ) {
+        //                 this.isNextStreetViewReady = true;
+        //             }
+        //
+        //             if (
+        //                 !this.countdownStarted &&
+        //                 !this.printMapFull &&
+        //                 this.countdown > 0 &&
+        //                 snapshot.child('guess').numChildren() >= 1
+        //             ) {
+        //                 this.$parent.initTimer(this.countdown, true);
+        //
+        //                 this.countdownStarted = true;
+        //             }
+        //         }
+        //     });
     },
     methods: {
         setSeletedPos(pos) {
@@ -535,15 +534,23 @@ export default {
                 );
             }
             // Save the distance into firebase
+            console.log(this.round, this.nbRound);
+            this.$game.commitGuess({
+                ...getSelectedPos(this.selectedPos, this.mode),
+                distance: this.distance,
+                points: this.point,
+                timePassed,
+                round: this.round,
+            });
             if (this.room) {
-                this.room
-                    .child('round' + this.round + '/player' + this.playerNumber)
-                    .set({
-                        ...getSelectedPos(this.selectedPos, this.mode),
-                        distance: this.distance,
-                        points: this.point,
-                        timePassed,
-                    });
+                // this.room
+                //     .child('round' + this.round + '/player' + this.playerNumber)
+                //     .set({
+                //         ...getSelectedPos(this.selectedPos, this.mode),
+                //         distance: this.distance,
+                //         points: this.point,
+                //         timePassed,
+                //     });
             } else {
                 this.game.rounds.push({
                     guess: this.selectedPos,
@@ -590,10 +597,10 @@ export default {
         },
         finishGame() {
             this.dialogSummary = false;
-            if (this.room)
-                this.room
-                    .child('isGameDone/player' + this.playerNumber)
-                    .set(true);
+            // if (this.room)
+            //     this.room
+            //         .child('isGameDone/player' + this.playerNumber)
+            //         .set(true);
             this.$emit('finishGame');
         },
     },
@@ -696,7 +703,7 @@ export default {
 
     .container-map_notepad {
         position: absolute;
-        background-color: var(--v-notepad-base);
+        background-color: rgb(var(--v-theme-notepad));
         resize: none;
         left: var(--width);
         margin-left: 10px;

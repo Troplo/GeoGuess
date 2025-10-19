@@ -22,11 +22,11 @@ import Footer from '@/components/page/Footer.vue';
         z-index: 1;
         width: 100%;
     }
-    background-color: var(--v-page-base);
+    background-color: rgb(var(--v-theme-page));
 }
 
 .page .content {
-    background: var(--v-content-base);
+    background: rgb(var(--v-theme-content));
     &--no-background {
         background: none;
     }

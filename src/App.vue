@@ -111,6 +111,6 @@ export default {
 
 <style>
 .gm-style {
-    background-color: var(--v-gmapBg-base) !important;
+    background-color: rgb(var(--v-theme-gmapBg)) !important;
 }
 </style>

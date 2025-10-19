@@ -1,10 +1,13 @@
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import {
     Room,
     RoomConfig,
 } from '../geonext-server-types/classes/rooms/Room.js';
-import geonextAxios from '../plugins/geonextAxios.js';
+import { useGameSocketStore } from './socket.store.js';
+import { GameSocketClientEvent } from '../geonext-server-types/types/socket/clientEvents.js';
+import { useSessionStore } from './session.store.js';
+import { RoomPlayer } from '../geonext-server-types/classes/rooms/RoomPlayer.js';
 
 export const useGameStore = defineStore('game', () => {
     const isOpenDialogRoom = ref(false);
@@ -18,14 +21,26 @@ export const useGameStore = defineStore('game', () => {
     const room = ref<Room | null>(null);
     const roomName = ref('');
     const roomErrorMessage = ref('');
-    const playerNumber = ref(0);
+
+    // For legacy components
+    const playerNumber = computed(() => {
+        if (!room.value) return 0;
+        if (currentRoomOwned.value) return 1;
+        const sessionStore = useSessionStore();
+        const index = room.value.players.findIndex(
+            (plyr) => plyr.player.id === sessionStore.currentSession.playerId
+        );
+        if (index === -1) return 2;
+        // Prevent the non-host accidentally being player 1
+        return index + 2;
+    });
 
     const gameSettings = computed(() => {
         if (!room.value) return new RoomConfig();
         return room.value.config;
     });
 
-    const players = computed(() => {
+    const players = computed<RoomPlayer[]>(() => {
         if (!room.value) return [];
         return room.value.players;
     });
@@ -45,6 +60,11 @@ export const useGameStore = defineStore('game', () => {
     }
     function setRoom(_room: Room) {
         room.value = _room;
+        if (currentRoomOwned.value && currentComponent.value === 'roomName') {
+            currentComponent.value = 'settingsMap';
+        } else if (currentComponent.value === 'roomName') {
+            currentComponent.value = 'playerName';
+        }
     }
 
     async function searchRoom(name: string) {
@@ -55,13 +75,21 @@ export const useGameStore = defineStore('game', () => {
         }
 
         try {
-            const { data } = await geonextAxios.post('/rooms/joinOrCreate', {
+            // const { data } = await geonextAxios.post('/rooms/joinOrCreate', {
+            //     name,
+            // });
+            const socketStore = useGameSocketStore();
+            await socketStore.emit(GameSocketClientEvent.CREATE_ROOM, {
                 name,
             });
-            setRoom(data);
-        } catch {
+        } catch (e) {
+            console.log(e);
             setError('DialogRoom.invalidRoomName');
         }
+    }
+
+    async function onRoomConnect(room: Room) {
+        setRoom(room);
     }
 
     function closeDialogRoom() {
@@ -73,6 +101,59 @@ export const useGameStore = defineStore('game', () => {
         isOpenDialogRoom.value = true;
         singlePlayer.value = isSinglePlayer;
         currentComponent.value = isSinglePlayer ? 'settingsMap' : 'roomName';
+    }
+
+    const currentRoomOwned = computed(() => {
+        if (!room.value) return false;
+        const sessionStore = useSessionStore();
+        if (room.value.ownerPlayerId === sessionStore.currentSession.playerId)
+            return true;
+        return false;
+    });
+
+    async function saveSettings() {
+        currentComponent.value = 'playerName';
+    }
+
+    watch(
+        () => name.value,
+        (newName) => {
+            const socketStore = useGameSocketStore();
+            socketStore.emit(GameSocketClientEvent.USER_UPDATE_NAME, {
+                name: newName,
+            });
+        }
+    );
+
+    async function startGame() {
+        const socketStore = useGameSocketStore();
+
+        socketStore.emit(GameSocketClientEvent.GAME_START, {});
+    }
+
+    async function commitGuess({
+        longitude,
+        latitude,
+        distance,
+        points,
+        timePassed,
+    }: {
+        longitude: number;
+        latitude: number;
+        distance: number;
+        points: number;
+        timePassed: number;
+    }) {
+        if (!room.value) return;
+        const socketStore = useGameSocketStore();
+        socketStore.emit(GameSocketClientEvent.GAME_COMMIT_GUESS, {
+            longitude,
+            latitude,
+            distance,
+            points,
+            timePassed,
+            round: room.value.currentRound,
+        });
     }
 
     return {
@@ -92,5 +173,11 @@ export const useGameStore = defineStore('game', () => {
         searchRoom,
         closeDialogRoom,
         openDialogRoom,
+        onRoomConnect,
+        saveSettings,
+        startGame,
+        commitGuess,
+        // COMPUTED
+        currentRoomOwned,
     };
 });

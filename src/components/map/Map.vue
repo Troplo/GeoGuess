@@ -180,7 +180,7 @@ export default {
 #mapClassic {
     width: 100%;
     height: 100%;
-    background-color: var(--v-gmapBg-base);
+    background-color: rgb(var(--v-theme-gmapBg));
 }
 
 .gm-style-iw {

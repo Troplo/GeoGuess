@@ -1,5 +1,6 @@
 <template>
     <v-dialog
+        style="z-index: 99999"
         :model-value="dialogSummary"
         max-width="720"
         persistent
@@ -35,8 +36,8 @@
                                 index == 0
                                     ? '#CCAC00'
                                     : index == 1
-                                      ? '#C0C0C0'
-                                      : '#CC8E34'
+                                    ? '#C0C0C0'
+                                    : '#CC8E34'
                             "
                             >mdi-crown</v-icon
                         >

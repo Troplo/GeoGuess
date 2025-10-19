@@ -57,7 +57,7 @@ export default {
 
 <style lang="scss">
 footer {
-    background: var(--v-footer-base);
+    background: rgb(var(--v-theme-footer));
     .footer__container {
         padding: 0.5rem 0;
         display: grid;

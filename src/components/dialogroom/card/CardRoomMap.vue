@@ -75,112 +75,115 @@
     </v-card>
 </template>
 
-<script>
-import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
-import { SETTINGS_SET_STEP_DIALOG_ROOM } from '@/store/mutation-types';
+<script setup lang="ts">
+import { ref, computed, watch, onMounted } from 'vue';
+import { useStore } from 'vuex';
+import { useGameStore } from '@/modernStores/game.store.js';
 import CardRoomMixin from './mixins/CardRoomMixin';
-export default {
-    name: 'CardRoomMap',
-    mixins: [CardRoomMixin],
-    data() {
-        return {
-            place: '',
-            entries: [],
-            isLoading: false,
-            search: '',
-        };
-    },
-    computed: {
-        ...mapGetters(['geoJson']),
-        ...mapState({
-            loadingGeoJson: (state) => state.homeStore.loadingGeoJson,
-        }),
-        items() {
-            return this.entries.map((entry) => entry.properties.name);
-        },
-        // If map have enough point, return false
-        canPlayGeoJSON() {
-            return !(
-                this.geoJson &&
-                Array.isArray(this.geoJson.features) &&
-                this.geoJson.features.length < 5 &&
-                this.geoJson.features.every(
-                    (feature) => feature.geometry.type === 'Point'
-                )
+
+// Pinia store for settings
+const gameStore = useGameStore();
+
+// Vuex store
+const store = useStore();
+
+// Refs / reactive state
+const place = ref<string>('');
+const entries = ref<any[]>([]);
+const isLoading = ref<boolean>(false);
+const search = ref<string>('');
+const mapRef = ref(null);
+
+// Computed properties
+const geoJson = computed(() => store.getters.geoJson);
+const loadingGeoJson = computed(() => store.state.homeStore.loadingGeoJson);
+
+const items = computed(() =>
+    entries.value.map((entry) => entry.properties.name)
+);
+
+const canPlayGeoJSON = computed(() => {
+    return !(
+        geoJson.value &&
+        Array.isArray(geoJson.value.features) &&
+        geoJson.value.features.length < 5 &&
+        geoJson.value.features.every(
+            (feature: any) => feature.geometry.type === 'Point'
+        )
+    );
+});
+
+// Watchers
+watch(search, async (val) => {
+    if (!val) return;
+
+    isLoading.value = true;
+
+    try {
+        const res = await fetch(
+            `https://photon.komoot.io/api/?q=${encodeURIComponent(val)}`
+        );
+        const data = await res.json();
+        if (res.ok && data.features) {
+            entries.value = data.features.filter(
+                (node: any) => node.properties.osm_type === 'R'
             );
-        },
-    },
-    watch: {
-        search(val) {
-            // Items have already been requested
-            if (!val) return;
-
-            this.isLoading = true;
-
-            this.axios
-                .get(`https://photon.komoot.io/api/?q=${encodeURI(val)}`)
-                .then((res) => {
-                    if (res.status === 200 && res.data && res.data.features) {
-                        this.entries = res.data.features.filter(
-                            (node) => node.properties.osm_type === 'R'
-                        );
-                    }
-                })
-                .catch(() => {
-                    //
-                })
-                .finally(() => (this.isLoading = false));
-        },
-        geoJson(val) {
-            this.addGeoJson(val);
-        },
-    },
-    async mounted() {
-        await this.$gmapApiPromiseLazy();
-        if (this.geoJson) {
-            this.addGeoJson(this.geoJson);
         }
+    } catch (err) {
+        console.error(err);
+    } finally {
+        isLoading.value = false;
+    }
+});
 
-        this.$refs.mapRef.$mapPromise.then((map) => {
-            const streetViewLayer = new google.maps.StreetViewCoverageLayer();
-            streetViewLayer.setMap(map);
-        });
-    },
+watch(geoJson, (val) => {
+    addGeoJson(val);
+});
 
-    methods: {
-        ...mapMutations('settingsStore', {
-            setStepDialogRoom: SETTINGS_SET_STEP_DIALOG_ROOM,
-        }),
-        ...mapActions(['loadPlaceGeoJSON', 'setGeoJson']),
-        addGeoJson(val) {
-            this.$refs.mapRef.$mapPromise.then((map) => {
-                map.data.setMap(null);
-                let data = new google.maps.Data({
-                    map: map,
-                });
-                if (val) data.addGeoJson(val);
-                map.data = data;
-                if (val && val.bbox) {
-                    map.fitBounds({
-                        east: val.bbox[2],
-                        north: val.bbox[3],
-                        south: val.bbox[1],
-                        west: val.bbox[0],
-                    });
-                } else {
-                    map.setZoom(1);
-                }
+// Methods
+function addGeoJson(val: any) {
+    mapRef.value?.$mapPromise.then((map: google.maps.Map) => {
+        map.data.setMap(null);
+
+        const data = new google.maps.Data({ map });
+        if (val) data.addGeoJson(val);
+
+        map.data = data;
+
+        if (val?.bbox) {
+            map.fitBounds({
+                east: val.bbox[2],
+                north: val.bbox[3],
+                south: val.bbox[1],
+                west: val.bbox[0],
             });
-        },
-        reset() {
-            this.place = '';
-            this.setGeoJson(null);
-        },
-        next() {
-            this.setStepDialogRoom('settings');
-        },
-    },
-};
+        } else {
+            map.setZoom(1);
+        }
+    });
+}
+
+function reset() {
+    place.value = '';
+    store.dispatch('setGeoJson', null);
+}
+
+function next() {
+    gameStore.currentComponent = 'settings';
+}
+
+onMounted(async () => {
+    await mapRef.value?.$gmapApiPromiseLazy();
+
+    if (geoJson.value) addGeoJson(geoJson.value);
+
+    mapRef.value.$mapPromise.then((map: google.maps.Map) => {
+        const streetViewLayer = new google.maps.StreetViewCoverageLayer();
+        streetViewLayer.setMap(map);
+    });
+});
+
+CardRoomMixin;
 </script>
 
 <style lang="scss" scoped>

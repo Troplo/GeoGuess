@@ -49,6 +49,7 @@ const i18n = createI18n({
     locale: locale,
     fallbackLocale: 'en',
     messages: translations,
+    legacy: false,
 });
 
 export default i18n;

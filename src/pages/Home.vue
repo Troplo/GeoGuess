@@ -1,6 +1,18 @@
 <template>
     <ContentPage class="home-page">
         <section class="home-page__main">
+            <v-alert type="warning" variant="tonal" class="mx-4">
+                You are using a beta version of GeoGuess. (GeoNEXT) Access the
+                DevTools with CTRL + ALT + M. You may experience issues.
+                <v-btn
+                    @click="toggleDevTools()"
+                    variant="tonal"
+                    class="ml-2"
+                    size="small"
+                >
+                    Open DevTools
+                </v-btn>
+            </v-alert>
             <v-container class="home-page__main__container" fluid>
                 <v-layout class="home-page__main__layout">
                     <div class="home-page__traveler-container">
@@ -35,6 +47,8 @@ import SearchBox from '@/components/home/SearchBox.vue';
 import ContentPage from '@/components/page/ContentPage.vue';
 import { GAME_MODE } from '@/constants';
 import MapsContainer from '@/components/home/MapsContainer.vue';
+import { toggleWidget } from '@troplo/debug-overlay';
+
 export default {
     components: {
         ContentPage,
@@ -43,6 +57,11 @@ export default {
     },
     props: {
         dialogCustomOpen: Boolean,
+    },
+    methods: {
+        toggleDevTools() {
+            toggleWidget('Action Dialog');
+        },
     },
     mounted() {
         if (this.$route.params && this.$route.params.partyParams) {
@@ -85,7 +104,7 @@ export default {
         z-index: 1;
         width: 100%;
     }
-    background-color: var(--v-home-base);
+    background-color: rgb(var(--v-theme-home));
     .home-page__main {
         margin-top: 100px;
         position: relative;

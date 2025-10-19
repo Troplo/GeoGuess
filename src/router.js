@@ -4,6 +4,7 @@ import MedalsPage from '@/pages/MedalsPage.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import { GAME_MODE } from '@/constants';
 import Login from './pages/Login.vue';
+import StreetViewMultiplayerWrapper from '@/pages/StreetViewMultiplayerWrapper.vue';
 
 const StreetView = () => import('@/pages/StreetView.vue');
 
@@ -87,14 +88,17 @@ const router = createRouter({
         {
             path: '/street-view/with-friends',
             name: 'with-friends',
-            component: StreetView,
-            props: (route) => ({
-                multiplayer: true,
-                ...route.params,
-                nbRoundSelected: route.params.nbRoundSelected
-                    ? parseInt(route.params.nbRoundSelected, 10)
-                    : 5,
-            }),
+            component: StreetViewMultiplayerWrapper,
+            // props: (route) => {
+            //     console.log(route, 'rparams');
+            //     return {
+            //         multiplayer: true,
+            //         ...route.query,
+            //         nbRoundSelected: route.params.nbRoundSelected
+            //             ? parseInt(route.params.nbRoundSelected, 10)
+            //             : 5,
+            //     };
+            // },
         },
     ],
 });
