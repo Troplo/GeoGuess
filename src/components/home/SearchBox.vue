@@ -28,6 +28,7 @@
                 variant="tonal"
                 color="yellow"
                 size="large"
+                block
                 @click="openDialog(false)"
             >
                 {{ $t('DialogRoom.matchmaking') }}
