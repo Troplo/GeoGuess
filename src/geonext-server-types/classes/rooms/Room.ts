@@ -1,4 +1,5 @@
 import { RoomPlayer } from './RoomPlayer';
+import { redisDirect } from '../../services/redis.service';
 import { Player } from '../players/Player';
 
 export enum GameMode {
@@ -14,6 +15,12 @@ export enum ScoreMode {
 export enum AreaMode {
     NOMINATIM = 'nominatim',
     POLYGON = 'polygon',
+}
+
+export enum RoomState {
+    LOBBY,
+    IN_GAME,
+    ROUND_FINISHED,
 }
 
 export class Round {
@@ -85,6 +92,7 @@ export class Room {
     config: RoomConfig = new RoomConfig();
     version: number = 1;
     rounds: Round[] = [];
-    players: RoomPlayer[] | null;
+    players?: RoomPlayer[] | null;
     currentRound: number = 0;
+    state: RoomState = RoomState.LOBBY;
 }

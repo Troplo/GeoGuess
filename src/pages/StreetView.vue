@@ -31,7 +31,7 @@
                         <template v-slot:activator="{ props }">
                             <v-btn
                                 class="resetBtn"
-                                rounded
+                                icon
                                 v-bind="props"
                                 @click="resetLocation"
                             >
@@ -49,6 +49,7 @@
                         :player-name="playerName"
                         :is-ready="isReady"
                         :round="round"
+                        :multiplayer="multiplayer"
                         :score="score"
                         :points="points"
                         :difficulty="difficultyData"
@@ -92,9 +93,10 @@
         />
         <div class="alert-container">
             <Leaderboard
+                style="top: 79px"
                 :guess-string="guessString"
                 :leaderboard-shown="leaderboardShown"
-                v-if="!printMapFull"
+                v-if="!printMapFull && props.multiplayer"
             ></Leaderboard>
             <v-alert
                 id="leaderboard-alert"
@@ -158,8 +160,11 @@ import { getRandomArea } from '@/utils';
 import { GAME_MODE, SCORE_MODE } from '@/constants';
 import { GameSocketClientEvent } from '@/geonext-server-types/types/socket/clientEvents.js';
 import { useGameSocketStore } from '@/modernStores/socket.store.js';
-import { GameSocketServerEvent } from '@/geonext-server-types/types/socket/serverEvents.js';
-import { Round } from '@/geonext-server-types/classes/rooms/Room';
+import {
+    GameSocketEventsServer,
+    GameSocketServerEvent,
+} from '@/geonext-server-types/types/socket/serverEvents.js';
+import { RoomState, Round } from '@/geonext-server-types/classes/rooms/Room';
 
 interface LeaderboardEntry {
     scoreHeader?: number;
@@ -550,17 +555,21 @@ function updateScore(distance: number, _points: number) {
     score.value += distance;
     points.value += _points;
 
-    if (props.multiplayer) {
-        // room.value
-        //     .child('finalScore/player' + props.playerNumber)
-        //     .set(score.value);
-        // room.value
-        //     .child('finalPoints/player' + props.playerNumber)
-        //     .set(points.value);
+    // if (props.multiplayer) {
+    // room.value
+    //     .child('finalScore/player' + props.playerNumber)
+    //     .set(score.value);
+    // room.value
+    //     .child('finalPoints/player' + props.playerNumber)
+    //     .set(points.value);
 
+    if (props.multiplayer) {
         dialogTitle.value = t('StreetView.waitForOtherPlayers');
         dialogMessage.value = true;
+    } else {
+        showResult();
     }
+    // }
 }
 
 function showResult() {
@@ -571,6 +580,7 @@ function showResult() {
     isVisibleCountdownAlert.value = false;
     overlay.value = true;
     header.value?.stopTimer();
+    mapContainer.value.showRoundResults();
 
     for (const player of Object.values(leaderboard.value)) {
         player.scoreHeader = player.score;
@@ -651,7 +661,6 @@ function onUserEventPanoramaMouse(e: MouseEvent | TouchEvent | PointerEvent) {
 // MODERN EVENTS
 const gameSocketStore = useGameSocketStore();
 function onNewRound(data: Round) {
-    console.log(data);
     lngLat.value = `${data.longitude},${data.latitude}`;
     randomLatLng.value = new google.maps.LatLng(data.latitude, data.longitude);
     round.value = data.round;
@@ -662,26 +671,50 @@ function onNewRound(data: Round) {
 
     resetLocation();
 }
-let rndListener: null;
-let exitListener: null;
+let rndUnregister: null;
+let exitUnregister: null;
+let gameStateUpdateUnregister = null;
+function onGameStateUpdate(
+    data: GameSocketEventsServer[GameSocketServerEvent.GAME_STATE_UPDATED]
+) {
+    if (data.state === RoomState.ROUND_FINISHED && data.round === round.value) {
+        showResult();
+    }
+}
 function registerGeoNextEvents() {
-    rndListener = gameSocketStore.on(
+    gameStateUpdateUnregister = gameSocketStore.on(
+        GameSocketServerEvent.GAME_STATE_UPDATED,
+        onGameStateUpdate
+    );
+    rndUnregister = gameSocketStore.on(
         GameSocketServerEvent.GAME_NEW_ROUND,
         onNewRound
     );
-    exitListener = gameSocketStore.on(
+    exitUnregister = gameSocketStore.on(
         GameSocketServerEvent.GAME_FINISHED,
         exitGame
     );
 }
 
-// Lifecycle
+function waitForGoogle() {
+    return new Promise(function (resolve) {
+        function check() {
+            if (window.google) {
+                resolve(window.google);
+            } else {
+                requestAnimationFrame(check);
+            }
+        }
+        check();
+    });
+}
+
 onMounted(async () => {
     if (props.areaParams?.data?.urlArea || mode.value === GAME_MODE.COUNTRY) {
         await loadAreas(props.areaParams?.data?.urlArea);
     }
 
-    await (window as any).$gmapApiPromiseLazy?.();
+    await waitForGoogle();
     panorama.value = new google.maps.StreetViewPanorama(streetView.value!);
 
     if (!streetViewService.value) {
@@ -735,8 +768,9 @@ onBeforeUnmount(() => {
         //
     });
 
-    if (rndListener) rndListener();
-    if (exitListener) exitListener();
+    if (rndUnregister) rndUnregister();
+    if (exitUnregister) exitUnregister();
+    if (gameStateUpdateUnregister) gameStateUpdateUnregister();
 });
 </script>
 
@@ -750,7 +784,6 @@ onBeforeUnmount(() => {
 
 #game-page {
     position: relative;
-    height: 100%;
     height: var(--global-height, 100%);
     width: 100%;
     top: 0;
@@ -778,14 +811,15 @@ onBeforeUnmount(() => {
         top: 0;
         right: 0;
         display: flex;
-        .resetBtn {
-            position: absolute;
-            bottom: 22px;
-            right: 70px;
-            z-index: 1;
-            @media (max-width: 450px) {
-                bottom: 65px;
-            }
+    }
+
+    .resetBtn {
+        position: absolute;
+        bottom: 22px;
+        right: 70px;
+        z-index: 1;
+        @media (max-width: 450px) {
+            bottom: 65px;
         }
     }
 }

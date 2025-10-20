@@ -3,8 +3,8 @@
         v-if="!!alert"
         type="success"
         closable
+        height="64"
         decelerated-easing
-        class="header-alert"
         :icon="alert.icon"
         :color="alert.color"
         @update:model-value="closeAlert"
@@ -28,13 +28,3 @@ export default {
     },
 };
 </script>
-
-<style lang="scss">
-.header-alert {
-    width: fit-content;
-    position: absolute;
-    z-index: 210;
-    right: 0;
-    margin: 0.625rem;
-}
-</style>

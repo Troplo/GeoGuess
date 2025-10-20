@@ -1,5 +1,5 @@
 import { createVuetify } from 'vuetify';
-import { RTL_LANGUAGES } from '@/lang';
+import { RTL_LANGUAGES } from '@/lang/index.js';
 import '../scss/variables.scss';
 import 'vuetify/styles';
 
@@ -19,7 +19,7 @@ import {
     it,
 } from 'vuetify/locale';
 
-import i18n from '../lang';
+import i18n from '../lang/index.js';
 
 const vuetify = createVuetify({
     theme: {
@@ -260,7 +260,7 @@ const vuetify = createVuetify({
                     },
                 ],
             },
-        },
+        } as unknown,
         options: {
             customProperties: true,
         },
@@ -277,6 +277,71 @@ const vuetify = createVuetify({
     },
     icons: {
         iconfont: 'mdi',
+    },
+    defaults: {
+        global: {},
+        VMenu: {
+            minWidth: 100,
+        },
+        VWindowItem: {
+            transition: false,
+            reverseTransition: false,
+        },
+        VWindow: {
+            transition: false,
+        },
+        VSkeletonLoader: {
+            color: 'card',
+        },
+        VAutoComplete: {
+            variant: 'underlined',
+            color: 'primary',
+        },
+        VDialog: {},
+        VDataTable: {
+            fixedHeader: true,
+            noDataText: 'No entries yet...',
+        },
+        VTable: {
+            color: 'card',
+        },
+        VExpansionPanels: {
+            color: 'card',
+        },
+        VExpansionPanel: {
+            color: 'toolbar',
+        },
+        VExpansionPanelHeader: {
+            color: 'card',
+        },
+        VExpansionPanelText: {
+            color: 'card',
+        },
+        VCheckbox: {
+            color: 'primary',
+        },
+        VSwitch: {
+            color: 'primary',
+            inset: true,
+        },
+        VToolbar: {
+            color: 'toolbar',
+        },
+        VTab: {
+            color: 'primary',
+        },
+        VOverlay: {
+            backgroundColor: 'dark',
+        },
+        VSlider: {
+            color: 'primary',
+        },
+        VContainer: {
+            fluid: true,
+        },
+        VList: {
+            bgColor: 'transparent',
+        },
     },
 });
 

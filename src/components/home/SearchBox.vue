@@ -17,6 +17,7 @@
                     rounded
                     color="secondary"
                     size="large"
+                    :loading="!sessionStore.currentSession.playerId"
                     @click="openDialog(false)"
                 >
                     {{ $t('DialogRoom.withFriends') }}
@@ -29,6 +30,7 @@
                 color="yellow"
                 size="large"
                 block
+                :loading="!sessionStore.currentSession.playerId"
                 @click="openDialog(false)"
             >
                 {{ $t('DialogRoom.matchmaking') }}
@@ -59,6 +61,7 @@ import { useGameStore } from '@/modernStores/game.store.js';
 import DialogCustomMap from '@/components/home/DialogCustomMap.vue';
 import DialogRoom from '@/components/dialogroom/DialogRoom.vue';
 import { useStore } from 'vuex';
+import { useSessionStore } from '@/modernStores/session.store.js';
 
 const props = defineProps({
     dialogCustomOpen: Boolean,
@@ -67,6 +70,7 @@ const props = defineProps({
 const dialogCustom = ref(false);
 
 const gameStore = useGameStore();
+const sessionStore = useSessionStore();
 
 const vuexStore = useStore();
 

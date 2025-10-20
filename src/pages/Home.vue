@@ -1,6 +1,6 @@
 <template>
     <ContentPage class="home-page">
-        <section class="home-page__main">
+        <section class="home-page__main mt-4">
             <v-alert type="warning" variant="tonal" class="mx-4">
                 You are using a beta version of GeoGuess. (GeoNEXT) Access the
                 DevTools with CTRL + ALT + M. You may experience issues.
@@ -15,10 +15,12 @@
             </v-alert>
             <v-container class="home-page__main__container" fluid>
                 <v-layout class="home-page__main__layout">
-                    <div class="home-page__traveler-container">
-                        <img
-                            class="home-page__traveler-img"
-                            src="../assets/home/traveller.svg"
+                    <div
+                        class="home-page__traveler-container position-relative"
+                    >
+                        <StreetGuessHomeArt
+                            class="home-page__traveler-art"
+                            v-if="!$vuetify.display.mobile"
                         />
                     </div>
                     <v-layout class="home-page__main__content">
@@ -48,9 +50,11 @@ import ContentPage from '@/components/page/ContentPage.vue';
 import { GAME_MODE } from '@/constants';
 import MapsContainer from '@/components/home/MapsContainer.vue';
 import { toggleWidget } from '@troplo/debug-overlay';
+import StreetGuessHomeArt from '@/components/brand/StreetGuessHomeArt.vue';
 
 export default {
     components: {
+        StreetGuessHomeArt,
         ContentPage,
         SearchBox,
         MapsContainer,
@@ -61,6 +65,34 @@ export default {
     methods: {
         toggleDevTools() {
             toggleWidget('Action Dialog');
+        },
+    },
+    data() {
+        return {
+            hasInited: false,
+        };
+    },
+    watch: {
+        '$session.currentSession.token'(val) {
+            if (val && !this.hasInited) {
+                if (this.$route.params?.roomName) {
+                    if (!this.$route.query?.name) {
+                        this.hasInited = true;
+                    }
+                    this.$game.singleplayer = false;
+                    this.$game.isOpenDialogRoom = true;
+                    this.$game.currentComponent = 'playerName';
+
+                    this.$game.searchRoom(this.$route.params.roomName);
+                }
+            }
+        },
+        '$game.room'(val) {
+            if (val.name && !this.hasInited) {
+                if (this.$route.query?.name) {
+                    this.$game.setName(this.$route.query.name);
+                }
+            }
         },
     },
     mounted() {
@@ -106,7 +138,6 @@ export default {
     }
     background-color: rgb(var(--v-theme-home));
     .home-page__main {
-        margin-top: 100px;
         position: relative;
         .v-theme--light & .home-page__main__container {
             background: url('../assets/home/world.svg');
@@ -136,7 +167,6 @@ export default {
                 }
                 .home-page__traveler-container {
                     height: auto;
-                    width: 100%;
                     max-width: 50vw;
                     display: flex;
                     justify-content: flex-start;
@@ -181,6 +211,15 @@ export default {
             }
         }
     }
+}
+
+.home-page__traveler-art {
+    height: 100%;
+    width: auto;
+    padding-left: 50px;
+    aspect-ratio: auto;
+    overflow: visible;
+    transform: scale(2);
 }
 
 @media (max-height: 550px) {

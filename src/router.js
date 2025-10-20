@@ -90,7 +90,6 @@ const router = createRouter({
             name: 'with-friends',
             component: StreetViewMultiplayerWrapper,
             // props: (route) => {
-            //     console.log(route, 'rparams');
             //     return {
             //         multiplayer: true,
             //         ...route.query,

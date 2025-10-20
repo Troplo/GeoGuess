@@ -139,7 +139,7 @@ export default {
                         }
                         if (Object.is(p, this.polygonSelect)) {
                             this.polygonSelect = null;
-                            this.$emit('setSeletedPos', null);
+                            this.$emit('setSelectedPos', null);
                         } else {
                             p.setStyle({
                                 strokeOpacity: 0.8,
@@ -150,7 +150,7 @@ export default {
 
                             this.polygonSelect = p;
                             this.$emit(
-                                'setSeletedPos',
+                                'setSelectedPos',
                                 p
                                     .getFeatureById('feature')
                                     .getProperty(this.pathKey)

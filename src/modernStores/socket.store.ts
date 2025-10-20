@@ -16,6 +16,10 @@ import { useStore } from 'vuex';
 export const useGameSocketStore = defineStore('sockets.game', () => {
     let socket: Socket | null = null;
     const ready = ref(false);
+    let _queuedEmits: {
+        event: GameSocketClientEvent;
+        data: any;
+    }[] = [];
 
     async function init(token: string) {
         socket = io({
@@ -24,6 +28,12 @@ export const useGameSocketStore = defineStore('sockets.game', () => {
             },
             path: '/api/v1/socket/game',
             transports: ['websocket'],
+        });
+        socket.on('connect', () => {
+            for (const emitter of _queuedEmits) {
+                socket.emit(emitter.event, { data: emitter.data });
+            }
+            _queuedEmits = [];
         });
         await initHandlers();
     }
@@ -41,14 +51,11 @@ export const useGameSocketStore = defineStore('sockets.game', () => {
             ({
                 data,
             }: GameSocketServerEvent[GameSocketServerEvent.PLAYER_UPDATED]) => {
-                console.log(data);
                 const gameStore = useGameStore();
-                console.log(gameStore.players.length);
                 if (!gameStore.players.length) return;
                 const playerIndex = gameStore.players.findIndex(
                     (player) => player.playerId === data.playerId
                 );
-                console.log(playerIndex);
                 if (playerIndex === -1) return;
                 gameStore.room.players[playerIndex].player.name =
                     data.player.name;
@@ -60,7 +67,6 @@ export const useGameSocketStore = defineStore('sockets.game', () => {
             ({
                 data,
             }: GameSocketServerEvent[GameSocketServerEvent.ROOM_PLAYER_JOINED]) => {
-                console.log(data);
                 const gameStore = useGameStore();
                 if (!gameStore.room) return;
                 const playerIndex = gameStore.players.findIndex(
@@ -117,7 +123,6 @@ export const useGameSocketStore = defineStore('sockets.game', () => {
             ({
                 data,
             }: GameSocketEventsServer[GameSocketServerEvent.CREATE_ROOM_RESPONSE]) => {
-                console.log(data);
                 const gameStore = useGameStore();
                 gameStore.onRoomConnect(data);
             }
@@ -146,6 +151,14 @@ export const useGameSocketStore = defineStore('sockets.game', () => {
         event: E,
         data: GameSocketClientEvents[E]
     ) {
+        if (!socket) {
+            _queuedEmits.push({
+                event,
+                data,
+            });
+
+            return;
+        }
         socket.emit(event, { data });
     }
 

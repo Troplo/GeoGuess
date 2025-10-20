@@ -10,6 +10,9 @@
             printMapFull ? 'container-map--full' : '',
             `container-map--size-${size}`,
         ]"
+        :style="{
+            zIndex: printMapFull ? 99999 : undefined,
+        }"
         @click.stop
         @mouseover="
             () => {
@@ -25,6 +28,7 @@
         <div class="container-map_details">
             <div class="alert-container">
                 <Leaderboard
+                    style="top: 15px"
                     :leaderboard-shown="leaderboardShown"
                     :guess-string="guessString"
                 ></Leaderboard>
@@ -37,12 +41,14 @@
 
         <div class="container-map_controls">
             <div class="container-map_btns">
-                <v-btn size="x-small" @click="showNotepad">
+                <v-btn size="x-small" variant="tonal" icon @click="showNotepad">
                     <v-icon> mdi-file-document-edit </v-icon>
                 </v-btn>
 
                 <v-btn
                     id="btnDown"
+                    variant="tonal"
+                    icon
                     size="x-small"
                     :disabled="size < 2"
                     @click="size--"
@@ -52,6 +58,8 @@
 
                 <v-btn
                     id="btnUp"
+                    variant="tonal"
+                    icon
                     size="x-small"
                     :disabled="size > 3"
                     @click="size++"
@@ -61,6 +69,8 @@
 
                 <v-btn
                     id="btnPin"
+                    variant="tonal"
+                    icon
                     size="x-small"
                     @click="pinActive = !pinActive"
                 >
@@ -82,22 +92,22 @@
             <v-icon color="white"> mdi-close </v-icon>
         </v-btn>
         <Map
-            v-if="this.mode === 'classic'"
+            v-if="mode === 'classic'"
             id="map"
-            ref="map"
+            ref="mapRef"
             :bbox="bbox"
-            @setSeletedPos="setSeletedPos"
+            @setSelectedPos="setSelectedPos"
         />
         <MapAreas
-            v-if="this.mode !== 'classic'"
+            v-if="mode !== 'classic'"
             id="map"
-            ref="map"
+            ref="mapRef"
             :area="area"
             :areasGeoJsonUrl="areasGeoJsonUrl"
             :pathKey="pathKey"
             :bbox="bbox"
-            :showFlag="this.mode === 'country'"
-            @setSeletedPos="setSeletedPos"
+            :showFlag="mode === 'country'"
+            @setSelectedPos="setSelectedPos"
         />
         <textarea
             class="container-map_notepad"
@@ -117,7 +127,7 @@
                 randomLatLng == null ||
                 selectedPos == null ||
                 isGuessButtonClicked ||
-                (!!this.room && !isReady)
+                (!!room && !isReady)
             "
             @click="selectLocation"
         >
@@ -171,7 +181,8 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import firebase from 'firebase/app';
 import 'firebase/database';
 
@@ -183,428 +194,333 @@ import { GAME_MODE } from '@/constants';
 import { getSelectedPos } from '@/utils';
 import { getScore } from '@/utils/game/score';
 import Leaderboard from '@/components/game/Leaderboard.vue';
+import { useGameStore } from '@/modernStores/game.store.js';
+import { useGameSocketStore } from '@/modernStores/socket.store.js';
+import {
+    GameSocketEventsServer,
+    GameSocketServerEvent,
+} from '@/geonext-server-types/types/socket/serverEvents.js';
+import { RoomState } from '@/geonext-server-types/classes/rooms/Room.js';
 
-export default {
-    components: {
-        Leaderboard,
-        DialogSummary,
-        DetailsMap,
-        Map,
-        MapAreas,
-    },
-    props: [
-        'randomLatLng',
-        'randomFeatureProperties',
-        'roomName',
-        'playerNumber',
-        'playerName',
-        'isReady',
-        'round',
-        'score',
-        'points',
-        'timeLimitation',
-        'difficulty',
-        'bbox',
-        'mode',
-        'area',
-        'timeAttack',
-        'nbRound',
-        'countdown',
-        'scoreMode',
-        'areasGeoJsonUrl',
-        'pathKey',
-        'mapDetails',
-        'scoreLeaderboard',
-        'guessedLeaderboard',
-        'leaderboardShown',
-        'guessString',
-    ],
-    data() {
-        return {
-            summaryTexts: [],
-            room: null,
-            selectedPos: null,
-            distance: null,
-            point: null,
-            isGuessButtonClicked: false,
-            isMakeGuessButtonClicked: false,
-            isSelected: false,
-            isNextStreetViewReady: false,
-            isNextButtonVisible: false,
-            isSummaryButtonVisible: false,
-            dialogSummary: false,
-            activeMap: false,
-            size: 2,
-            isNotepadVisible: false,
-            pinActive: localStorage.getItem('pinActive') === 'true',
-            printMapFull: false,
-            countdownStarted: false,
-            game: {
-                multiplayer: !!this.roomName,
-                date: new Date(),
-                rounds: [],
-            },
-            startTime: null,
-        };
-    },
-    computed: {
-        isNextButtonEnabled() {
-            if (this.playerNumber == 1 || !this.room) {
-                return true;
-            } else {
-                if (this.isNextStreetViewReady) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        },
-    },
-    watch: {
-        pinActive() {
-            localStorage.setItem('pinActive', this.pinActive);
-        },
-        printMapFull(value) {
-            this.$emit('printMapFull', value);
-        },
-    },
-    async mounted() {
-        await this.$gmapApiPromiseLazy();
-        this.game.timeLimitation = this.timeLimitation;
-        this.game.difficulty = this.difficulty;
-        this.game.mode = this.mode;
-        this.game.timeAttack = this.timeAttack;
-        this.game.playerName = this.playerName;
-        let size = 0;
+interface GameRound {
+    guess?: LatLng;
+    area?: string;
+    position: LatLng;
+    distance: number | null;
+    points: number;
+    timePassed: number;
+}
 
-        // if (this.roomName) {
-        //     this.room = firebase.database().ref(this.roomName);
-        //
-        //     this.room.on('value', (snapshot) => {
-        //         if (snapshot.hasChild('active')) {
-        //             size = snapshot.child('size').val();
-        //             if (size === 1) {
-        //                 this.room.onDisconnect().remove();
-        //             } else {
-        //                 this.room.onDisconnect().update({ size: size - 1 });
-        //             }
-        //             if (
-        //                 // If Time Attack and 1st true guess finish round
-        //                 (this.timeAttack &&
-        //                     this.countdown === 0 &&
-        //                     snapshot.child('guess').numChildren() >= 1 &&
-        //                     snapshot
-        //                         .child('guess')
-        //                         .forEach(
-        //                             (guess) =>
-        //                                 guess.child('area').val() === this.area
-        //                         )) ||
-        //                 // Allow players to move on to the next round when every players guess locations
-        //                 snapshot.child('guess').numChildren() === size
-        //             ) {
-        //                 this.game.timeLimitation = this.timeLimitation;
-        //                 this.isNextStreetViewReady = false;
-        //
-        //                 this.$emit('showResult');
-        //
-        //                 // Put markers and draw polylines on the map
-        //                 let i = 0;
-        //                 let players = {};
-        //                 snapshot.child('guess').forEach((childSnapshot) => {
-        //                     let posGuess;
-        //                     if (this.mode === GAME_MODE.CLASSIC) {
-        //                         const lat = childSnapshot
-        //                             .child('latitude')
-        //                             .val();
-        //                         const lng = childSnapshot
-        //                             .child('longitude')
-        //                             .val();
-        //                         posGuess = new google.maps.LatLng({
-        //                             lat: lat,
-        //                             lng: lng,
-        //                         });
-        //                     } else {
-        //                         posGuess = childSnapshot.child('area').val();
-        //                     }
-        //
-        //                     const playerName = snapshot
-        //                         .child('playerName')
-        //                         .child(childSnapshot.key)
-        //                         .val();
-        //                     const roundValues = snapshot
-        //                         .child(
-        //                             'round' +
-        //                                 this.round +
-        //                                 '/' +
-        //                                 childSnapshot.key
-        //                         )
-        //                         .exportVal();
-        //
-        //                     const { points, distance } = roundValues;
-        //
-        //                     players[playerName] = {
-        //                         ...roundValues,
-        //                         guess: posGuess,
-        //                     };
-        //                     this.$refs.map.drawPolyline(
-        //                         posGuess,
-        //                         i,
-        //                         this.randomLatLng
-        //                     );
-        //                     this.$refs.map.putMarker(
-        //                         posGuess,
-        //                         false,
-        //                         playerName && playerName.length > 0
-        //                             ? playerName[0].toUpperCase()
-        //                             : ''
-        //                     );
-        //                     this.$refs.map.setInfoWindow(
-        //                         playerName,
-        //                         distance,
-        //                         points,
-        //                         false,
-        //                         posGuess
-        //                     );
-        //                     i++;
-        //                 });
-        //                 this.$refs.map.fitBounds();
-        //                 this.game.rounds.push({
-        //                     position: {
-        //                         ...this.randomLatLng.toJSON(),
-        //                         area: this.area,
-        //                     },
-        //                     players,
-        //                 });
-        //                 this.$refs.map.putMarker(this.randomLatLng, true);
-        //
-        //                 this.printMapFull = true;
-        //                 // Remove guess node every time the round is done
-        //                 this.room.child('guess').remove();
-        //
-        //                 if (this.round >= this.nbRound) {
-        //                     // Show summary button
-        //                     snapshot
-        //                         .child('finalPoints')
-        //                         .forEach((childSnapshot) => {
-        //                             const playerName = snapshot
-        //                                 .child('playerName')
-        //                                 .child(childSnapshot.key)
-        //                                 .val();
-        //                             const finalScore = snapshot
-        //                                 .child('finalScore')
-        //                                 .child(childSnapshot.key)
-        //                                 .val();
-        //                             const finalPoints = childSnapshot.val();
-        //                             this.summaryTexts.push({
-        //                                 playerName: playerName,
-        //                                 finalScore: finalScore,
-        //                                 finalPoints: finalPoints,
-        //                             });
-        //                         });
-        //
-        //                     this.summaryTexts.sort(
-        //                         (a, b) =>
-        //                             parseInt(b.finalPoints) -
-        //                             parseInt(a.finalPoints)
-        //                     );
-        //
-        //                     this.isSummaryButtonVisible = true;
-        //                 } else {
-        //                     // Show next button
-        //                     this.isNextButtonVisible = true;
-        //                 }
-        //             }
-        //
-        //             // Allow other players to move on to the next round when the next street view is set
-        //             if (
-        //                 snapshot.child('streetView').numChildren() ==
-        //                 this.round + 1
-        //             ) {
-        //                 this.isNextStreetViewReady = true;
-        //             }
-        //
-        //             if (
-        //                 !this.countdownStarted &&
-        //                 !this.printMapFull &&
-        //                 this.countdown > 0 &&
-        //                 snapshot.child('guess').numChildren() >= 1
-        //             ) {
-        //                 this.$parent.initTimer(this.countdown, true);
-        //
-        //                 this.countdownStarted = true;
-        //             }
-        //         }
-        //     });
-    },
-    methods: {
-        setSeletedPos(pos) {
-            this.selectedPos = pos;
-        },
-        showMap() {
-            this.isMakeGuessButtonClicked = true;
-        },
-        hideMap() {
-            this.isMakeGuessButtonClicked = false;
-        },
-        showNotepad() {
-            this.isNotepadVisible = !this.isNotepadVisible;
-            if (this.isNotepadVisible) {
-                setTimeout(() => {
-                    this.$refs.refNotepad.focus();
-                });
-            }
-        },
-        selectLocation() {
-            this.calculateDistance();
+interface SummaryText {
+    playerName: string;
+    finalScore: number;
+    finalPoints: number;
+}
 
-            if (this.room) {
-                // Save the selected location into database
-                // So that it uses for putting the markers and polylines
-                this.room
-                    .child('guess/player' + this.playerNumber)
-                    .set(getSelectedPos(this.selectedPos, this.mode));
-            } else {
-                // Put the marker on the random location
-                this.$refs.map.putMarker(this.randomLatLng, true);
-                // Show the polyline
-                this.$refs.map.drawPolyline(
-                    this.selectedPos,
-                    1,
-                    this.randomLatLng
-                );
+interface Game {
+    multiplayer: boolean;
+    date: Date;
+    rounds: GameRound[];
+    timeLimitation?: number;
+    difficulty?: string;
+    mode?: string;
+    timeAttack?: boolean;
+    playerName?: string;
+}
 
-                this.$refs.map.setInfoWindow(
-                    null,
-                    this.distance,
-                    this.point,
-                    false,
-                    this.setSeletedPos
-                );
-                this.printMapFull = true;
-                this.$refs.map.fitBounds();
-                if (this.round >= this.nbRound) {
-                    this.isSummaryButtonVisible = true;
-                } else {
-                    this.isNextButtonVisible = true;
-                }
-                this.$emit('showResult');
-            }
-            // Clear the event
-            this.$refs.map.removeListener();
+interface LatLng {
+    lat: number;
+    lng: number;
+}
 
-            // Diable guess button and opacity of the map
-            this.isGuessButtonClicked = true;
-            this.isSelected = true;
+const props = defineProps<{
+    randomLatLng: LatLng;
+    randomFeatureProperties: Record<string, unknown>;
+    roomName?: string;
+    playerNumber: number;
+    playerName: string;
+    isReady: boolean;
+    round: number;
+    score: number;
+    points: number;
+    timeLimitation: number;
+    difficulty: string;
+    bbox: unknown;
+    mode: string;
+    area: string;
+    timeAttack: boolean;
+    nbRound: number;
+    countdown: number;
+    scoreMode: string;
+    areasGeoJsonUrl: string;
+    pathKey: string;
+    mapDetails: Record<string, unknown>;
+    scoreLeaderboard: unknown[];
+    guessedLeaderboard: unknown[];
+    leaderboardShown: boolean;
+    guessString: string;
+    multiplayer: boolean;
+}>();
 
-            // Turn off the flag before the next button appears
-            this.isNextStreetViewReady = false;
-        },
-        selectRandomLocation(randomLatLng) {
-            if (this.selectedPos === null) {
-                // set a random location if the player didn't select in time
-                this.selectedPos = randomLatLng;
-                this.$refs.map.removeMarkers();
-                this.$refs.map.putMarker(this.selectedPos);
-            }
-            this.selectLocation();
-        },
-        resetLocation() {
-            this.$emit('resetLocation');
-        },
-        calculateDistance() {
-            const timePassed = new Date() - this.startTime;
-            if (
-                [GAME_MODE.COUNTRY, GAME_MODE.CUSTOM_AREA].includes(this.mode)
-            ) {
-                this.point = +(this.area === this.selectedPos);
-                this.distance = null;
-            } else {
-                this.distance = Math.floor(
-                    google.maps.geometry.spherical.computeDistanceBetween(
-                        this.randomLatLng,
-                        this.selectedPos
-                    )
-                );
+const emit = defineEmits<{
+    printMapFull: [value: boolean];
+    showResult: [];
+    calculateDistance: [distance: number | null, points: number];
+    goToNextRound: [isPlayAgain: boolean, incrementRound: boolean];
+    finishGame: [];
+    resetLocation: [];
+}>();
 
-                this.point = getScore(
-                    this.distance,
-                    this.difficulty,
-                    timePassed,
-                    this.scoreMode
-                );
-            }
-            // Save the distance into firebase
-            console.log(this.round, this.nbRound);
-            this.$game.commitGuess({
-                ...getSelectedPos(this.selectedPos, this.mode),
-                distance: this.distance,
-                points: this.point,
-                timePassed,
-                round: this.round,
-            });
-            if (this.room) {
-                // this.room
-                //     .child('round' + this.round + '/player' + this.playerNumber)
-                //     .set({
-                //         ...getSelectedPos(this.selectedPos, this.mode),
-                //         distance: this.distance,
-                //         points: this.point,
-                //         timePassed,
-                //     });
-            } else {
-                this.game.rounds.push({
-                    guess: this.selectedPos,
-                    area: this.area,
-                    position: this.randomLatLng,
-                    distance: this.distance,
-                    points: this.point,
-                    timePassed,
-                });
-            }
+const mapRef = ref<InstanceType<typeof Map>>();
+const refNotepad = ref<HTMLTextAreaElement>();
 
-            this.$emit('calculateDistance', this.distance, this.point);
-        },
-        startNextRound() {
-            this.$refs.map.startNextRound();
-            this.startTime = new Date();
-        },
-        goToNextRound(isPlayAgain = false, incrementRound = true) {
-            if (isPlayAgain) {
-                this.dialogSummary = false;
-                this.isSummaryButtonVisible = false;
-            }
+const summaryTexts = ref<SummaryText[]>([]);
+const room = ref<firebase.database.Reference | null>(null);
+const selectedPos = ref<LatLng | null>(null);
+const distance = ref<number | null>(null);
+const point = ref<number>(0);
+const isGuessButtonClicked = ref(false);
+const isMakeGuessButtonClicked = ref(false);
+const isSelected = ref(false);
+const isNextStreetViewReady = ref(false);
+const isNextButtonVisible = ref(false);
+const isSummaryButtonVisible = ref(false);
+const dialogSummary = ref(false);
+const activeMap = ref(false);
+const size = ref(2);
+const isNotepadVisible = ref(false);
+const pinActive = ref(
+    typeof localStorage !== 'undefined' &&
+        localStorage.getItem('pinActive') === 'true'
+);
+const printMapFull = ref(false);
+const countdownStarted = ref(false);
+const startTime = ref<Date | null>(null);
 
-            // Reset
-            this.selectedPos = null;
-            this.isGuessButtonClicked = false;
-            this.isSelected = false;
-            this.isNextButtonVisible = false;
-            this.countdownStarted = false;
-            this.isNotepadVisible = false;
+const game = ref<Game>({
+    multiplayer: !!props.roomName,
+    date: new Date(),
+    rounds: [],
+});
 
-            if (this.$viewport.width < 450) {
-                // Hide the map if the player is on mobile
-                this.hideMap();
-            }
+const gameStore = useGameStore();
+const gameSocketStore = useGameSocketStore();
 
-            this.printMapFull = false;
-            this.$refs.map.removeMarkers();
-            this.$refs.map.removePolylines();
-            this.$refs.map.centerOnBbox();
+// Computed
+const isNextButtonEnabled = computed(() => {
+    if (props.playerNumber === 1 || !room.value) {
+        return true;
+    }
+    return isNextStreetViewReady.value;
+});
 
-            // Replace the streetview with the next one
-            this.$emit('goToNextRound', isPlayAgain, incrementRound);
-        },
-        finishGame() {
-            this.dialogSummary = false;
-            // if (this.room)
-            //     this.room
-            //         .child('isGameDone/player' + this.playerNumber)
-            //         .set(true);
-            this.$emit('finishGame');
-        },
-    },
+// Watchers
+watch(pinActive, (value) => {
+    if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('pinActive', String(value));
+    }
+});
+
+watch(printMapFull, (value) => {
+    emit('printMapFull', value);
+});
+
+// Lifecycle
+onMounted(async () => {
+    if (mapRef.value) {
+        await mapRef.value.$gmapApiPromiseLazy?.();
+    }
+
+    game.value.timeLimitation = props.timeLimitation;
+    game.value.difficulty = props.difficulty;
+    game.value.mode = props.mode;
+    game.value.timeAttack = props.timeAttack;
+    game.value.playerName = props.playerName;
+
+    // Firebase setup commented out in original
+    // if (props.roomName) {
+    //   room.value = firebase.database().ref(props.roomName);
+    //   room.value.on('value', (snapshot) => {
+    //     // ... firebase logic
+    //   });
+    // }
+});
+
+const setSelectedPos = (pos: LatLng): void => {
+    selectedPos.value = pos;
 };
+
+const showMap = (): void => {
+    isMakeGuessButtonClicked.value = true;
+};
+
+const hideMap = (): void => {
+    isMakeGuessButtonClicked.value = false;
+};
+
+const showNotepad = (): void => {
+    isNotepadVisible.value = !isNotepadVisible.value;
+    if (isNotepadVisible.value) {
+        setTimeout(() => {
+            refNotepad.value?.focus();
+        });
+    }
+};
+
+const calculateDistance = (): void => {
+    const timePassed = startTime.value
+        ? new Date().getTime() - startTime.value.getTime()
+        : 0;
+
+    if ([GAME_MODE.COUNTRY, GAME_MODE.CUSTOM_AREA].includes(props.mode)) {
+        point.value = selectedPos.value === props.area ? 1 : 0;
+        distance.value = null;
+    } else {
+        distance.value = Math.floor(
+            google.maps.geometry.spherical.computeDistanceBetween(
+                props.randomLatLng,
+                selectedPos.value
+            )
+        );
+
+        point.value = getScore(
+            distance.value,
+            props.difficulty,
+            timePassed,
+            props.scoreMode
+        );
+    }
+
+    gameStore.commitGuess({
+        ...getSelectedPos(selectedPos.value, props.mode),
+        distance: distance.value,
+        points: point.value,
+        timePassed,
+        round: props.round,
+    });
+
+    // Firebase update commented out in original
+    // if (room.value) {
+    //   room.value
+    //     .child(`round${props.round}/player${props.playerNumber}`)
+    //     .set({
+    //       ...getSelectedPos(selectedPos.value, props.mode),
+    //       distance: distance.value,
+    //       points: point.value,
+    //       timePassed,
+    //     });
+    // } else {
+    game.value.rounds.push({
+        guess: selectedPos.value ?? undefined,
+        area: props.area,
+        position: props.randomLatLng,
+        distance: distance.value,
+        points: point.value,
+        timePassed,
+    });
+    // }
+
+    emit('calculateDistance', distance.value, point.value);
+};
+
+const selectLocation = (): void => {
+    calculateDistance();
+
+    if (!props.multiplayer) {
+        showRoundResults();
+    }
+
+    mapRef.value?.removeListener();
+    isGuessButtonClicked.value = true;
+    isSelected.value = true;
+    isNextStreetViewReady.value = false;
+};
+
+const selectRandomLocation = (randomLatLng: LatLng): void => {
+    if (selectedPos.value === null) {
+        selectedPos.value = randomLatLng;
+        mapRef.value?.removeMarkers();
+        mapRef.value?.putMarker(selectedPos.value);
+    }
+    selectLocation();
+};
+
+const resetLocation = (): void => {
+    emit('resetLocation');
+};
+
+const startNextRound = (): void => {
+    mapRef.value?.startNextRound();
+    startTime.value = new Date();
+};
+
+const goToNextRound = (isPlayAgain = false, incrementRound = true): void => {
+    if (isPlayAgain) {
+        dialogSummary.value = false;
+        isSummaryButtonVisible.value = false;
+    }
+
+    selectedPos.value = null;
+    isGuessButtonClicked.value = false;
+    isSelected.value = false;
+    isNextButtonVisible.value = false;
+    countdownStarted.value = false;
+    isNotepadVisible.value = false;
+
+    if ((window as any).$viewport?.width < 450) {
+        hideMap();
+    }
+
+    printMapFull.value = false;
+    mapRef.value?.removeMarkers();
+    mapRef.value?.removePolylines();
+    mapRef.value?.centerOnBbox();
+
+    emit('goToNextRound', isPlayAgain, incrementRound);
+};
+
+const finishGame = (): void => {
+    dialogSummary.value = false;
+    // Firebase update commented out in original
+    // if (room.value) {
+    //   room.value
+    //     .child(`isGameDone/player${props.playerNumber}`)
+    //     .set(true);
+    // }
+    emit('finishGame');
+};
+
+function setDialogSummary(val: boolean) {
+    dialogSummary.value = val;
+}
+
+function showRoundResults() {
+    mapRef.value!.putMarker(props.randomLatLng, true);
+    mapRef.value!.drawPolyline(selectedPos.value, 1, props.randomLatLng);
+    mapRef.value!.setInfoWindow(
+        null,
+        distance.value,
+        point.value,
+        false,
+        setSelectedPos
+    );
+
+    printMapFull.value = true;
+    mapRef.value!.fitBounds();
+
+    if (props.round >= props.nbRound) {
+        isSummaryButtonVisible.value = true;
+    } else {
+        isNextButtonVisible.value = true;
+    }
+}
+
+defineExpose({
+    startNextRound,
+    selectRandomLocation,
+    setDialogSummary,
+    showRoundResults,
+});
 </script>
 
 <style scoped lang="scss">

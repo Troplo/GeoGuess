@@ -1,141 +1,149 @@
 <template>
-    <div id="historyTable">
-        <h2>
-            {{ $t('History.title') }}
-        </h2>
-        <v-dialog v-model="dialog" max-width="500">
-            <v-card>
-                <v-card-text>
-                    <center>
-                        <v-icon size="x-large"> mdi-clipboard-check </v-icon>
-                        <p>{{ $t('urlCopied') }}</p>
-                        <v-text-field v-model="url" readonly />
-                    </center>
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer />
+    <v-container>
+        <div id="historyTable">
+            <v-toolbar class="rounded-t-lg">
+                <v-toolbar-title>
+                    {{ $t('History.title') }}
+                </v-toolbar-title>
+                <v-spacer />
+                <v-tooltip location="top" v-if="!saving">
+                    <template v-slot:activator="{ props }">
+                        <div v-bind="props">
+                            <v-btn icon @click="cloudConflict(true)">
+                                <v-icon> mdi-sync </v-icon>
+                            </v-btn>
+                        </div>
+                    </template>
+                    <span>{{ $t('History.forceCloudConflict') }}</span>
+                </v-tooltip>
+                <v-tooltip location="top" v-else>
+                    <template v-slot:activator="{ props }">
+                        <div v-bind="props" v-on="on">
+                            <v-btn icon disabled>
+                                <v-progress-circular
+                                    size="20"
+                                    width="2"
+                                    color="white"
+                                    indeterminate
+                                ></v-progress-circular>
+                            </v-btn>
+                        </div>
+                    </template>
+                    <span>{{ $t('History.syncing') }}</span>
+                </v-tooltip>
 
-                    <v-btn
-                        variant="flat"
-                        color="#43B581"
-                        @click="dialog = false"
-                    >
-                        {{ $t('OK') }}
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-        <div class="history-table__btns">
-            <v-tooltip location="top" v-if="!saving">
-                <template v-slot:activator="{ props }">
-                    <div v-bind="props">
-                        <v-btn icon @click="cloudConflict(true)">
-                            <v-icon> mdi-sync </v-icon>
-                        </v-btn>
-                    </div>
-                </template>
-                <span>{{ $t('History.forceCloudConflict') }}</span>
-            </v-tooltip>
-            <v-tooltip location="top" v-else>
-                <template v-slot:activator="{ props }">
-                    <div v-bind="props" v-on="on">
-                        <v-btn icon disabled>
-                            <v-progress-circular
-                                size="20"
-                                width="2"
-                                color="white"
-                                indeterminate
-                            ></v-progress-circular>
-                        </v-btn>
-                    </div>
-                </template>
-                <span>{{ $t('History.syncing') }}</span>
-            </v-tooltip>
+                <v-tooltip location="top">
+                    <template v-slot:activator="{ props }">
+                        <div v-bind="props">
+                            <v-file-input
+                                hide-input
+                                accept="application/json"
+                                prepend-icon="mdi-download-outline"
+                                @change="importSave"
+                            >
+                            </v-file-input>
+                        </div>
+                    </template>
+                    <span>{{ $t('History.importGeoSave') }}</span>
+                </v-tooltip>
 
-            <v-tooltip location="top">
-                <template v-slot:activator="{ props }">
-                    <div v-bind="props">
-                        <v-file-input
-                            hide-input
-                            accept="application/json"
-                            prepend-icon="mdi-download-outline"
-                            @change="importSave"
+                <v-tooltip location="top">
+                    <template v-slot:activator="{ props }">
+                        <v-btn icon v-bind="props" @click="exportSave">
+                            <v-icon>mdi-upload-outline</v-icon>
+                        </v-btn>
+                    </template>
+                    <span>{{ $t('History.exportGeoSave') }}</span>
+                </v-tooltip>
+            </v-toolbar>
+            <v-dialog v-model="dialog" max-width="500">
+                <v-card>
+                    <v-card-text>
+                        <center>
+                            <v-icon size="x-large">
+                                mdi-clipboard-check
+                            </v-icon>
+                            <p>{{ $t('urlCopied') }}</p>
+                            <v-text-field v-model="url" readonly />
+                        </center>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer />
+
+                        <v-btn
+                            variant="flat"
+                            color="#43B581"
+                            @click="dialog = false"
+                        >
+                            {{ $t('OK') }}
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+
+            <v-text-field
+                class="my-2"
+                v-model="search"
+                :label="$t('History.search')"
+                append-icon="mdi-magnify"
+                single-line
+                hide-details
+            />
+            <v-data-table
+                id="history-table"
+                calculate-widths
+                item-key="id"
+                show-expand
+                single-expand
+                :search="search"
+                :headers="headers.filter((h) => !h.hide)"
+                :items="items"
+                :sort-by="['dateString']"
+                :custom-sort="customSort"
+                :expanded="items.length > 0 ? [items[items.length - 1]] : []"
+            >
+                <template v-slot:[`item.actions`]="{ item }">
+                    <v-icon size="small" class="mr-2" @click="share(item)">
+                        mdi-share
+                    </v-icon>
+                </template>
+                <template v-slot:expanded-item="{ headers, item }">
+                    <td :colspan="headers.length" class="item">
+                        <div v-if="item.multiplayer" class="item_time_multi">
+                            <HistoryTimeDetail
+                                class="item__times"
+                                v-for="(playerName, index) in playersNames(
+                                    item.rounds
+                                )"
+                                :rounds="roundsPlayer(item.rounds, playerName)"
+                                :playerName="playerName"
+                                :key="`HistoryTimeDetail` + playerName"
+                                :index="index"
+                            />
+                        </div>
+                        <div v-else>
+                            <HistoryTimeDetail
+                                class="item__times"
+                                :rounds="item.rounds"
+                            />
+                        </div>
+                        <HistoryMapClassic
+                            v-if="item.gameMode === $t('modes.classic')"
+                            :item="item"
                         />
-                    </div>
+                        <HistoryMapArea
+                            v-else
+                            :is-country="item.gameMode === $t('modes.country')"
+                            :item="item"
+                        />
+                    </td>
                 </template>
-                <span>{{ $t('History.importGeoSave') }}</span>
-            </v-tooltip>
-
-            <v-tooltip location="top">
-                <template v-slot:activator="{ props }">
-                    <v-btn icon v-bind="props" @click="exportSave">
-                        <v-icon>mdi-upload-outline</v-icon>
-                    </v-btn>
-                </template>
-                <span>{{ $t('History.exportGeoSave') }}</span>
-            </v-tooltip>
+            </v-data-table>
+            <v-btn color="primary" class="btn-export mx-2" @click="exportCsv">
+                {{ $t('History.exportCSV') }}
+            </v-btn>
         </div>
-        <v-text-field
-            v-model="search"
-            :label="$t('History.search')"
-            append-icon="mdi-magnify"
-            single-line
-            hide-details
-        />
-        <v-data-table
-            id="history-table"
-            calculate-widths
-            item-key="id"
-            show-expand
-            single-expand
-            :search="search"
-            :headers="headers.filter((h) => !h.hide)"
-            :items="items"
-            :sort-by="['dateString']"
-            :custom-sort="customSort"
-            :expanded="items.length > 0 ? [items[items.length - 1]] : []"
-        >
-            <template v-slot:[`item.actions`]="{ item }">
-                <v-icon size="small" class="mr-2" @click="share(item)">
-                    mdi-share
-                </v-icon>
-            </template>
-            <template v-slot:expanded-item="{ headers, item }">
-                <td :colspan="headers.length" class="item">
-                    <div v-if="item.multiplayer" class="item_time_multi">
-                        <HistoryTimeDetail
-                            class="item__times"
-                            v-for="(playerName, index) in playersNames(
-                                item.rounds
-                            )"
-                            :rounds="roundsPlayer(item.rounds, playerName)"
-                            :playerName="playerName"
-                            :key="`HistoryTimeDetail` + playerName"
-                            :index="index"
-                        />
-                    </div>
-                    <div v-else>
-                        <HistoryTimeDetail
-                            class="item__times"
-                            :rounds="item.rounds"
-                        />
-                    </div>
-                    <HistoryMapClassic
-                        v-if="item.gameMode === $t('modes.classic')"
-                        :item="item"
-                    />
-                    <HistoryMapArea
-                        v-else
-                        :is-country="item.gameMode === $t('modes.country')"
-                        :item="item"
-                    />
-                </td>
-            </template>
-        </v-data-table>
-        <v-btn color="primary" class="btn-export mx-2" @click="exportCsv">
-            {{ $t('History.exportCSV') }}
-        </v-btn>
-    </div>
+    </v-container>
 </template>
 <script>
 import { mapActions, mapState } from 'vuex';
@@ -371,40 +379,3 @@ export default {
     },
 };
 </script>
-
-<style lang="scss" scoped>
-#historyTable {
-    h2 {
-        font-weight: 500;
-    }
-    padding: 0.625rem;
-    .item {
-        padding: 0;
-        width: 100%;
-        .item_time_multi {
-            max-height: 10.5rem;
-            overflow-x: auto;
-        }
-    }
-
-    position: relative;
-    .history-table__btns {
-        position: absolute;
-        top: 0.625rem;
-        right: 0.625rem;
-        display: inline-flex;
-        .v-input {
-            margin-top: 0.125rem;
-            padding-top: 0;
-        }
-        .v-btn {
-            margin-right: 0.3125rem;
-        }
-    }
-    .btn-export {
-        position: absolute;
-        bottom: 1.25rem;
-        left: 0.625rem;
-    }
-}
-</style>

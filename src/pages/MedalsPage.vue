@@ -1,59 +1,74 @@
 <template>
     <ContentPage>
-        <div class="content content--no-background mt-5 mb-0 pa-0">
-            <WorldCountries
-                class="m-auto"
-                :countries="countriesData"
-                @click-country="selectCountry"
-            />
-        </div>
-        <div class="content">
-            <div class="medal-count">
-                <div
-                    v-for="medal in ['platinum', 'gold', 'silver', 'bronze']"
-                    :key="`medal-${medal}`"
-                >
-                    <p>
-                        <v-chip
-                            class="medal-count__chip"
-                            :color="medalcolors[medal]"
-                        >
-                            {{ $t(`Home.HomeCard.medal.${medal}`) }}
-                        </v-chip>
-                        {{ countMedal[medal] }}
-                    </p>
-                </div>
+        <v-container :fluid="false">
+            <div class="mb-0">
+                <WorldCountries
+                    class="m-auto"
+                    :countries="countriesData"
+                    @click-country="selectCountry"
+                />
             </div>
-            <v-text-field
-                v-model="search"
-                append-icon="mdi-magnify"
-                :label="$t('History.search')"
-                single-line
-                hide-details
-            ></v-text-field>
-            <v-data-table
-                class="medal-table"
-                :headers="headers"
-                :items="items"
-                :search="search"
-                :items-per-page="-1"
-                :sort-by="[{ key: 'maxScore', order: 'desc' }]"
-                disable-pagination
-                @click:row="onClickRow"
-            >
-                <template v-slot:item.name="{ item }">
-                    <div class="country-col">
-                        <FlagIcon size="big" :iso-name="item.iso_a2" rounded />
-                        <span>{{ item.name }}</span>
+            <div class="content mt-4">
+                <div class="medal-count">
+                    <div
+                        v-for="medal in [
+                            'platinum',
+                            'gold',
+                            'silver',
+                            'bronze',
+                        ]"
+                        :key="`medal-${medal}`"
+                    >
+                        <p>
+                            <v-chip
+                                class="medal-count__chip"
+                                :color="medalcolors[medal]"
+                            >
+                                {{ $t(`Home.HomeCard.medal.${medal}`) }}
+                            </v-chip>
+                            {{ countMedal[medal] }}
+                        </p>
                     </div>
-                </template>
-                <template v-slot:item.medal="{ item }">
-                    <v-chip v-if="item.medal" :color="medalcolors[item.medal]">
-                        {{ $t(`Home.HomeCard.medal.${item.medal}`) }}
-                    </v-chip>
-                </template>
-            </v-data-table>
-        </div>
+                </div>
+                <v-text-field
+                    v-model="search"
+                    append-icon="mdi-magnify"
+                    :label="$t('History.search')"
+                    single-line
+                    hide-details
+                    class="my-4"
+                ></v-text-field>
+                <v-data-table
+                    class="medal-table"
+                    :headers="headers"
+                    :items="items"
+                    :search="search"
+                    :items-per-page="-1"
+                    :sort-by="[{ key: 'maxScore', order: 'desc' }]"
+                    disable-pagination
+                    @click:row="onClickRow"
+                >
+                    <template v-slot:item.name="{ item }">
+                        <div class="country-col">
+                            <FlagIcon
+                                size="big"
+                                :iso-name="item.iso_a2"
+                                rounded
+                            />
+                            <span>{{ item.name }}</span>
+                        </div>
+                    </template>
+                    <template v-slot:item.medal="{ item }">
+                        <v-chip
+                            v-if="item.medal"
+                            :color="medalcolors[item.medal]"
+                        >
+                            {{ $t(`Home.HomeCard.medal.${item.medal}`) }}
+                        </v-chip>
+                    </template>
+                </v-data-table>
+            </div>
+        </v-container>
     </ContentPage>
 </template>
 

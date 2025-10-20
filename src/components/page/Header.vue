@@ -1,147 +1,144 @@
 <template>
-    <div>
-        <v-app-bar class="header" height="92">
-            <router-link to="/">
-                <img
-                    class="header__logo"
-                    src="/src/assets/geoguessLogo.png"
-                    alt="logo"
-                />
-                <img
-                    class="header__logo-min"
-                    src="/img/icons/android-icon-72x72.png"
-                    alt="logo"
-                />
-            </router-link>
+    <v-app-bar class="header" height="92" :extension-height="extensionHeight">
+        <router-link to="/" class="d-flex">
+            <StreetGuessLogo v-if="!$vuetify.display.mobile" class="ml-6" />
+            <StreetGuessIcon style="width: 54px" class="ml-6" v-else />
+        </router-link>
 
-            <v-spacer />
+        <v-spacer />
 
-            <v-app-bar-nav-icon
-                class="header__nav-icon"
-                @click="menuMobile = !menuMobile"
-            ></v-app-bar-nav-icon>
-            <nav class="header__nav" :class="{ visible: menuMobile }">
-                <v-btn id="historyBtn" variant="text" to="/history">
-                    {{ $t('Home.historyBtn') }}
+        <v-app-bar-nav-icon
+            class="header__nav-icon"
+            @click="menuMobile = !menuMobile"
+        ></v-app-bar-nav-icon>
+        <nav class="header__nav ga-2" :class="{ visible: menuMobile }">
+            <v-btn id="historyBtn" variant="text" to="/history">
+                {{ $t('Home.historyBtn') }}
+            </v-btn>
+            <v-btn id="historyBtn" variant="text" to="/medals">
+                {{ $t('Home.medalsBtn') }}
+            </v-btn>
+            <div class="header__nav__btns">
+                <v-btn id="aboutBtn" @click="aboutDialog = true">
+                    <v-icon size="30"> mdi-help-circle </v-icon>
                 </v-btn>
-                <v-btn id="historyBtn" variant="text" to="/medals">
-                    {{ $t('Home.medalsBtn') }}
+                <v-btn @click="changeStreamerMode(!streamerMode)">
+                    <v-icon size="30">
+                        mdi-eye{{ streamerMode ? '-off' : '' }}
+                    </v-icon>
                 </v-btn>
-                <div class="header__nav__btns">
-                    <v-btn id="aboutBtn" @click="aboutDialog = true">
-                        <v-icon size="30"> mdi-help-circle </v-icon>
-                    </v-btn>
-                    <v-btn @click="changeStreamerMode(!streamerMode)">
-                        <v-icon size="30">
-                            mdi-eye{{ streamerMode ? '-off' : '' }}
-                        </v-icon>
-                    </v-btn>
-                    <v-menu>
-                        <template v-slot:activator="{ props }">
-                            <v-btn id="languageBtn" v-bind="props">
-                                <v-icon size="30"> mdi-translate </v-icon>
-                            </v-btn>
-                        </template>
-                        <v-list id="menuLanguage">
-                            <v-list-item
-                                v-for="(language, index) in languages"
-                                :key="index"
-                                @click="switchLanguage(language.value)"
-                            >
-                                <v-list-item-title>
-                                    {{ language.text }}
-                                </v-list-item-title>
-                            </v-list-item>
-                        </v-list>
-                    </v-menu>
-                    <v-btn @click="changeTheme()">
-                        <v-icon size="30">
-                            {{
-                                $vuetify.theme.global.current.dark
-                                    ? 'mdi-white-balance-sunny'
-                                    : 'mdi-weather-night'
-                            }}
-                            }}
-                        </v-icon>
-                    </v-btn>
-                    <v-progress-circular
-                        v-if="loading"
-                        indeterminate
-                    ></v-progress-circular>
-                    <template v-else>
-                        <template v-if="user">
-                            <v-menu>
-                                <template v-slot:activator="{ props }">
-                                    <v-btn variant="text" icon>
-                                        <v-avatar v-bind="props">
-                                            <v-img
-                                                :src="user.avatar"
-                                                :alt="user.username"
-                                            />
-                                        </v-avatar>
-                                    </v-btn>
-                                </template>
-                                <v-list>
-                                    <v-list-item :disabled="true">
-                                        {{ user.username }}
-                                    </v-list-item>
-                                    <v-list-item @click="logout">
-                                        <v-list-item-title>
-                                            <v-icon
-                                                class="header__nav__btns__user__icon"
-                                            >
-                                                mdi-logout
-                                            </v-icon>
-                                            {{ $t('Home.logoutBtn') }}
-                                        </v-list-item-title>
-                                    </v-list-item>
-                                </v-list>
-                            </v-menu>
-                        </template>
-                        <template v-else>
-                            <v-btn
-                                id="loginBtn"
-                                variant="text"
-                                :href="
-                                    'https://privateuploader.com/oauth/' +
-                                    clientId
-                                "
-                            >
-                                {{ $t('Home.loginBtn') }}
-                            </v-btn>
-                        </template>
+                <v-menu>
+                    <template v-slot:activator="{ props }">
+                        <v-btn id="languageBtn" v-bind="props">
+                            <v-icon size="30"> mdi-translate </v-icon>
+                        </v-btn>
                     </template>
-                </div>
-            </nav>
-            <v-dialog v-model="aboutDialog">
-                <About />
-            </v-dialog>
-        </v-app-bar>
-
-        <v-alert v-if="demoMode" color="#7289DA" class="demo-alert">
-            <v-row align="center">
-                <v-col class="grow">
-                    {{ $t('Demo.message') }}
-                </v-col>
-                <v-col class="shrink">
-                    <v-btn target="_blank" href="https://discord.gg/9GXm6RT">
-                        <v-icon start> mdi-discord </v-icon>
-                        {{ $t('Demo.btn') }}
-                    </v-btn>
-                </v-col>
-            </v-row>
-        </v-alert>
-        <HeaderAlert />
-    </div>
+                    <v-list id="menuLanguage">
+                        <v-list-item
+                            v-for="(language, index) in languages"
+                            :key="index"
+                            @click="switchLanguage(language.value)"
+                        >
+                            <v-list-item-title>
+                                {{ language.text }}
+                            </v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
+                <v-btn @click="changeTheme()">
+                    <v-icon size="30">
+                        {{
+                            $vuetify.theme.global.current.dark
+                                ? 'mdi-white-balance-sunny'
+                                : 'mdi-weather-night'
+                        }}
+                        }}
+                    </v-icon>
+                </v-btn>
+                <v-progress-circular
+                    v-if="loading"
+                    indeterminate
+                ></v-progress-circular>
+                <template v-else>
+                    <template v-if="user">
+                        <v-menu>
+                            <template v-slot:activator="{ props }">
+                                <v-btn variant="text" icon>
+                                    <v-avatar v-bind="props">
+                                        <v-img
+                                            :src="user.avatar"
+                                            :alt="user.username"
+                                        />
+                                    </v-avatar>
+                                </v-btn>
+                            </template>
+                            <v-list>
+                                <v-list-item :disabled="true">
+                                    {{ user.username }}
+                                </v-list-item>
+                                <v-list-item @click="logout">
+                                    <v-list-item-title>
+                                        <v-icon
+                                            class="header__nav__btns__user__icon"
+                                        >
+                                            mdi-logout
+                                        </v-icon>
+                                        {{ $t('Home.logoutBtn') }}
+                                    </v-list-item-title>
+                                </v-list-item>
+                            </v-list>
+                        </v-menu>
+                    </template>
+                    <template v-else>
+                        <v-btn
+                            id="loginBtn"
+                            variant="text"
+                            :href="
+                                'https://privateuploader.com/oauth/' + clientId
+                            "
+                        >
+                            {{ $t('Home.loginBtn') }}
+                        </v-btn>
+                    </template>
+                </template>
+            </div>
+        </nav>
+        <v-dialog v-model="aboutDialog">
+            <About />
+        </v-dialog>
+        <template #extension>
+            <v-alert v-if="demoMode" color="#7289DA" class="demo-alert">
+                <v-row align="center">
+                    <v-col class="grow">
+                        {{ $t('Demo.message') }}
+                    </v-col>
+                    <v-col class="shrink">
+                        <v-btn
+                            target="_blank"
+                            href="https://discord.gg/9GXm6RT"
+                        >
+                            <v-icon start> mdi-discord </v-icon>
+                            {{ $t('Demo.btn') }}
+                        </v-btn>
+                    </v-col>
+                </v-row>
+            </v-alert>
+            <HeaderAlert />
+        </template>
+    </v-app-bar>
 </template>
 <script>
 import About from '@/components/page/About.vue';
 import { languages, RTL_LANGUAGES } from '@/lang';
 import { mapActions, mapState } from 'vuex';
 import HeaderAlert from './HeaderAlert.vue';
+import StreetGuessLogo from '@/components/brand/StreetGuessLogo.vue';
+import StreetGuessIcon from '@/components/brand/StreetGuessIcon.vue';
 
 export default {
     components: {
+        StreetGuessIcon,
+        StreetGuessLogo,
         About,
         HeaderAlert,
     },
@@ -161,8 +158,15 @@ export default {
             loading: (state) => state.authStore.loading,
             user: (state) => state.authStore.user,
         }),
+        ...mapState('alertStore', ['alert']),
         demoMode() {
             return !!import.meta.env.VITE_APP_DEMO_MODE;
+        },
+        extensionHeight() {
+            let height = 0;
+            if (this.demoMode) height = height + 64;
+            if (this.alert) height = height + 64;
+            return height;
         },
     },
     methods: {

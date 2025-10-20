@@ -52,7 +52,7 @@ npm run build
 - [ ] Add translation file in `src/lang/locale` following `en.json`
 
 - [ ] Add the language in :
-    - `src/plugins/vuetify.js`
+    - `src/plugins/vuetify.ts`
 
 ```js
 // 1

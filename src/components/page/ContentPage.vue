@@ -1,7 +1,9 @@
 <template>
     <div class="page">
         <Header class="page__header" />
-        <slot />
+        <v-app>
+            <slot />
+        </v-app>
         <Footer class="page__footer" />
     </div>
 </template>

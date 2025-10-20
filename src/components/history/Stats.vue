@@ -1,83 +1,28 @@
 <template>
-    <div id="stats">
-        <h2>
-            {{ $t('History.Stats.title') }}
-        </h2>
-        <v-layout wrap class="mt-2">
-            <v-card class="text-center px-6 mr-3 my-2" max-width="400">
-                <p class="text-h2 pt-3">
-                    {{ (stats.totalGameTime / 3600).toFixed(2) }}
-                </p>
-                <p class="text-h6 mt-n4">
-                    {{ $t('History.Stats.hours') }}
-                </p>
-            </v-card>
-            <v-card class="text-center mr-3 px-6 my-2" max-width="400">
-                <p class="text-h2 pt-3">
-                    {{ stats.perfectScores }}/{{ rounds.length }}
-                </p>
-
-                <p class="text-h6 mt-n4">
-                    {{ $t('History.Stats.perfect5000') }}
-                </p>
-            </v-card>
-            <v-card class="text-center mr-3 px-6 my-2" max-width="400">
-                <p class="text-h2 pt-3">
-                    {{ (stats.avgTimePerRound / 60).toFixed(2) }}min
-                </p>
-
-                <p class="text-h6 mt-n4">
-                    {{ $t('History.Stats.averageTime') }}
-                </p>
-            </v-card>
-            <v-card class="text-center mr-3 px-6 my-2" max-width="400">
-                <p class="text-h2 pt-3">
-                    {{ (stats.avgTimePerGame / 60).toFixed(2) }}min
-                </p>
-
-                <p class="text-h6 mt-n4">
-                    {{ $t('History.Stats.averageGame') }}
-                </p>
-            </v-card>
-            <v-card class="text-center mr-3 px-6 my-2" max-width="400">
-                <p class="text-h2 pt-3">
-                    {{ (stats.longestGame / 60).toFixed(2) }}min
-                </p>
-
-                <p class="text-h6 mt-n4">
-                    {{ $t('History.Stats.longestGame') }}
-                </p>
-            </v-card>
-            <v-card class="text-center mr-3 px-6 my-2" max-width="400">
-                <p class="text-h2 pt-3">
-                    {{ stats.wonGames.won }}/{{ stats.wonGames.total }}
-                </p>
-
-                <p class="text-h6 mt-n4">
-                    {{ $t('History.Stats.wonMultiplayer') }}
-                </p>
-            </v-card>
-            <v-card class="text-center mr-3 px-6 my-2" max-width="400">
-                <p class="text-h2 pt-3">
-                    {{ stats.averageScore }}
-                </p>
-
-                <p class="text-h6 mt-n4">
-                    {{ $t('History.Stats.averageScore') }}
-                </p>
-            </v-card>
-            <v-card class="text-center mr-3 px-6 my-2" max-width="400">
-                <p class="text-h2 pt-3">
-                    {{ stats.averageScoreGame }}
-                </p>
-
-                <p class="text-h6 mt-n4">
-                    {{ $t('History.Stats.averageScoreGame') }}
-                </p>
-            </v-card>
-        </v-layout>
+    <div id="stats" class="ma-4 mb-0">
+        <v-row dense align="stretch" justify="center">
+            <v-col
+                v-for="(item, index) in statItems"
+                :key="index"
+                cols="12"
+                sm="6"
+                md="4"
+                lg="3"
+                xl="2"
+            >
+                <v-card elevation="3" class="text-center py-4">
+                    <p class="text-h3 font-weight-bold mb-1">
+                        {{ item.value }}
+                    </p>
+                    <p class="text-subtitle-1 text-medium-emphasis">
+                        {{ item.label }}
+                    </p>
+                </v-card>
+            </v-col>
+        </v-row>
     </div>
 </template>
+
 <script>
 import { mapActions, mapState } from 'vuex';
 import { getCountdownText } from '../../utils';
@@ -104,6 +49,44 @@ export default {
                 ).toLocaleString(),
             };
         },
+        statItems() {
+            return [
+                {
+                    label: this.$t('History.Stats.hours'),
+                    value: (this.stats.totalGameTime / 3600).toFixed(2),
+                },
+                {
+                    label: this.$t('History.Stats.perfect5000'),
+                    value: `${this.stats.perfectScores}/${this.rounds.length}`,
+                },
+                {
+                    label: this.$t('History.Stats.averageTime'),
+                    value: `${(this.stats.avgTimePerRound / 60).toFixed(
+                        2
+                    )} min`,
+                },
+                {
+                    label: this.$t('History.Stats.averageGame'),
+                    value: `${(this.stats.avgTimePerGame / 60).toFixed(2)} min`,
+                },
+                {
+                    label: this.$t('History.Stats.longestGame'),
+                    value: `${(this.stats.longestGame / 60).toFixed(2)} min`,
+                },
+                {
+                    label: this.$t('History.Stats.wonMultiplayer'),
+                    value: `${this.stats.wonGames.won}/${this.stats.wonGames.total}`,
+                },
+                {
+                    label: this.$t('History.Stats.averageScore'),
+                    value: this.stats.averageScore,
+                },
+                {
+                    label: this.$t('History.Stats.averageScoreGame'),
+                    value: this.stats.averageScoreGame,
+                },
+            ];
+        },
         rounds() {
             let rounds = [];
             for (const game of this.history) {
@@ -128,7 +111,6 @@ export default {
             return getCountdownText(Math.floor(time));
         },
         getPerfectScore() {
-            // count how many 5000 scores there are in this.rounds
             return this.rounds.filter((round) => round.points === 5000).length;
         },
         getTotalDuration() {
@@ -168,15 +150,13 @@ export default {
                         allPlayersPoints.every(
                             ([, points]) => points < playerPoints
                         )
-                    )
+                    ) {
                         gamesWon++;
+                    }
                     gamesTotal++;
                 }
             }
-            return {
-                won: gamesWon,
-                total: gamesTotal,
-            };
+            return { won: gamesWon, total: gamesTotal };
         },
         getAvgTimePerGame() {
             if (!this.history.length) return 0;
@@ -203,7 +183,6 @@ export default {
         },
         getLongestGame() {
             if (!this.history.length) return 0;
-            // get the longest game
             return this.history.reduce((acc, { playerName, rounds }) => {
                 if (playerName) {
                     let timePassed = 0;
@@ -247,9 +226,25 @@ export default {
 
 <style lang="scss" scoped>
 #stats {
+    padding: 1rem;
     h2 {
-        font-weight: 500;
+        text-align: center;
     }
-    padding: 0.625rem;
+
+    .v-card {
+        border-radius: 16px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .v-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    @media (max-width: 600px) {
+        .text-h3 {
+            font-size: 1.8rem;
+        }
+    }
 }
 </style>

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import {
+    GameMode,
     Room,
     RoomConfig,
 } from '../geonext-server-types/classes/rooms/Room.js';
@@ -8,6 +9,7 @@ import { useGameSocketStore } from './socket.store.js';
 import { GameSocketClientEvent } from '../geonext-server-types/types/socket/clientEvents.js';
 import { useSessionStore } from './session.store.js';
 import { RoomPlayer } from '../geonext-server-types/classes/rooms/RoomPlayer.js';
+import { useRouter } from 'vue-router';
 
 export const useGameStore = defineStore('game', () => {
     const isOpenDialogRoom = ref(false);
@@ -35,9 +37,20 @@ export const useGameStore = defineStore('game', () => {
         return index + 2;
     });
 
-    const gameSettings = computed(() => {
-        if (!room.value) return new RoomConfig();
-        return room.value.config;
+    const gameSettings = computed({
+        get: () => {
+            if (!room.value) return new RoomConfig();
+            return room.value.config;
+        },
+        set: (val) => {
+            if (!room.value) {
+                room.value = {
+                    config: val,
+                    players: [],
+                    rounds: [],
+                };
+            }
+        },
     });
 
     const players = computed<RoomPlayer[]>(() => {
@@ -83,7 +96,7 @@ export const useGameStore = defineStore('game', () => {
                 name,
             });
         } catch (e) {
-            console.log(e);
+            console.error(e);
             setError('DialogRoom.invalidRoomName');
         }
     }
@@ -111,8 +124,24 @@ export const useGameStore = defineStore('game', () => {
         return false;
     });
 
+    const router = useRouter();
+
     async function saveSettings() {
-        currentComponent.value = 'playerName';
+        if (singlePlayer.value) {
+            router.push({
+                name: 'street-view',
+                params: {
+                    modeSelected: room.value.config.modeSelected,
+                    time: room.value.config.timeLimitation,
+                    difficulty: room.value.config.difficulty,
+                    roundsPredefined: room.value.config.nbRoundSelected,
+                },
+            });
+
+            closeDialogRoom();
+        } else {
+            currentComponent.value = 'playerName';
+        }
     }
 
     watch(
@@ -122,8 +151,13 @@ export const useGameStore = defineStore('game', () => {
             socketStore.emit(GameSocketClientEvent.USER_UPDATE_NAME, {
                 name: newName,
             });
+            localStorage.setItem('playerName', newName);
         }
     );
+
+    function setName(val: string) {
+        name.value = val;
+    }
 
     async function startGame() {
         const socketStore = useGameSocketStore();
@@ -177,6 +211,7 @@ export const useGameStore = defineStore('game', () => {
         saveSettings,
         startGame,
         commitGuess,
+        setName,
         // COMPUTED
         currentRoomOwned,
     };

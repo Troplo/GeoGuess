@@ -372,13 +372,17 @@ const gameMode = computed(() => GAME_MODE);
 
 // Methods
 function setGameSettings(settings: any) {
-    gameStore.room.config = {
-        ...config,
-        ...settings,
-    };
+    // likely singleplayer
+    if (!gameStore.room) {
+        gameStore.gameSettings = {
+            ...gameStore.gameSettings,
+            ...settings,
+        };
+    }
 }
 
 function setSettings() {
+    setGameSettings({});
     gameStore.saveSettings();
 }
 

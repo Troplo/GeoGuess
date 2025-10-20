@@ -69,6 +69,10 @@ const roomInputValue = computed({
 function searchRoom(value) {
     gameStore.searchRoom(value);
 }
+
+function cancel() {
+    gameStore.closeDialogRoom();
+}
 </script>
 
 <style lang="scss" scoped>

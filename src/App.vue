@@ -1,7 +1,9 @@
 <template>
     <v-app>
         <DialogSaveSync></DialogSaveSync>
-        <router-view />
+        <component :is="useVMain ? VMain : 'div'" style="height: 0px">
+            <router-view />
+        </component>
         <v-snackbar
             :model-value="syncError"
             location="top right"
@@ -46,10 +48,11 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import DialogSaveSync from '@/components/DialogSaveSync.vue';
+import { VMain } from 'vuetify/components';
 
 export default {
     name: 'App',
-    components: { DialogSaveSync },
+    components: { DialogSaveSync, VMain },
     data() {
         return {
             refreshing: false,
@@ -71,13 +74,20 @@ export default {
         this.handleCloudSync();
         this.$app.getState();
         this.$session.startSession();
+        this.$experiments.init();
     },
     computed: {
+        VMain() {
+            return VMain;
+        },
         ...mapState({
             syncError: (state) => state.authStore.syncError,
             history: (state) => state.homeStore.history,
             saving: (state) => state.authStore.saving,
         }),
+        useVMain() {
+            return !this.$route.path.startsWith('/street-view/');
+        },
     },
     methods: {
         ...mapActions('authStore', ['login']),

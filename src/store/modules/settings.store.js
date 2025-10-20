@@ -74,7 +74,6 @@ export default {
                 state.isOpenDialogRoom = true;
             }
 
-            console.log(state.room);
             state.room.once('value', (snapshot) => {
                 console.log(
                     `here! started? ${snapshot.child('started').val()}`

@@ -54,7 +54,6 @@ const players = computed(() => {
     float: right;
     pointer-events: none;
     position: absolute;
-    top: 64px;
     right: 15px;
 }
 </style>
