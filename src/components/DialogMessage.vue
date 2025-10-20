@@ -12,9 +12,9 @@
                     dialogTitle
                 }}</span>
                 <v-spacer />
-                <v-btn v-if="dismissible" icon @click="$emit('close')">
+                <geo-btn v-if="dismissible" icon @click="$emit('close')">
                     <v-icon>mdi-close</v-icon>
-                </v-btn>
+                </geo-btn>
             </v-card-title>
             <v-card-text>
                 <v-container>

@@ -8,9 +8,9 @@
         >
             <v-menu v-if="data.type === 'custom'">
                 <template v-slot:activator="{ props }">
-                    <v-btn icon absolute location="top left" v-bind="props">
+                    <geo-btn icon absolute location="top left" v-bind="props">
                         <v-icon> mdi-file</v-icon>
-                    </v-btn>
+                    </geo-btn>
                 </template>
                 <v-list>
                     <v-list-item @click="editMap">
@@ -32,7 +32,7 @@
                 >
                     <v-tooltip location="top">
                         <template v-slot:activator="{ props }">
-                            <v-btn
+                            <geo-btn
                                 class="map-card__medal-button"
                                 icon
                                 to="/history"
@@ -40,7 +40,7 @@
                                 v-bind="props"
                             >
                                 {{ $t(`Home.HomeCard.medal.${colorMedal}`) }}
-                            </v-btn>
+                            </geo-btn>
                         </template>
                         <span>{{ maxScore.toLocaleString() }}</span>
                     </v-tooltip>

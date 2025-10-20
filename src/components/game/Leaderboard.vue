@@ -3,7 +3,7 @@
         id="leaderboard-alert"
         standard-easing
         width="400"
-        color="background"
+        color="#212121"
         class="mt-2 mr-2"
     >
         <div class="d-flex ga-2 align-center">

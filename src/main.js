@@ -81,6 +81,9 @@ app.use(store);
 app.use(vuetify);
 setupLegacyPiniaCompat(app);
 import '@troplo/debug-overlay/dist/debug-overlay.css';
+import GeoBtn from '@/components/core/GeoBtn.vue';
 init(app);
+
+app.component('GeoBtn', GeoBtn);
 
 app.mount('#app');

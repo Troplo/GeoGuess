@@ -4,16 +4,16 @@
 
         <div class="ga-2 d-flex flex-column align-center">
             <div class="d-flex ga-2">
-                <v-btn
+                <geo-btn
                     rounded
                     color="primary"
                     size="large"
                     @click="openDialog()"
                 >
                     {{ $t('DialogRoom.singlePlayer') }}
-                </v-btn>
+                </geo-btn>
 
-                <v-btn
+                <geo-btn
                     rounded
                     color="secondary"
                     size="large"
@@ -21,9 +21,9 @@
                     @click="openDialog(false)"
                 >
                     {{ $t('DialogRoom.withFriends') }}
-                </v-btn>
+                </geo-btn>
             </div>
-            <v-btn
+            <geo-btn
                 class="search-box__btns__btn"
                 rounded
                 variant="tonal"
@@ -34,11 +34,11 @@
                 @click="openDialog(false)"
             >
                 {{ $t('DialogRoom.matchmaking') }}
-            </v-btn>
+            </geo-btn>
             <DialogRoom />
         </div>
         <div class="search-box__mapmenu">
-            <v-btn
+            <geo-btn
                 variant="text"
                 class="btn-customs"
                 color="primary"
@@ -46,7 +46,7 @@
                 @click="dialogCustom = !dialogCustom"
             >
                 <v-icon>mdi-map-plus</v-icon> {{ $t('Home.createMap') }}
-            </v-btn>
+            </geo-btn>
             <DialogCustomMap
                 :visibility="dialogCustom"
                 @change-visibility="changeDialogCustom"

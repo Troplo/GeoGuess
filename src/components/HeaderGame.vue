@@ -8,7 +8,7 @@
                 :dismissible="true"
                 @close="scoreboard = false"
             />
-            <v-btn
+            <geo-btn
                 icon
                 @click="scoreboard = true"
                 v-if="
@@ -16,7 +16,7 @@
                 "
             >
                 <v-icon>mdi-scoreboard-outline</v-icon>
-            </v-btn>
+            </geo-btn>
             <div class="ml-4">
                 <div v-if="remainingTime != null && remainingTime > 0">
                     <span id="countdown-text">{{ countdownText }}</span>
@@ -39,7 +39,7 @@
             <v-tooltip location="bottom" v-if="allowReRoll">
                 <template v-slot:activator="{ props }">
                     <span v-bind="props">
-                        <v-btn
+                        <geo-btn
                             icon
                             @click="reRollGame()"
                             :disabled="reRollVoted"
@@ -48,7 +48,7 @@
                                 >mdi-dice-multiple</v-icon
                             >
                             <v-icon v-else>mdi-check</v-icon>
-                        </v-btn>
+                        </geo-btn>
                     </span>
                 </template>
                 <span v-if="!multiplayer">{{ $t('HeaderGame.reRoll') }}</span>

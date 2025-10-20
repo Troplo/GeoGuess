@@ -6,9 +6,9 @@
         @update:model-value="$emit('change-visibility')"
     >
         <v-card class="dialog-customs">
-            <v-btn class="close-btn" icon @click="$emit('change-visibility')">
+            <geo-btn class="close-btn" icon @click="$emit('change-visibility')">
                 <v-icon>mdi-close</v-icon>
-            </v-btn>
+            </geo-btn>
             <v-card-title>
                 <p>{{ $t('DialogCustomMap.title') }}</p>
             </v-card-title>
@@ -70,7 +70,7 @@
                                 }"
                             />
                             <v-row>
-                                <v-btn
+                                <geo-btn
                                     class="mt-6 mr-auto ml-auto"
                                     color="secondary"
                                     size="small"
@@ -78,7 +78,7 @@
                                 >
                                     <v-icon start> mdi-cloud-download </v-icon>
                                     {{ $t('DialogCustomMap.download') }}
-                                </v-btn>
+                                </geo-btn>
                             </v-row>
                         </div>
                     </v-col>
@@ -134,12 +134,12 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer />
-                <v-btn @click="clean" color="error">
+                <geo-btn @click="clean" color="error">
                     {{ $t('DialogCustomMap.Clean') }}
-                </v-btn>
-                <v-btn color="primary" @click="$emit('change-visibility')">
+                </geo-btn>
+                <geo-btn color="primary" @click="$emit('change-visibility')">
                     {{ $t('DialogCustomMap.OK') }}
-                </v-btn>
+                </geo-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

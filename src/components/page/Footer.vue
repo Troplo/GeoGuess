@@ -2,30 +2,30 @@
     <footer>
         <div class="footer__container">
             <div class="footer__logo">
-                <v-btn
+                <geo-btn
                     icon
                     color="#FFFFFF"
                     href="https://github.com/GeoGuess/Geoguess"
                 >
                     <v-icon size="30"> mdi-github </v-icon>
-                </v-btn>
-                <v-btn icon color="#FFFFFF" href="https://discord.gg/9GXm6RT">
+                </geo-btn>
+                <geo-btn icon color="#FFFFFF" href="https://discord.gg/9GXm6RT">
                     <v-icon size="30"> mdi-discord </v-icon>
-                </v-btn>
-                <v-btn
+                </geo-btn>
+                <geo-btn
                     icon
                     color="#FFFFFF"
                     href="https://twitter.com/BilelJegham"
                 >
                     <v-icon size="30"> mdi-twitter </v-icon>
-                </v-btn>
-                <v-btn
+                </geo-btn>
+                <geo-btn
                     icon
                     color="#FFFFFF"
                     href="https://www.instagram.com/geoguess.games/"
                 >
                     <v-icon size="30"> mdi-instagram </v-icon>
-                </v-btn>
+                </geo-btn>
             </div>
             <div class="licence">
                 <p class="mb-0">

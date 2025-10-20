@@ -5,9 +5,9 @@
         :fullscreen="$viewport.width < 450"
     >
         <template v-slot:activator="{ props }">
-            <v-btn variant="text" color="darkGreen" v-bind="props">
+            <geo-btn variant="text" color="darkGreen" v-bind="props">
                 {{ $t('Home.play') }}
-            </v-btn>
+            </geo-btn>
         </template>
         <v-card>
             <v-img
@@ -25,18 +25,18 @@
                 {{ data.descriptionLocate }}
             </v-card-text>
             <v-card-actions>
-                <v-btn color="error" variant="text" @click="visible = false">
+                <geo-btn color="error" variant="text" @click="visible = false">
                     {{ $t('cancel') }}
-                </v-btn>
+                </geo-btn>
 
                 <v-spacer />
-                <v-btn color="primary" @click="onClickSinglePlayer">
+                <geo-btn color="primary" @click="onClickSinglePlayer">
                     {{ $t('DialogRoom.singlePlayer') }}
-                </v-btn>
+                </geo-btn>
 
-                <v-btn color="secondary" @click="onClickMultiPlayer">
+                <geo-btn color="secondary" @click="onClickMultiPlayer">
                     {{ $t('DialogRoom.withFriends') }}
-                </v-btn>
+                </geo-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

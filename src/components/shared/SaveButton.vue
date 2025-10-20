@@ -1,5 +1,5 @@
 <template>
-    <v-btn
+    <geo-btn
         v-bind="$props"
         :color="success ? 'success' : color"
         @click="$emit('click')"
@@ -8,7 +8,7 @@
         <template v-else>
             <v-icon>mdi-check</v-icon>{{ $t('Saved') }}
         </template>
-    </v-btn>
+    </geo-btn>
 </template>
 
 <script lang="js">

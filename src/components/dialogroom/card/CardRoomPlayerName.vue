@@ -54,19 +54,19 @@
         </v-card-text>
         <v-card-actions>
             <v-spacer />
-            <v-btn variant="flat" color="error" @click="cancel">
+            <geo-btn variant="tonal" color="error" @click="cancel">
                 {{ $t('cancel') }}
-            </v-btn>
-            <v-btn
+            </geo-btn>
+            <geo-btn
                 v-if="playerNumber === 1"
                 id="btnStart"
-                variant="flat"
+                variant="tonal"
                 color="#43B581"
                 :disabled="players.length < 2 || !canNext"
                 @click="startGame"
             >
                 {{ $t('next') }}
-            </v-btn>
+            </geo-btn>
         </v-card-actions>
     </v-card>
 </template>

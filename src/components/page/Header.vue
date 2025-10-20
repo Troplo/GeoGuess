@@ -12,26 +12,26 @@
             @click="menuMobile = !menuMobile"
         ></v-app-bar-nav-icon>
         <nav class="header__nav ga-2" :class="{ visible: menuMobile }">
-            <v-btn id="historyBtn" variant="text" to="/history">
+            <geo-btn id="historyBtn" variant="text" to="/history">
                 {{ $t('Home.historyBtn') }}
-            </v-btn>
-            <v-btn id="historyBtn" variant="text" to="/medals">
+            </geo-btn>
+            <geo-btn id="historyBtn" variant="text" to="/medals">
                 {{ $t('Home.medalsBtn') }}
-            </v-btn>
+            </geo-btn>
             <div class="header__nav__btns">
-                <v-btn id="aboutBtn" @click="aboutDialog = true">
+                <geo-btn id="aboutBtn" @click="aboutDialog = true">
                     <v-icon size="30"> mdi-help-circle </v-icon>
-                </v-btn>
-                <v-btn @click="changeStreamerMode(!streamerMode)">
+                </geo-btn>
+                <geo-btn @click="changeStreamerMode(!streamerMode)">
                     <v-icon size="30">
                         mdi-eye{{ streamerMode ? '-off' : '' }}
                     </v-icon>
-                </v-btn>
+                </geo-btn>
                 <v-menu>
                     <template v-slot:activator="{ props }">
-                        <v-btn id="languageBtn" v-bind="props">
+                        <geo-btn id="languageBtn" v-bind="props">
                             <v-icon size="30"> mdi-translate </v-icon>
-                        </v-btn>
+                        </geo-btn>
                     </template>
                     <v-list id="menuLanguage">
                         <v-list-item
@@ -45,7 +45,7 @@
                         </v-list-item>
                     </v-list>
                 </v-menu>
-                <v-btn @click="changeTheme()">
+                <geo-btn @click="changeTheme()">
                     <v-icon size="30">
                         {{
                             $vuetify.theme.global.current.dark
@@ -54,7 +54,7 @@
                         }}
                         }}
                     </v-icon>
-                </v-btn>
+                </geo-btn>
                 <v-progress-circular
                     v-if="loading"
                     indeterminate
@@ -63,14 +63,14 @@
                     <template v-if="user">
                         <v-menu>
                             <template v-slot:activator="{ props }">
-                                <v-btn variant="text" icon>
+                                <geo-btn variant="text" icon>
                                     <v-avatar v-bind="props">
                                         <v-img
                                             :src="user.avatar"
                                             :alt="user.username"
                                         />
                                     </v-avatar>
-                                </v-btn>
+                                </geo-btn>
                             </template>
                             <v-list>
                                 <v-list-item :disabled="true">
@@ -90,7 +90,7 @@
                         </v-menu>
                     </template>
                     <template v-else>
-                        <v-btn
+                        <geo-btn
                             id="loginBtn"
                             variant="text"
                             :href="
@@ -98,7 +98,7 @@
                             "
                         >
                             {{ $t('Home.loginBtn') }}
-                        </v-btn>
+                        </geo-btn>
                     </template>
                 </template>
             </div>
@@ -113,13 +113,13 @@
                         {{ $t('Demo.message') }}
                     </v-col>
                     <v-col class="shrink">
-                        <v-btn
+                        <geo-btn
                             target="_blank"
                             href="https://discord.gg/9GXm6RT"
                         >
                             <v-icon start> mdi-discord </v-icon>
                             {{ $t('Demo.btn') }}
-                        </v-btn>
+                        </geo-btn>
                     </v-col>
                 </v-row>
             </v-alert>

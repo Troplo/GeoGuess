@@ -18,14 +18,14 @@
                     rounded
                     @update:model-value="loadPlaceGeoJSON"
                 />
-                <v-btn
+                <geo-btn
                     @click="loadPlaceGeoJSON(place)"
                     color="dark"
                     id="loadBtn"
                     :loading="loadingGeoJson"
                 >
                     {{ $t('CardRoomMap.loadBtn') }}
-                </v-btn>
+                </geo-btn>
             </v-row>
             <GMapMap
                 ref="mapRef"
@@ -55,22 +55,22 @@
             </v-row>
         </v-card-text>
         <v-card-actions>
-            <v-btn variant="plain" v-if="geoJson" @click="reset">{{
+            <geo-btn variant="plain" v-if="geoJson" @click="reset">{{
                 $t('CardRoomMap.reset')
-            }}</v-btn>
+            }}</geo-btn>
             <v-spacer />
-            <v-btn variant="flat" color="error" @click="cancel">
+            <geo-btn variant="tonal" color="error" @click="cancel">
                 {{ $t('cancel') }}
-            </v-btn>
-            <v-btn
+            </geo-btn>
+            <geo-btn
                 id="btnStart"
-                variant="flat"
+                variant="tonal"
                 color="#43B581"
                 @click="next"
                 :disabled="loadingGeoJson || !canPlayGeoJSON"
             >
                 {{ $t('next') }}
-            </v-btn>
+            </geo-btn>
         </v-card-actions>
     </v-card>
 </template>

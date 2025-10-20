@@ -26,6 +26,10 @@ export interface GameSocketEventsServer {
     [GameSocketServerEvent.HELLO]: {
         payload: {
             playerId: string;
+            resume: {
+                room: Room;
+                kickAt: string;
+            } | null;
         };
     };
     [GameSocketServerEvent.CREATE_ROOM_RESPONSE]: Room;

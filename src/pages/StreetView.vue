@@ -29,14 +29,14 @@
                     <div id="street-view" ref="streetView" />
                     <v-tooltip location="top">
                         <template v-slot:activator="{ props }">
-                            <v-btn
+                            <geo-btn
                                 class="resetBtn"
                                 icon
                                 v-bind="props"
                                 @click="resetLocation"
                             >
                                 <v-icon>mdi-crosshairs-gps</v-icon>
-                            </v-btn>
+                            </geo-btn>
                         </template>
                         <span>{{ $t('Maps.reset') }}</span>
                     </v-tooltip>

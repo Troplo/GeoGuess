@@ -12,7 +12,7 @@
         >
             {{ $t('SyncError.label') }}
             <template v-slot:actions="{ attrs }">
-                <v-btn
+                <geo-btn
                     color="white"
                     variant="text"
                     v-bind="attrs"
@@ -20,7 +20,7 @@
                     :loading="saving"
                 >
                     {{ $t('SyncError.btn') }}
-                </v-btn>
+                </geo-btn>
             </template>
         </v-snackbar>
         <v-alert
@@ -36,9 +36,9 @@
                     {{ $t('AlertUpdate.label') }}
                 </v-col>
                 <v-col class="shrink">
-                    <v-btn @click="refreshApp">{{
+                    <geo-btn @click="refreshApp">{{
                         $t('AlertUpdate.btn')
-                    }}</v-btn>
+                    }}</geo-btn>
                 </v-col>
             </v-row>
         </v-alert>
@@ -122,5 +122,34 @@ export default {
 <style>
 .gm-style {
     background-color: rgb(var(--v-theme-gmapBg)) !important;
+}
+
+.v-theme--light .shimmer-parent > .shimmer-effect {
+    mix-blend-mode: multiply !important;
+}
+
+.shimmer-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    border-radius: inherit;
+    background: radial-gradient(
+        circle 150px at var(--shimmer-x, 50%) var(--shimmer-y, 50%),
+        rgba(
+            var(--shimmer-color, 255, 255, 255),
+            var(--shimmer-strength, 0.15)
+        ),
+        rgba(var(--shimmer-color, 255, 255, 255), 0) 100%
+    );
+    mix-blend-mode: screen;
+    transition: opacity 0.2s ease, background-position 0.1s ease;
+    opacity: 0;
+}
+
+.shimmer-effect.active {
+    opacity: 1;
 }
 </style>

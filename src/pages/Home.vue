@@ -4,14 +4,14 @@
             <v-alert type="warning" variant="tonal" class="mx-4">
                 You are using a beta version of GeoGuess. (GeoNEXT) Access the
                 DevTools with CTRL + ALT + M. You may experience issues.
-                <v-btn
+                <geo-btn
                     @click="toggleDevTools()"
                     variant="tonal"
                     class="ml-2"
                     size="small"
                 >
                     Open DevTools
-                </v-btn>
+                </geo-btn>
             </v-alert>
             <v-container class="home-page__main__container" fluid>
                 <v-layout class="home-page__main__layout">
@@ -30,7 +30,7 @@
                     </v-layout>
                 </v-layout>
             </v-container>
-            <v-btn
+            <geo-btn
                 id="btnMaps"
                 href="#maps-container"
                 size="large"
@@ -38,7 +38,7 @@
                 color="secondary"
             >
                 <v-icon>mdi-arrow-down</v-icon>
-            </v-btn>
+            </geo-btn>
         </section>
         <MapsContainer />
     </ContentPage>

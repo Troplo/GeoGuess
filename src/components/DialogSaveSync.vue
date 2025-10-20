@@ -8,7 +8,7 @@
                 <v-container>
                     <v-row>
                         <v-col>
-                            <v-btn
+                            <geo-btn
                                 block
                                 height="300"
                                 style="
@@ -43,10 +43,10 @@
                                         </small>
                                     </span>
                                 </div>
-                            </v-btn>
+                            </geo-btn>
                         </v-col>
                         <v-col>
-                            <v-btn
+                            <geo-btn
                                 block
                                 height="300"
                                 style="
@@ -81,10 +81,10 @@
                                         </small>
                                     </span>
                                 </div>
-                            </v-btn>
+                            </geo-btn>
                         </v-col>
                         <v-col>
-                            <v-btn
+                            <geo-btn
                                 block
                                 height="300"
                                 style="
@@ -127,7 +127,7 @@
                                         >If in doubt, use this.</span
                                     >
                                 </div>
-                            </v-btn>
+                            </geo-btn>
                         </v-col>
                     </v-row>
                 </v-container>

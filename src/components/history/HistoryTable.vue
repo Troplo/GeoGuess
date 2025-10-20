@@ -9,9 +9,9 @@
                 <v-tooltip location="top" v-if="!saving">
                     <template v-slot:activator="{ props }">
                         <div v-bind="props">
-                            <v-btn icon @click="cloudConflict(true)">
+                            <geo-btn icon @click="cloudConflict(true)">
                                 <v-icon> mdi-sync </v-icon>
-                            </v-btn>
+                            </geo-btn>
                         </div>
                     </template>
                     <span>{{ $t('History.forceCloudConflict') }}</span>
@@ -19,14 +19,14 @@
                 <v-tooltip location="top" v-else>
                     <template v-slot:activator="{ props }">
                         <div v-bind="props" v-on="on">
-                            <v-btn icon disabled>
+                            <geo-btn icon disabled>
                                 <v-progress-circular
                                     size="20"
                                     width="2"
                                     color="white"
                                     indeterminate
                                 ></v-progress-circular>
-                            </v-btn>
+                            </geo-btn>
                         </div>
                     </template>
                     <span>{{ $t('History.syncing') }}</span>
@@ -49,9 +49,9 @@
 
                 <v-tooltip location="top">
                     <template v-slot:activator="{ props }">
-                        <v-btn icon v-bind="props" @click="exportSave">
+                        <geo-btn icon v-bind="props" @click="exportSave">
                             <v-icon>mdi-upload-outline</v-icon>
-                        </v-btn>
+                        </geo-btn>
                     </template>
                     <span>{{ $t('History.exportGeoSave') }}</span>
                 </v-tooltip>
@@ -70,13 +70,13 @@
                     <v-card-actions>
                         <v-spacer />
 
-                        <v-btn
-                            variant="flat"
+                        <geo-btn
+                            variant="tonal"
                             color="#43B581"
                             @click="dialog = false"
                         >
                             {{ $t('OK') }}
-                        </v-btn>
+                        </geo-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -139,9 +139,9 @@
                     </td>
                 </template>
             </v-data-table>
-            <v-btn color="primary" class="btn-export mx-2" @click="exportCsv">
+            <geo-btn color="primary" class="btn-export mx-2" @click="exportCsv">
                 {{ $t('History.exportCSV') }}
-            </v-btn>
+            </geo-btn>
         </div>
     </v-container>
 </template>

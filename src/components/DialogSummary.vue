@@ -60,15 +60,15 @@
                     </span>
                 </v-row>
                 <v-row class="mt-8" justify="center">
-                    <v-btn
+                    <geo-btn
                         id="play-again-button"
                         class="mt-8"
                         color="#43B581"
                         @click="$emit('finishGame')"
                     >
                         {{ $t('DialogSummary.viewDetails') }}
-                    </v-btn>
-                    <v-btn
+                    </geo-btn>
+                    <geo-btn
                         v-if="!multiplayer"
                         id="exit-button"
                         class="mt-8"
@@ -76,7 +76,7 @@
                         @click="$emit('playAgain')"
                     >
                         {{ $t('Maps.playAgain') }}
-                    </v-btn>
+                    </geo-btn>
                 </v-row>
             </v-card-text>
         </v-card>

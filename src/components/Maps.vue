@@ -41,44 +41,53 @@
 
         <div class="container-map_controls">
             <div class="container-map_btns">
-                <v-btn size="x-small" variant="tonal" icon @click="showNotepad">
+                <geo-btn
+                    size="x-small"
+                    variant="tonal"
+                    base-color="white"
+                    icon
+                    @click="showNotepad"
+                >
                     <v-icon> mdi-file-document-edit </v-icon>
-                </v-btn>
+                </geo-btn>
 
-                <v-btn
+                <geo-btn
                     id="btnDown"
                     variant="tonal"
                     icon
                     size="x-small"
+                    base-color="white"
                     :disabled="size < 2"
                     @click="size--"
                 >
                     <v-icon> mdi-arrow-bottom-left </v-icon>
-                </v-btn>
+                </geo-btn>
 
-                <v-btn
+                <geo-btn
                     id="btnUp"
                     variant="tonal"
                     icon
                     size="x-small"
+                    base-color="white"
                     :disabled="size > 3"
                     @click="size++"
                 >
                     <v-icon> mdi-arrow-top-right </v-icon>
-                </v-btn>
+                </geo-btn>
 
-                <v-btn
+                <geo-btn
                     id="btnPin"
                     variant="tonal"
                     icon
+                    base-color="white"
                     size="x-small"
                     @click="pinActive = !pinActive"
                 >
                     <v-icon> mdi-pin{{ pinActive ? '-off' : '' }} </v-icon>
-                </v-btn>
+                </geo-btn>
             </div>
         </div>
-        <v-btn
+        <geo-btn
             v-if="
                 $viewport.width < 450 &&
                 !isGuessButtonClicked &&
@@ -90,7 +99,7 @@
             @click="hideMap"
         >
             <v-icon color="white"> mdi-close </v-icon>
-        </v-btn>
+        </geo-btn>
         <Map
             v-if="mode === 'classic'"
             id="map"

@@ -13,7 +13,7 @@
                         <v-row
                             class="card_settings__mode__btns d-flex justify-space-around w-100"
                         >
-                            <v-btn
+                            <geo-btn
                                 id="modeClassicBtn"
                                 :variant="
                                     gameSettings.modeSelected !==
@@ -32,8 +32,8 @@
                             >
                                 <v-icon size="large"> mdi-map-marker </v-icon>
                                 <span>{{ $t('modes.classic') }}</span>
-                            </v-btn>
-                            <v-btn
+                            </geo-btn>
+                            <geo-btn
                                 id="modeCountryBtn"
                                 :variant="
                                     gameSettings.modeSelected !==
@@ -52,8 +52,8 @@
                             >
                                 <v-icon size="large"> mdi-flag </v-icon>
                                 <span>{{ $t('modes.country') }}</span>
-                            </v-btn>
-                            <v-btn
+                            </geo-btn>
+                            <geo-btn
                                 id="modeCustomAreaBtn"
                                 v-if="
                                     gameSettings.modeSelected ===
@@ -72,7 +72,7 @@
                                     mdi-flag-checkered
                                 </v-icon>
                                 <span>{{ $t('modes.custom_area') }}</span>
-                            </v-btn>
+                            </geo-btn>
                         </v-row>
                     </v-row>
 
@@ -222,11 +222,11 @@
                                             <template
                                                 v-slot:activator="{ props }"
                                             >
-                                                <v-btn icon v-bind="props">
+                                                <geo-btn icon v-bind="props">
                                                     <v-icon>
                                                         mdi-information
                                                     </v-icon>
-                                                </v-btn>
+                                                </geo-btn>
                                             </template>
                                             <span>{{
                                                 $t(
@@ -303,17 +303,17 @@
         </v-card-text>
         <v-card-actions>
             <v-spacer />
-            <v-btn variant="flat" color="error" @click="cancel">
+            <geo-btn variant="tonal" color="error" @click="cancel">
                 {{ $t('cancel') }}
-            </v-btn>
-            <v-btn
+            </geo-btn>
+            <geo-btn
                 id="btnNextSettings"
-                variant="flat"
+                variant="tonal"
                 color="#43B581"
                 @click="onClickNext"
             >
                 {{ $t('next') }}
-            </v-btn>
+            </geo-btn>
         </v-card-actions>
     </v-card>
 </template>
