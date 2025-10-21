@@ -1,5 +1,6 @@
 import { registerWidget } from '@troplo/debug-overlay';
 import { defineComponent, h } from 'vue';
+import DevWidgetSocket from './socket/DevWidgetSocket.vue';
 
 const quickStart = defineComponent({
     mounted() {
@@ -45,15 +46,18 @@ export function registerGeoGuessWidgets() {
         title: 'Quick Start SPinMP',
         shortcut: ['F1'],
         component: h(quickStart),
+        category: 'Quick Start',
     });
     registerWidget({
         title: 'Quick Start MP 2 Player',
         shortcut: ['F2'],
         component: h(quickStartMp),
+        category: 'Quick Start',
     });
     registerWidget({
         title: 'Quick Start MP 4 Player',
         shortcut: ['F4'],
+        category: 'Quick Start',
         component: h(
             quickStartMp,
             {
@@ -61,5 +65,23 @@ export function registerGeoGuessWidgets() {
             },
             []
         ),
+    });
+
+    registerWidget({
+        title: 'Socket Network Options',
+        category: 'Socket',
+        component: h(DevWidgetSocket),
+    });
+
+    registerWidget({
+        title: 'HTTP Network Inspector',
+        category: 'Network',
+        component: h(DevWidgetSocket),
+    });
+
+    registerWidget({
+        title: 'Socket Network Inspector',
+        category: 'Network',
+        component: h(DevWidgetSocket),
     });
 }

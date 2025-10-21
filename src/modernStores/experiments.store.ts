@@ -11,9 +11,6 @@ export interface ExperimentsState {
 export const useExperimentsStore = defineStore('experiments', () => {
     const experiments = ref<Record<string, number | object>>({
         // Synced from the server
-        API_VERSION: 3,
-        FLOWINITY: 1,
-        DISABLE_ANIMATIONS: 0,
     } as any);
     const experimentsInherit = ref<Record<string, number | boolean | object>>(
         {}

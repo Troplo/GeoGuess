@@ -98,7 +98,7 @@
                 :search="search"
                 :headers="headers.filter((h) => !h.hide)"
                 :items="items"
-                :sort-by="['dateString']"
+                :sort-by="[{ key: 'dateString', order: 'desc' }]"
                 :custom-sort="customSort"
                 :expanded="items.length > 0 ? [items[items.length - 1]] : []"
             >
@@ -107,35 +107,42 @@
                         mdi-share
                     </v-icon>
                 </template>
-                <template v-slot:expanded-item="{ headers, item }">
+                <template #expanded-row="{ item }">
+                    {{ item }}
                     <td :colspan="headers.length" class="item">
-                        <div v-if="item.multiplayer" class="item_time_multi">
-                            <HistoryTimeDetail
-                                class="item__times"
-                                v-for="(playerName, index) in playersNames(
-                                    item.rounds
-                                )"
-                                :rounds="roundsPlayer(item.rounds, playerName)"
-                                :playerName="playerName"
-                                :key="`HistoryTimeDetail` + playerName"
-                                :index="index"
+                        <template v-if="() => true">
+                            <div
+                                v-if="item.multiplayer"
+                                class="item_time_multi"
+                            >
+                                <HistoryTimeDetail
+                                    class="item__times"
+                                    v-for="(playerName, index) in playersNames(
+                                        item.rounds
+                                    )"
+                                    :rounds="
+                                        roundsPlayer(item.rounds, playerName)
+                                    "
+                                    :playerName="playerName"
+                                    :key="`HistoryTimeDetail` + playerName"
+                                    :index="index"
+                                />
+                            </div>
+                            <div v-else>
+                                {{ item }}
+                            </div>
+                            <HistoryMapClassic
+                                v-if="item.gameMode === $t('modes.classic')"
+                                :item="item"
                             />
-                        </div>
-                        <div v-else>
-                            <HistoryTimeDetail
-                                class="item__times"
-                                :rounds="item.rounds"
+                            <HistoryMapArea
+                                v-else
+                                :is-country="
+                                    item.gameMode === $t('modes.country')
+                                "
+                                :item="item"
                             />
-                        </div>
-                        <HistoryMapClassic
-                            v-if="item.gameMode === $t('modes.classic')"
-                            :item="item"
-                        />
-                        <HistoryMapArea
-                            v-else
-                            :is-country="item.gameMode === $t('modes.country')"
-                            :item="item"
-                        />
+                        </template>
                     </td>
                 </template>
             </v-data-table>
@@ -282,6 +289,7 @@ export default {
             return rounds.map((r) => r.players[name]);
         },
         playersNames(rounds) {
+            if (!rounds[0]?.players) return {};
             return Object.keys(rounds[0].players);
         },
         customSort(items, index, isDesc) {

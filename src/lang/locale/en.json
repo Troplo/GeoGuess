@@ -80,7 +80,9 @@
         },
         "leaderboard": {
             "notGuessed": "Not Guessed",
-            "guessed": "Guessed"
+            "guessed": "Guessed",
+            "disconnected": "{player} has disconnected from the game, and will be kicked in {time}, they can rejoin before this time runs out.",
+            "kicking": "Kicking..."
         }
     },
     "Header": {
@@ -192,8 +194,8 @@
         "countDownLabel": "CountDown (seconds)",
         "scoreModeLabel": "Score formula",
         "scoreModes": {
-            "normal": "normal",
-            "time": "time"
+            "normal": "Normal",
+            "time": "Time"
         },
         "selectAreas": "Select Areas",
         "moreSettings": "More settings",
@@ -216,7 +218,9 @@
     },
     "Footer": {
         "under": "under",
-        "privacyPolicy": "Privacy Policy"
+        "privacyPolicy": "Privacy Policy",
+        "original": "StreetGuess is a modern fork of",
+        "originalEnhancements": ""
     },
     "urlCopied": "Url copied",
     "DetailsMap": {
@@ -241,5 +245,17 @@
     "SyncError": {
         "label": "There was an issue saving your game to TroploServices. Please try again later.",
         "btn": "Retry"
-    }
+    },
+  "none": "None",
+  "unspecified": "Unspecified",
+  "resumeDialog": {
+    "title": "Resume last game?",
+    "titleDisconnected": "You were disconnected!",
+    "description": "StreetGuess has detected you may have accidentally left, or have been disconnected from an on-going game.",
+    "descriptionDisconnect": "There might have been a network connection issue that caused you to disconnect from the game.\nNot a problem though, you can reconnect when you have access to the internet again.",
+    "resume": "Resume",
+    "reconnect": "Reconnect",
+    "leave": "Leave",
+    "room": "Room: {room}"
+  }
 }

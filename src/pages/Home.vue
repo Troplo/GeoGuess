@@ -141,17 +141,21 @@ export default {
         position: relative;
         .v-theme--light & .home-page__main__container {
             background: url('../assets/home/world.svg');
+            background-repeat: no-repeat;
+            background-size: 120%;
+            background-position: 80% 10%;
         }
         .v-theme--dark & .home-page__main__container {
             background: url('../assets/home/world-dark.svg');
+            background-repeat: no-repeat;
+            background-size: 120%;
+            background-position: 80% 10%;
         }
         .home-page__main__container {
             font-size: 1.2rem;
             padding: 0;
             margin: 0;
             width: 100%;
-            background-size: cover;
-            background-position: top;
             .home-page__main__layout {
                 height: calc(70vh - 100px);
                 flex-wrap: nowrap;

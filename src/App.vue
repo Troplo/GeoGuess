@@ -1,6 +1,11 @@
 <template>
     <v-app>
         <DialogSaveSync></DialogSaveSync>
+        <QuickResumeDialog
+            v-if="$session.quickResume.resume"
+            :resume="$session.quickResume.resume"
+            v-model="$session.quickResume.dialogValue"
+        />
         <component :is="useVMain ? VMain : 'div'" style="height: 0px">
             <router-view />
         </component>
@@ -49,10 +54,11 @@
 import { mapActions, mapState } from 'vuex';
 import DialogSaveSync from '@/components/DialogSaveSync.vue';
 import { VMain } from 'vuetify/components';
+import QuickResumeDialog from '@/components/resume/QuickResumeDialog.vue';
 
 export default {
     name: 'App',
-    components: { DialogSaveSync, VMain },
+    components: { QuickResumeDialog, DialogSaveSync, VMain },
     data() {
         return {
             refreshing: false,
@@ -73,7 +79,7 @@ export default {
             });
         this.handleCloudSync();
         this.$app.getState();
-        this.$session.startSession();
+        this.$session.startSession(this.$route.query.name);
         this.$experiments.init();
     },
     computed: {

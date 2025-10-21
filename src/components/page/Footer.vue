@@ -31,9 +31,12 @@
                 <p class="mb-0">
                     {{ version }} - {{ $t('Footer.under') }}
                     <a
-                        href="https://github.com/GeoGuess/Geoguess/blob/master/LICENSE"
+                        href="https://github.com/Troplo/StreetGuess/blob/master/LICENSE"
                         >MIT license</a
                     >
+                    - {{ $t('Footer.original') }}
+                    <a href="https://github.com/GeoGuess/GeoGuess">GeoGuess.</a>
+                    {{ $t('Footer.originalEnhancements') }}
                 </p>
             </div>
 

@@ -18,7 +18,7 @@
                 {{ $t('HeaderGame.round') }}
                 {{ index + 1 }} :
             </b>
-            {{ durationToText(r.timePassed / 1000) }}
+            {{ r }}
         </p>
 
         <p>

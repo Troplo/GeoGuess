@@ -6,7 +6,8 @@
             <div class="d-flex ga-2">
                 <geo-btn
                     rounded
-                    color="primary"
+                    color="secondary"
+                    variant="tonal"
                     size="large"
                     @click="openDialog()"
                 >
@@ -15,7 +16,8 @@
 
                 <geo-btn
                     rounded
-                    color="secondary"
+                    color="primary"
+                    variant="tonal"
                     size="large"
                     :loading="!sessionStore.currentSession.playerId"
                     @click="openDialog(false)"
@@ -27,7 +29,7 @@
                 class="search-box__btns__btn"
                 rounded
                 variant="tonal"
-                color="yellow"
+                color="gold"
                 size="large"
                 block
                 :loading="!sessionStore.currentSession.playerId"

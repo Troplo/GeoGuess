@@ -237,66 +237,87 @@
                                     </template>
                                 </v-checkbox>
                             </div>
-                        </v-col>
-                    </v-row>
-                    <v-row class="mb-0 mt-0" align="center">
-                        <v-col>
-                            <v-list-group prepend-icon="mdi-cog">
-                                <template v-slot:activator>
-                                    <v-list-item-title>
-                                        {{
-                                            $t('CardRoomSettings.moreSettings')
-                                        }}
-                                    </v-list-item-title>
-                                </template>
-                                <v-text-field
-                                    class="mt-2"
-                                    type="number"
-                                    :disabled="gameSettings.timeAttackSelected"
-                                    :label="$t('CardRoomSettings.nbRound')"
-                                    :model-value="
-                                        gameSettings.timeAttackSelected
-                                            ? 10
-                                            : gameSettings.nbRoundSelected
-                                    "
-                                    min="1"
-                                    @update:model-value="
-                                        (nbRoundSelected) =>
-                                            setGameSettings({
-                                                nbRoundSelected:
-                                                    +nbRoundSelected,
-                                            })
-                                    "
-                                />
-                                <v-select
-                                    v-if="
-                                        gameSettings.modeSelected ===
-                                        gameMode.CLASSIC
-                                    "
-                                    :label="
-                                        $t('CardRoomSettings.scoreModeLabel')
-                                    "
-                                    :model-value="gameSettings.scoreMode"
-                                    :items="scoreModes"
-                                    @update:model-value="
-                                        (scoreMode) =>
-                                            setGameSettings({ scoreMode })
-                                    "
-                                />
+                            <v-expansion-panels
+                                prepend-icon="mdi-cog"
+                                color="toolbar"
+                                class="mt-4"
+                            >
+                                <v-expansion-panel>
+                                    <v-expansion-panel-title>
+                                        More Settings
+                                    </v-expansion-panel-title>
+                                    <v-expansion-panel-text>
+                                        <v-text-field
+                                            class="mt-2"
+                                            type="number"
+                                            :disabled="
+                                                gameSettings.timeAttackSelected
+                                            "
+                                            :label="
+                                                $t('CardRoomSettings.nbRound')
+                                            "
+                                            :model-value="
+                                                gameSettings.timeAttackSelected
+                                                    ? 10
+                                                    : gameSettings.nbRoundSelected
+                                            "
+                                            min="1"
+                                            @update:model-value="
+                                                (nbRoundSelected) =>
+                                                    setGameSettings({
+                                                        nbRoundSelected:
+                                                            +nbRoundSelected,
+                                                    })
+                                            "
+                                        />
+                                        <v-select
+                                            v-if="
+                                                gameSettings.modeSelected ===
+                                                gameMode.CLASSIC
+                                            "
+                                            :label="
+                                                $t(
+                                                    'CardRoomSettings.scoreModeLabel'
+                                                )
+                                            "
+                                            :model-value="
+                                                gameSettings.scoreMode
+                                            "
+                                            :items="scoreModes"
+                                            @update:model-value="
+                                                (scoreMode) =>
+                                                    setGameSettings({
+                                                        scoreMode,
+                                                    })
+                                            "
+                                            item-key="value"
+                                            item-title="text"
+                                        />
 
-                                <v-autocomplete
-                                    v-if="optionsArea.length > 0"
-                                    :label="$t('CardRoomSettings.selectAreas')"
-                                    :model-value="gameSettings.areaParams"
-                                    :items="optionsArea"
-                                    @update:model-value="
-                                        (areaParams) =>
-                                            setGameSettings({ areaParams })
-                                    "
-                                />
-                            </v-list-group>
+                                        <v-autocomplete
+                                            v-if="optionsArea.length > 0"
+                                            :label="
+                                                $t(
+                                                    'CardRoomSettings.selectAreas'
+                                                )
+                                            "
+                                            :model-value="
+                                                gameSettings.areaParams
+                                            "
+                                            :items="optionsArea"
+                                            @update:model-value="
+                                                (areaParams) =>
+                                                    setGameSettings({
+                                                        areaParams,
+                                                    })
+                                            "
+                                            item-key="value"
+                                            item-title="text"
+                                        />
+                                    </v-expansion-panel-text>
+                                </v-expansion-panel>
+                            </v-expansion-panels>
                         </v-col>
-                        <v-col />
                     </v-row>
                 </v-col>
             </v-row>
@@ -325,6 +346,7 @@ import TimePicker from '@/components/shared/TimePicker.vue';
 import { GAME_MODE, SCORE_MODE } from '@/constants';
 import CardRoomMixin from './mixins/CardRoomMixin';
 import bbox from '@turf/bbox';
+import { useI18n } from 'vue-i18n';
 
 // Pinia store for settings
 const gameStore = useGameStore();
@@ -345,26 +367,32 @@ const areasList = computed(() => store.getters.areasList);
 const placeGeoJson = computed(() => store.state.homeStore.map.geojson);
 const gameSettings = computed(() => gameStore.gameSettings);
 
+const { t } = useI18n();
+
 const optionsArea = computed(() => {
-    return areasList.value
-        .filter((a: any) => {
-            if (!a.data.bbox) return true;
-            if (placeGeoJson.value) {
-                const bboxPlace = bbox(placeGeoJson.value);
-                return a.data.bbox.every((v: number, index: number) =>
-                    index < 2 ? v <= bboxPlace[index] : v >= bboxPlace[index]
-                );
-            }
-            return false;
-        })
-        .map((a: any) => ({ text: a.nameLocate, value: a }));
+    return [
+        { text: t('unspecified'), value: null },
+        ...areasList.value
+            .filter((a: any) => {
+                if (!a.data.bbox) return true;
+                if (placeGeoJson.value) {
+                    const bboxPlace = bbox(placeGeoJson.value);
+                    return a.data.bbox.every((v: number, index: number) =>
+                        index < 2
+                            ? v <= bboxPlace[index]
+                            : v >= bboxPlace[index]
+                    );
+                }
+                return false;
+            })
+            .map((a: any) => ({ text: a.nameLocate, value: a })),
+    ];
 });
 
 const scoreModes = computed(() =>
     Object.values(SCORE_MODE).map((mode) => ({
         value: mode,
-        text:
-            (window as any).$t?.('CardRoomSettings.scoreModes.' + mode) || mode,
+        text: t('CardRoomSettings.scoreModes.' + mode) || mode,
     }))
 );
 
@@ -372,13 +400,10 @@ const gameMode = computed(() => GAME_MODE);
 
 // Methods
 function setGameSettings(settings: any) {
-    // likely singleplayer
-    if (!gameStore.room) {
-        gameStore.gameSettings = {
-            ...gameStore.gameSettings,
-            ...settings,
-        };
-    }
+    gameStore.gameSettings = {
+        ...gameStore.gameSettings,
+        ...settings,
+    };
 }
 
 function setSettings() {

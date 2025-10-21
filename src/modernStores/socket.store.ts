@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { nextTick, ref } from 'vue';
 import { io, Socket } from 'socket.io-client';
 import {
     GameSocketClientEvent,
@@ -12,9 +12,14 @@ import {
 import { useGameStore } from './game.store.js';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import { useSessionStore } from './session.store.js';
+
+type Callback<E extends GameSocketServerEvent> = (
+    data: GameSocketServerEventMap[E]
+) => void;
 
 export const useGameSocketStore = defineStore('sockets.game', () => {
-    let socket: Socket | null = null;
+    const socket = ref<Socket | null>(null);
     const ready = ref(false);
     let _queuedEmits: {
         event: GameSocketClientEvent;
@@ -22,16 +27,17 @@ export const useGameSocketStore = defineStore('sockets.game', () => {
     }[] = [];
 
     async function init(token: string) {
-        socket = io({
+        socket.value = io({
             auth: {
                 token,
             },
             path: '/api/v1/socket/game',
             transports: ['websocket'],
+            autoConnect: true,
         });
-        socket.on('connect', () => {
+        socket.value.on('connect', () => {
             for (const emitter of _queuedEmits) {
-                socket.emit(emitter.event, { data: emitter.data });
+                socket.value.emit(emitter.event, { data: emitter.data });
             }
             _queuedEmits = [];
         });
@@ -39,14 +45,26 @@ export const useGameSocketStore = defineStore('sockets.game', () => {
     }
 
     async function initHandlers() {
-        if (!socket) return;
+        if (!socket.value) return;
         await gameHandlers();
         await playerHandlers();
         ready.value = true;
     }
 
     async function playerHandlers() {
-        socket.on(
+        socket.value.on(
+            GameSocketServerEvent.HELLO,
+            ({ data }: GameSocketServerEvent[GameSocketServerEvent.HELLO]) => {
+                console.log(data.resume);
+                if (data.resume) {
+                    const sessionStore = useSessionStore();
+                    sessionStore.quickResume.resume = data.resume;
+                    sessionStore.quickResume.dialogValue = true;
+                }
+            }
+        );
+
+        socket.value.on(
             GameSocketServerEvent.PLAYER_UPDATED,
             ({
                 data,
@@ -62,7 +80,7 @@ export const useGameSocketStore = defineStore('sockets.game', () => {
             }
         );
 
-        socket.on(
+        socket.value.on(
             GameSocketServerEvent.ROOM_PLAYER_JOINED,
             ({
                 data,
@@ -78,7 +96,7 @@ export const useGameSocketStore = defineStore('sockets.game', () => {
             }
         );
 
-        socket.on(
+        socket.value.on(
             GameSocketServerEvent.ROOM_PLAYER_SCORE_DETAILS_UPDATED,
             ({
                 data,
@@ -102,7 +120,7 @@ export const useGameSocketStore = defineStore('sockets.game', () => {
             }
         );
 
-        socket.on(
+        socket.value.on(
             GameSocketServerEvent.GAME_NEW_ROUND,
             ({
                 data,
@@ -112,13 +130,81 @@ export const useGameSocketStore = defineStore('sockets.game', () => {
                 gameStore.room.currentRound = data.round;
             }
         );
+
+        socket.value.on(
+            GameSocketServerEvent.ROOM_PLAYER_DISCONNECTED,
+            ({
+                data,
+            }: {
+                data: GameSocketEventsServer[GameSocketServerEvent.ROOM_PLAYER_DISCONNECTED];
+            }) => {
+                const gameStore = useGameStore();
+                if (!gameStore.room) return;
+                const player = gameStore.players.find(
+                    (plyr) => plyr.playerId === data.playerId
+                );
+                if (player) {
+                    player.socketId = data.socketId;
+                    player.connected = data.connected;
+                    player.kickAt = data.kickAt;
+                    player.rounds = data.rounds;
+                } else {
+                    // realistically this shouldn't happen
+                    gameStore.room.players.push(data);
+                }
+            }
+        );
+
+        socket.value.on(
+            GameSocketServerEvent.ROOM_PLAYER_RECONNECTED,
+            ({
+                data,
+            }: {
+                data: GameSocketEventsServer[GameSocketServerEvent.ROOM_PLAYER_RECONNECTED];
+            }) => {
+                const gameStore = useGameStore();
+                if (!gameStore.room) return;
+                const player = gameStore.players.find(
+                    (plyr) => plyr.playerId === data.playerId
+                );
+                if (player) {
+                    player.socketId = data.socketId;
+                    player.connected = data.connected;
+                    player.kickAt = data.kickAt;
+                    player.rounds = data.rounds;
+                } else {
+                    // realistically this shouldn't happen
+                    gameStore.room.players.push(data);
+                }
+            }
+        );
+
+        socket.value.on(
+            GameSocketServerEvent.ROOM_PLAYER_LEFT,
+            ({
+                data,
+            }: {
+                data: GameSocketEventsServer[GameSocketServerEvent.ROOM_PLAYER_DISCONNECTED];
+            }) => {
+                const gameStore = useGameStore();
+                if (!gameStore.room) return;
+                const player = gameStore.players.find(
+                    (plyr) => plyr.playerId === data.playerId
+                );
+                if (player) {
+                    gameStore.room.players = gameStore.players.filter(
+                        (plyr) => plyr.playerId !== plyr.playerId
+                    );
+                }
+            }
+        );
     }
 
     const router = useRouter();
     const legacyState = useStore();
 
     async function gameHandlers() {
-        socket.on(
+        socket.value.on(
             GameSocketServerEvent.CREATE_ROOM_RESPONSE,
             ({
                 data,
@@ -128,21 +214,28 @@ export const useGameSocketStore = defineStore('sockets.game', () => {
             }
         );
 
-        socket.on(
+        socket.value.on(
             GameSocketServerEvent.GAME_STARTED,
             ({
                 data,
-            }: GameSocketEventsServer[GameSocketServerEvent.GAME_STARTED]) => {
+            }: {
+                data: GameSocketEventsServer[GameSocketServerEvent.GAME_STARTED];
+            }) => {
                 const gameStore = useGameStore();
-                if (!gameStore.room) return;
+                gameStore.room.config = data.config;
+                // TODO: hack, if someone clicks on the reconnect game button while in game, it won't do anything
+                // router.replace('/').then(() => {
                 router.push({
                     name: 'with-friends',
                     query: {
-                        roomName: btoa(gameStore.room.name),
+                        t: Date.now(),
                     },
                 });
+                // });
 
                 gameStore.closeDialogRoom();
+                const sessionStore = useSessionStore();
+                sessionStore.quickResume.dialogValue = false;
             }
         );
     }
@@ -151,7 +244,7 @@ export const useGameSocketStore = defineStore('sockets.game', () => {
         event: E,
         data: GameSocketClientEvents[E]
     ) {
-        if (!socket) {
+        if (!socket.value) {
             _queuedEmits.push({
                 event,
                 data,
@@ -159,22 +252,22 @@ export const useGameSocketStore = defineStore('sockets.game', () => {
 
             return;
         }
-        socket.emit(event, { data });
+        socket.value.emit(event, { data });
     }
 
     function on<E extends GameSocketServerEvent>(event: E, cb: Callback<E>) {
         const listener = (payload: { data: GameSocketEventsServer[E] }) => {
             cb(payload.data);
         };
-        socket.on(event, listener);
-        return () => socket.off(event, listener);
+        socket.value.on(event, listener);
+        return () => socket.value.off(event, listener);
     }
 
     function off<E extends GameSocketServerEvent>(event: E, cb: Callback<E>) {
         const listener = (payload: { data: GameSocketEventsServer[E] }) => {
             cb(payload.data);
         };
-        socket.off(event, listener);
+        socket.value.off(event, listener);
     }
 
     return {
@@ -183,5 +276,7 @@ export const useGameSocketStore = defineStore('sockets.game', () => {
         emit,
         on,
         off,
+        // should not be access directly. Available for debug tools
+        _socket: socket,
     };
 });

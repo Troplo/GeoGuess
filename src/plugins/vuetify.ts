@@ -26,20 +26,21 @@ const vuetify = createVuetify({
         themes: {
             light: {
                 colors: {
-                    primary: '#468F69',
-                    secondary: '#808F87',
-                    accent: '#D0CABC',
-                    beige: '#ded3af',
+                    primary: '#FFA01F',
+                    secondary: '#0190ea',
+                    gold: '#ffd707',
+                    accent: '#ffffff',
+                    beige: '#ffffff',
                     darkGreen: '#4F665A',
                     streamerMode: '#9146ff',
                     error: '#ff5252',
-                    background: '#ded3af',
-                    home: '#ded3af',
-                    header: '#f1e9d6',
-                    card: '#f1e9d6',
+                    background: '#ffffff',
+                    home: '#ffffff',
+                    header: '#ffffff',
+                    card: '#ffffff',
                     notepad: '#fafafa',
-                    page: '#ded3af',
-                    content: '#f1e9d6',
+                    page: '#ffffff',
+                    content: '#ffffff',
                     footer: '#7fad94',
                     scrollbar: '#3e3e3e',
                 },
@@ -47,8 +48,9 @@ const vuetify = createVuetify({
             },
             dark: {
                 colors: {
-                    primary: '#468F69',
-                    secondary: '#808F87',
+                    primary: '#FFA01F',
+                    secondary: '#0190ea',
+                    gold: '#ffd707',
                     accent: '#D0CABC',
                     beige: '#181818',
                     darkGreen: '#5d8772',
@@ -275,9 +277,6 @@ const vuetify = createVuetify({
         locales: { en, fr, ja, cs, de, ru, pt, sv, tr, he, it, hu, es },
         current: i18n.locale,
     },
-    icons: {
-        iconfont: 'mdi',
-    },
     defaults: {
         global: {},
         VMenu: {
@@ -292,10 +291,6 @@ const vuetify = createVuetify({
         },
         VSkeletonLoader: {
             color: 'card',
-        },
-        VAutoComplete: {
-            variant: 'underlined',
-            color: 'primary',
         },
         VDialog: {},
         VDataTable: {
@@ -330,17 +325,11 @@ const vuetify = createVuetify({
         VTab: {
             color: 'primary',
         },
-        VOverlay: {
-            backgroundColor: 'dark',
-        },
         VSlider: {
             color: 'primary',
         },
         VContainer: {
             fluid: true,
-        },
-        VList: {
-            bgColor: 'transparent',
         },
     },
 });

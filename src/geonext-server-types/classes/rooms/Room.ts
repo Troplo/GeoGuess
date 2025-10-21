@@ -1,5 +1,4 @@
 import { RoomPlayer } from './RoomPlayer';
-import { redisDirect } from '../../services/redis.service';
 import { Player } from '../players/Player';
 
 export enum GameMode {
@@ -40,6 +39,7 @@ export class Round {
     latitude: number;
     longitude: number;
     warning: boolean;
+    timerStart: number = new Date().getTime();
     version: number = 1;
 }
 
@@ -94,5 +94,52 @@ export class Room {
     rounds: Round[] = [];
     players?: RoomPlayer[] | null;
     currentRound: number = 0;
-    state: RoomState = RoomState.LOBBY;
+    timerStart: number = new Date().getTime();
+
+    // Protection: do not assign state directly
+    private _state: RoomState = RoomState.LOBBY;
+    get state(): RoomState {
+        return this._state;
+    }
+    async getPlayers(): Promise<RoomPlayer[]> {
+        if (!redisDirect) return [];
+        const players = await redisDirect?.get(`room:${this.name}:players`);
+
+        if (!players) return [];
+
+        try {
+            const parsed = JSON.parse(players) as RoomPlayer[];
+
+            const importedPlayers: RoomPlayer[] = [];
+
+            for (const player of parsed) {
+                const roomPlayer = new RoomPlayer(player);
+                roomPlayer.player = await roomPlayer.getPlayer();
+                importedPlayers.push(roomPlayer);
+            }
+            return importedPlayers;
+        } catch (e) {
+            console.error(e);
+            return [];
+        }
+    }
+
+    getRoundIsValid(roundId: number): boolean {
+        const round = this.rounds.find((rnd) => rnd.round === roundId);
+        return !!round && roundId <= this.currentRound;
+    }
+
+    getRound(roundId: number): Round | null {
+        const round = this.rounds.find((rnd) => rnd.round === roundId);
+        return round || null;
+    }
+
+    /**
+     * DO NOT USE DIRECTLY!
+     * Use the RoomService.setState function instead to ensure all participants get the event.
+     * @param {RoomState} state
+     */
+    _setState(state: RoomState) {
+        this._state = state;
+    }
 }

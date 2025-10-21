@@ -1,14 +1,16 @@
 import { defineStore } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import {
-    GameMode,
     Room,
     RoomConfig,
 } from '../geonext-server-types/classes/rooms/Room.js';
 import { useGameSocketStore } from './socket.store.js';
 import { GameSocketClientEvent } from '../geonext-server-types/types/socket/clientEvents.js';
 import { useSessionStore } from './session.store.js';
-import { RoomPlayer } from '../geonext-server-types/classes/rooms/RoomPlayer.js';
+import {
+    RoomPlayer,
+    RoomPlayerRound,
+} from '../geonext-server-types/classes/rooms/RoomPlayer.js';
 import { useRouter } from 'vue-router';
 
 export const useGameStore = defineStore('game', () => {
@@ -49,6 +51,11 @@ export const useGameStore = defineStore('game', () => {
                     players: [],
                     rounds: [],
                 };
+            } else {
+                room.value.config = {
+                    ...room.value.config,
+                    ...val,
+                };
             }
         },
     });
@@ -77,6 +84,11 @@ export const useGameStore = defineStore('game', () => {
             currentComponent.value = 'settingsMap';
         } else if (currentComponent.value === 'roomName') {
             currentComponent.value = 'playerName';
+        }
+
+        if (!room.value.started) {
+            singlePlayer.value = false;
+            isOpenDialogRoom.value = true;
         }
     }
 
@@ -127,6 +139,11 @@ export const useGameStore = defineStore('game', () => {
     const router = useRouter();
 
     async function saveSettings() {
+        const socketStore = useGameSocketStore();
+        socketStore.emit(GameSocketClientEvent.ROOM_UPDATE_CONFIG, {
+            config: room.value.config,
+            roomName: room.value.name,
+        });
         if (singlePlayer.value) {
             router.push({
                 name: 'street-view',
@@ -162,7 +179,10 @@ export const useGameStore = defineStore('game', () => {
     async function startGame() {
         const socketStore = useGameSocketStore();
 
-        socketStore.emit(GameSocketClientEvent.GAME_START, {});
+        socketStore.emit(GameSocketClientEvent.GAME_START, {
+            config: room.value.config,
+            roomName: room.value.name,
+        });
     }
 
     async function commitGuess({
@@ -190,6 +210,77 @@ export const useGameStore = defineStore('game', () => {
         });
     }
 
+    const currentRoomPlayer = computed<RoomPlayer | null>(() => {
+        const sessionStore = useSessionStore();
+        const player = players.value.find(
+            (plyr) => plyr.player.id === sessionStore.currentSession.playerId
+        );
+        return player;
+    });
+
+    const currentRoomRound = computed<RoomPlayerRound | null>(() => {
+        const roomPlayer = currentRoomPlayer.value;
+        if (!roomPlayer) return null;
+        console.log(roomPlayer);
+        const round = roomPlayer.rounds.find(
+            (rnd) => rnd.round === room.value.currentRound
+        );
+        return round;
+    });
+
+    const currentDistanceScore = computed<number>(() => {
+        const roomPlayer = currentRoomPlayer.value;
+        if (!roomPlayer) return 0;
+        return roomPlayer.rounds.reduce(
+            (sum, round) => sum + round.distance,
+            0
+        );
+    });
+
+    const currentPointsScore = computed<number>(() => {
+        const roomPlayer = currentRoomPlayer.value;
+        if (!roomPlayer) return 0;
+        return roomPlayer.rounds.reduce((sum, round) => sum + round.points, 0);
+    });
+
+    const ranks = computed<
+        {
+            id: string;
+            name: string;
+            totalPoints: number;
+            totalScore: number;
+            rank: number;
+        }[]
+    >(function () {
+        if (!room.value || !room.value.players) return {};
+
+        const scores = room.value.players.map(function (player) {
+            const totalPoints = player.rounds.reduce(function (sum, round) {
+                return sum + round.points;
+            }, 0);
+            const totalScore = player.rounds.reduce(function (sum, round) {
+                return sum + round.distance;
+            }, 0);
+            return {
+                id: player.id,
+                totalPoints: totalPoints,
+                totalScore: totalScore,
+                name: player.player.name,
+                rank: 0,
+            };
+        });
+
+        scores.sort(function (a, b) {
+            return b.totalPoints - a.totalPoints;
+        });
+
+        for (const i in scores) {
+            scores[i].rank = i + 1;
+        }
+
+        return scores;
+    });
+
     return {
         isOpenDialogRoom,
         loadRoom,
@@ -214,5 +305,10 @@ export const useGameStore = defineStore('game', () => {
         setName,
         // COMPUTED
         currentRoomOwned,
+        currentRoomPlayer,
+        currentRoomRound,
+        currentDistanceScore,
+        currentPointsScore,
+        ranks,
     };
 });

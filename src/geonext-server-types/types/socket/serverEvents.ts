@@ -18,19 +18,18 @@ export enum GameSocketServerEvent {
     ROOM_PLAYER_SCORE_DETAILS_UPDATED = 'ROOM_PLAYER_SCORE_DETAILS_UPDATED',
     GAME_FINISHED = 'GAME_FINISHED',
     GAME_STATE_UPDATED = 'GAME_STATE_UPDATED',
+    GAME_REQUEST_STREET_VIEW_POPULATE = 'GAME_REQUEST_STREET_VIEW_POPULATE',
 }
 
 export type EmptyObject = Record<PropertyKey, never>;
 
 export interface GameSocketEventsServer {
     [GameSocketServerEvent.HELLO]: {
-        payload: {
-            playerId: string;
-            resume: {
-                room: Room;
-                kickAt: string;
-            } | null;
-        };
+        playerId: string;
+        resume: {
+            room: Room;
+            kickAt: string;
+        } | null;
     };
     [GameSocketServerEvent.CREATE_ROOM_RESPONSE]: Room;
     [GameSocketServerEvent.ROOM_PLAYER_LEFT]: RoomPlayer;
@@ -39,7 +38,10 @@ export interface GameSocketEventsServer {
     [GameSocketServerEvent.ROOM_PLAYER_RECONNECTED]: RoomPlayer;
     [GameSocketServerEvent.GAME_CONFIG]: RoomConfig;
     [GameSocketServerEvent.PLAYER_UPDATED]: RoomPlayer;
-    [GameSocketServerEvent.GAME_STARTED]: EmptyObject;
+    [GameSocketServerEvent.GAME_STARTED]: {
+        config: RoomConfig;
+        roomName: string;
+    };
     [GameSocketServerEvent.GAME_NEW_ROUND]: Round;
     [GameSocketServerEvent.ROOM_PLAYER_SCORE_DETAILS_UPDATED]: {
         playerId: string;
@@ -50,6 +52,9 @@ export interface GameSocketEventsServer {
         // round assertion
         round: number;
         state: RoomState;
+    };
+    [GameSocketServerEvent.GAME_REQUEST_STREET_VIEW_POPULATE]: {
+        round: number;
     };
 }
 

@@ -31,6 +31,9 @@
                     style="top: 15px"
                     :leaderboard-shown="leaderboardShown"
                     :guess-string="guessString"
+                    :current-round="gameStore.room?.currentRound"
+                    :players="gameStore.players"
+                    :owner-id="gameStore.room?.ownerPlayerId"
                 ></Leaderboard>
             </div>
             <DetailsMap
@@ -210,6 +213,7 @@ import {
     GameSocketServerEvent,
 } from '@/geonext-server-types/types/socket/serverEvents.js';
 import { RoomState } from '@/geonext-server-types/classes/rooms/Room.js';
+import { useSessionStore } from '@/modernStores/session.store.js';
 
 interface GameRound {
     guess?: LatLng;
@@ -283,7 +287,6 @@ const emit = defineEmits<{
 const mapRef = ref<InstanceType<typeof Map>>();
 const refNotepad = ref<HTMLTextAreaElement>();
 
-const summaryTexts = ref<SummaryText[]>([]);
 const room = ref<firebase.database.Reference | null>(null);
 const selectedPos = ref<LatLng | null>(null);
 const distance = ref<number | null>(null);
@@ -306,13 +309,97 @@ const printMapFull = ref(false);
 const countdownStarted = ref(false);
 const startTime = ref<Date | null>(null);
 
-const game = ref<Game>({
+const _game = ref<Game>({
     multiplayer: !!props.roomName,
     date: new Date(),
     rounds: [],
 });
 
+const sessionStore = useSessionStore();
 const gameStore = useGameStore();
+
+const game = computed({
+    get: () => {
+        if (!gameStore.room.started) return _game.value;
+        const room = gameStore.room;
+
+        return {
+            multiplayer: true,
+            date: new Date(room.timerStart),
+            roomName: room.name,
+            version: 2,
+            timeLimitation: 0,
+            difficulty: room.config.difficulty,
+            mode: room.config.modeSelected,
+            timeAttack: room.config.timeAttackSelected,
+            playerId: sessionStore.currentSession.playerId,
+            // keep compatibility with v1
+            playerName: sessionStore.currentSession.playerId,
+            score: gameStore.currentDistanceScore,
+            points: gameStore.currentPointsScore,
+            rank: 1,
+            nbRound: 5,
+            rounds: room.rounds.map((round) => {
+                const playersObj = {};
+                room.players.forEach((player) => {
+                    const playerRound = player.rounds.find(
+                        (rnd) => rnd.round === round.round
+                    );
+                    if (!playerRound) {
+                        playersObj[player.playerId] = {
+                            playerName: player.player.name,
+                            distance: -1,
+                            latitude: round.latitude,
+                            longitude: round.longitude,
+                            points: 0,
+                            timePassed: 0,
+                            guess: {
+                                lat: 0,
+                                lng: 0,
+                            },
+                        };
+                    } else {
+                        playersObj[player.playerId] = {
+                            playerName: player.player.name,
+                            distance: playerRound.distance,
+                            latitude: round.latitude,
+                            longitude: round.longitude,
+                            points: playerRound.points,
+                            timePassed: playerRound.timePassed,
+                            guess: {
+                                lat: playerRound.latitude,
+                                lng: playerRound.longitude,
+                            },
+                        };
+                    }
+                });
+                return {
+                    position: {
+                        latitude: round.latitude,
+                        longitude: round.longitude,
+                        // coming soon to GeoNEXT
+                        area: round.area ?? null,
+                    },
+                    players: playersObj,
+                };
+            }),
+        };
+    },
+    set: (val) => {
+        if (!gameStore.room.started) _game.value = val;
+    },
+});
+
+const summaryTexts = computed<SummaryText[]>(() => {
+    return gameStore.ranks.map((rank) => {
+        return {
+            playerName: rank.name,
+            finalScore: rank.totalScore,
+            finalPoints: rank.totalPoints,
+        };
+    });
+});
+
 const gameSocketStore = useGameSocketStore();
 
 // Computed

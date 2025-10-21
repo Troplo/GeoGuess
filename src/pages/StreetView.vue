@@ -14,7 +14,7 @@
                     :multiplayer="multiplayer"
                     :re-roll-game="reRollGame"
                     :re-roll-voted="reRollVoted"
-                    :player-count="playerCount"
+                    :player-count="gameStore.players?.length"
                     :voted-count="votedCount"
                     :allow-re-roll="allowReRoll"
                     :guess-string="guessString"
@@ -96,6 +96,9 @@
                 style="top: 79px"
                 :guess-string="guessString"
                 :leaderboard-shown="leaderboardShown"
+                :current-round="gameStore.room?.currentRound"
+                :players="gameStore.players"
+                :owner-id="gameStore.room?.ownerPlayerId"
                 v-if="!printMapFull && props.multiplayer"
             ></Leaderboard>
             <v-alert
@@ -271,8 +274,6 @@ const timeCountdown = ref(0);
 const streetViewService = ref<StreetViewService | null>(null);
 const reRollVoted = ref(false);
 const lngLat = ref<string | null>(null);
-const playerCount = ref(0);
-const votedCount = ref(0);
 const leaderboard = ref<LeaderboardEntry[]>([]);
 const leaderboardShown = ref(
     props.guessedLeaderboard || props.scoreLeaderboard
@@ -324,47 +325,36 @@ const loadAreas = async (urlArea?: string) => {
     await vuexStore.dispatch('loadAreas', urlArea);
 };
 
-async function loadStreetViewFromHost(snapshot: any) {
-    const randomLat = snapshot
-        .child('streetView/round' + round.value + '/latitude')
-        .val();
-    const randomLng = snapshot
-        .child('streetView/round' + round.value + '/longitude')
-        .val();
-
-    area.value = snapshot
-        .child('streetView/round' + round.value + '/area')
-        .val();
-    isVisibleDialog.value = snapshot
-        .child('streetView/round' + round.value + '/warning')
-        .val();
-    randomFeatureProperties.value = snapshot
-        .child('streetView/round' + round.value + '/roundInfo')
-        .val();
-    lngLat.value = `${randomLng},${randomLat}`;
-    randomLatLng.value = new google.maps.LatLng(randomLat, randomLng);
-
-    resetLocation();
-}
-
-async function reRollGame(snapshot?: any) {
+async function reRollGame() {
     if (!props.allowReRoll) return;
-    if (props.multiplayer && !snapshot) {
-        reRollVoted.value = true;
-    } else if (props.playerNumber === 1 || !props.multiplayer) {
-        await mapContainer.value?.goToNextRound(false, false);
-        await header.value?.startTimer();
-        reRollVoted.value = false;
-        votedCount.value = 0;
-    } else {
-        await loadStreetViewFromHost(snapshot);
-        await header.value?.startTimer();
-        reRollVoted.value = false;
-        votedCount.value = 0;
+    if (props.multiplayer) {
+        gameSocketStore.emit(GameSocketClientEvent.GAME_VOTE_TO_REROLL, {
+            round: round.value,
+        });
     }
 }
 
+const votedCount = computed(() => {
+    const room = gameStore.room;
+    console.log(room);
+    if (!room?.players?.length) return 0;
+    console.log(room, room.players.length, 292002);
+
+    return room.players.reduce((count, player) => {
+        const currentRound = player.rounds?.find(
+            (r) => r.round === round.value
+        );
+        console.log(currentRound, 'deez');
+        if (currentRound?.votedReRoll) count++;
+        return count;
+    }, 0);
+});
+
 async function loadStreetView() {
+    // if (!props.multiplayer && timeLimitation.value !== 0) {
+    //     initTimer(timeLimitation.value);
+    // }
+
     const {
         panorama: panoData,
         roundInfo,
@@ -611,17 +601,14 @@ async function goToNextRound(playAgain = false, incrementRound = true) {
 
     if (incrementRound) round.value += 1;
 
-    if (props.playerNumber === 1 || !props.multiplayer) {
+    if (!props.multiplayer) {
         await loadStreetView();
-        if (!props.multiplayer && timeLimitation.value !== 0) {
-            initTimer(timeLimitation.value);
-        }
-    } else {
-        room.value
-            .child('trigger/player' + props.playerNumber)
-            .set(round.value);
     }
     mapContainer.value?.startNextRound();
+
+    gameSocketStore.emit(GameSocketClientEvent.GAME_READY_TO_CONTINUE, {
+        nextRound: round.value,
+    });
 }
 
 function exitGame() {
@@ -670,10 +657,18 @@ function onNewRound(data: Round) {
     mapContainer.value?.startNextRound();
 
     resetLocation();
+
+    // server authoritative stats
+    console.log('Current room round', gameStore.currentRoomRound);
+    score.value = gameStore.currentDistanceScore;
+    scoreHeader.value = gameStore.currentDistanceScore;
+    points.value = gameStore.currentPointsScore;
+    pointsHeader.value = gameStore.currentPointsScore;
 }
 let rndUnregister: null;
 let exitUnregister: null;
 let gameStateUpdateUnregister = null;
+let requestStreetViewUnregister = null;
 function onGameStateUpdate(
     data: GameSocketEventsServer[GameSocketServerEvent.GAME_STATE_UPDATED]
 ) {
@@ -694,6 +689,18 @@ function registerGeoNextEvents() {
         GameSocketServerEvent.GAME_FINISHED,
         exitGame
     );
+    requestStreetViewUnregister = gameSocketStore.on(
+        GameSocketServerEvent.GAME_REQUEST_STREET_VIEW_POPULATE,
+        (
+            data: GameSocketEventsServer[GameSocketServerEvent.GAME_REQUEST_STREET_VIEW_POPULATE]
+        ) => {
+            if (data.round === round.value) {
+                loadStreetView();
+            }
+        }
+    );
+
+    gameSocketStore.emit(GameSocketClientEvent.GAME_READY, {});
 }
 
 function waitForGoogle() {
@@ -745,9 +752,6 @@ onMounted(async () => {
         }
     } else {
         registerGeoNextEvents();
-        if (props.playerNumber === 1) {
-            await loadStreetView();
-        }
     }
 
     header.value?.startTimer();
