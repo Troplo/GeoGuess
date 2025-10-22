@@ -4,7 +4,7 @@ import { registerGeoGuessWidgets } from './widgets/geoguess.ts';
 
 export function init(app: App) {
     install({
-        useFramework: import.meta.env.DEV,
+        useFramework: true,
         log: true,
         platform: {
             version: '3.0.0',
