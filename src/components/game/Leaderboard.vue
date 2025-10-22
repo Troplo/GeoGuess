@@ -85,7 +85,15 @@ onUnmounted(() => {
 
 const players = computed(() => {
     if (!props.players?.length) return [];
-    return props.players.map((player) => {
+
+    const allGuessed = props.players.every(function (player) {
+        const round = player.rounds.find(
+            (rnd) => rnd.round === props.currentRound
+        );
+        return round?.guessed ?? false;
+    });
+
+    return props.players.map(function (player) {
         const round = player.rounds.find(
             (rnd) => rnd.round === props.currentRound
         );
@@ -96,7 +104,15 @@ const players = computed(() => {
         return {
             guessed: round?.guessed ?? false,
             name: player.player.name,
-            points: player.rounds.reduce((sum, round) => sum + round.points, 0),
+            points: allGuessed
+                ? player.rounds.reduce(function (sum, round) {
+                      return sum + round.points;
+                  }, 0)
+                : player.rounds
+                      .filter((rnd) => rnd.round !== props.currentRound)
+                      .reduce(function (sum, round) {
+                          return sum + round.points;
+                      }, 0),
             connected: player.connected,
             remainingTime,
             playerId: player.playerId,

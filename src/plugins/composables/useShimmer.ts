@@ -2,7 +2,7 @@
 
 import { computed, ref } from 'vue';
 import { useExperimentsStore } from '@/modernStores/experiments.store';
-import { useDisplay } from 'vuetify';
+// import { useDisplay } from 'vuetify';
 
 export function useShimmer() {
     const shimmerX = ref(50);
@@ -13,8 +13,8 @@ export function useShimmer() {
     const eligibleForShimmer = computed(() => {
         return (
             experimentsStore.experiments.INTERACTIVE_BUTTONS &&
-            !experimentsStore.experiments.DISABLE_ANIMATIONS &&
-            !useDisplay().mobile.value
+            !experimentsStore.experiments.DISABLE_ANIMATIONS
+            // !useDisplay().mobile.value
         );
     });
 

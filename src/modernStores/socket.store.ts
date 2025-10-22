@@ -13,6 +13,8 @@ import { useGameStore } from './game.store.js';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { useSessionStore } from './session.store.js';
+import { useExperimentsStore } from './experiments.store.js';
+import { round } from '@turf/helpers';
 
 type Callback<E extends GameSocketServerEvent> = (
     data: GameSocketServerEventMap[E]
@@ -112,7 +114,7 @@ export const useGameSocketStore = defineStore('sockets.game', () => {
                     ].rounds.findIndex((rnd) => rnd.round === data.round.round);
                     if (roundIndex !== -1) {
                         gameStore.players[playerIndex].rounds[roundIndex] =
-                            data;
+                            data.round;
                     } else {
                         gameStore.players[playerIndex].rounds.push(data.round);
                     }
@@ -128,6 +130,14 @@ export const useGameSocketStore = defineStore('sockets.game', () => {
                 const gameStore = useGameStore();
                 if (!gameStore.room) return;
                 gameStore.room.currentRound = data.round;
+                const roundExistsIndex = gameStore.room.rounds.findIndex(
+                    (rnd) => rnd.round === data.round
+                );
+                if (roundExistsIndex !== -1) {
+                    gameStore.room.rounds[roundExistsIndex] = data;
+                } else {
+                    gameStore.room.rounds.push(data);
+                }
             }
         );
 
@@ -222,16 +232,28 @@ export const useGameSocketStore = defineStore('sockets.game', () => {
                 data: GameSocketEventsServer[GameSocketServerEvent.GAME_STARTED];
             }) => {
                 const gameStore = useGameStore();
+                const experimentsStore = useExperimentsStore();
                 gameStore.room.config = data.config;
                 // TODO: hack, if someone clicks on the reconnect game button while in game, it won't do anything
-                // router.replace('/').then(() => {
-                router.push({
-                    name: 'with-friends',
-                    query: {
-                        t: Date.now(),
-                    },
-                });
-                // });
+                if (
+                    experimentsStore.experiments.GAME_RECONNECT_FORCE_RERENDER
+                ) {
+                    router.replace('/').then(() => {
+                        router.push({
+                            name: 'with-friends',
+                            query: {
+                                t: Date.now(),
+                            },
+                        });
+                    });
+                } else {
+                    router.push({
+                        name: 'with-friends',
+                        query: {
+                            t: Date.now(),
+                        },
+                    });
+                }
 
                 gameStore.closeDialogRoom();
                 const sessionStore = useSessionStore();

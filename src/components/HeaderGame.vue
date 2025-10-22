@@ -49,6 +49,12 @@
                             >
                             <v-icon v-else>mdi-check</v-icon>
                         </geo-btn>
+                        <v-badge
+                            v-if="votedCount"
+                            :content="votedCount"
+                            color="blue"
+                        >
+                        </v-badge>
                     </span>
                 </template>
                 <span v-if="!multiplayer">{{ $t('HeaderGame.reRoll') }}</span>
@@ -111,11 +117,11 @@ export default {
         'votedCount',
         'allowReRoll',
         'mode',
+        'startedAt',
     ],
     data() {
         return {
             scoreboard: false,
-            startedAt: null,
             timerText: '',
             intervalFunction: null,
         };
@@ -141,7 +147,6 @@ export default {
             if (this.remainingTime != 0) {
                 return;
             }
-            this.startedAt = new Date();
 
             this.intervalFunction = setInterval(() => {
                 this.timerText = getCountdownText(

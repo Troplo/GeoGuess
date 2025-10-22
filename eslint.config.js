@@ -1,9 +1,14 @@
+import { defineConfig } from 'eslint/config';
+import globals from 'globals';
+import js from '@eslint/js';
+
 /** @type {import('eslint').Linter.Config} */
-module.exports = {
+export default defineConfig({
     env: {
         browser: true,
         node: true,
         es2021: true,
+        'vue/setup-compiler-macros': true,
     },
     extends: [
         ...(process.env.NODE_ENV === 'production'
@@ -48,4 +53,4 @@ module.exports = {
             extends: ['plugin:vitest/recommended'],
         },
     ],
-};
+});

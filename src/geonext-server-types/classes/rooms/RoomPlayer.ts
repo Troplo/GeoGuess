@@ -13,6 +13,8 @@ export class RoomPlayerRound {
     points: number = 0;
     timePassed: number = 0;
     round: number;
+    readyToContinue: boolean = false;
+    votedReRoll: boolean = false;
 }
 
 export class RoomPlayer {

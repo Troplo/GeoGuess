@@ -19,6 +19,7 @@
                     :allow-re-roll="allowReRoll"
                     :guess-string="guessString"
                     :leaderboard-shown="leaderboardShown"
+                    :started-at="startedAt"
                 />
 
                 <div id="game-interface">
@@ -42,7 +43,7 @@
                     </v-tooltip>
                     <Maps
                         ref="mapContainer"
-                        :random-lat-lng="randomLatLng"
+                        :random-lat-lng="trueLatLng"
                         :random-feature-properties="randomFeatureProperties"
                         :room-name="roomName"
                         :player-number="playerNumber"
@@ -272,7 +273,6 @@ const bbox = ref(props.bboxObj);
 const isVisibleCountdownAlert = ref(false);
 const timeCountdown = ref(0);
 const streetViewService = ref<StreetViewService | null>(null);
-const reRollVoted = ref(false);
 const lngLat = ref<string | null>(null);
 const leaderboard = ref<LeaderboardEntry[]>([]);
 const leaderboardShown = ref(
@@ -286,6 +286,14 @@ const canExit = ref(false);
 // Computed
 const areasJson = computed(() => vuexStore.getters.areasJson);
 const players = computed(() => vuexStore.state.settingsStore.players);
+
+const startedAt = computed(() => {
+    return (
+        gameStore.room.rounds.find(
+            (rnd) => rnd.round === gameStore.room.currentRound
+        )?.timerStart || new Date().getTime()
+    );
+});
 
 const guessString = computed(() => {
     if (!leaderboardShown.value) return '';
@@ -318,6 +326,10 @@ const guessString = computed(() => {
 
 const countdownPercentage = computed(() => {
     return (remainingTime.value * 100) / timeCountdown.value;
+});
+
+const reRollVoted = computed<boolean>(() => {
+    return gameStore.currentRoomRound?.votedReRoll ?? false;
 });
 
 // Methods
@@ -401,6 +413,26 @@ function devScan() {
         }
     });
 }
+
+const trueLatLng = computed(() => {
+    if (!props.multiplayer) {
+        return randomLatLng.value;
+    }
+    const round = gameStore.room?.rounds.find(
+        (rnd) => rnd.round === gameStore.room.currentRound
+    );
+    console.log(
+        'deezer',
+        google,
+        round,
+        gameStore.room?.rounds,
+        gameStore.room.currentRound
+    );
+    if (!google || !round) return;
+    const latLng = new google.maps.LatLng(round.latitude, round.longitude);
+    console.log(latLng, 'LATLNG');
+    return latLng;
+});
 
 function resetLocation() {
     if (!randomLatLng.value) return;

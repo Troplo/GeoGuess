@@ -591,18 +591,51 @@ function setDialogSummary(val: boolean) {
 }
 
 function showRoundResults() {
+    if (!props.multiplayer) {
+        const latLng = props.randomLatLng;
+        mapRef.value!.putMarker(latLng, true);
+        mapRef.value!.drawPolyline(selectedPos.value, 1, latLng);
+        mapRef.value!.setInfoWindow(
+            null,
+            distance.value,
+            point.value,
+            false,
+            setSelectedPos
+        );
+
+        printMapFull.value = true;
+        mapRef.value!.fitBounds();
+
+        if (props.round >= props.nbRound) {
+            isSummaryButtonVisible.value = true;
+        } else {
+            isNextButtonVisible.value = true;
+        }
+        return;
+    }
+
+    const bounds: google.maps.LatLngBounds = new google.maps.LatLngBounds();
     mapRef.value!.putMarker(props.randomLatLng, true);
-    mapRef.value!.drawPolyline(selectedPos.value, 1, props.randomLatLng);
-    mapRef.value!.setInfoWindow(
-        null,
-        distance.value,
-        point.value,
-        false,
-        setSelectedPos
-    );
+    for (const player of gameStore.room.players) {
+        const round = player.rounds.find((rnd) => rnd.round === props.round);
+        if (!round) continue;
+
+        const latLng = new google.maps.LatLng(round.latitude, round.longitude);
+        mapRef.value!.putMarker(latLng, false);
+        mapRef.value!.drawPolyline(latLng, 1, props.randomLatLng);
+        mapRef.value!.setInfoWindow(
+            player.player?.name || player.playerId,
+            round.distance,
+            round.points,
+            false,
+            setSelectedPos
+        );
+
+        bounds.extend(latLng);
+    }
 
     printMapFull.value = true;
-    mapRef.value!.fitBounds();
+    mapRef.value!.fitBounds(bounds);
 
     if (props.round >= props.nbRound) {
         isSummaryButtonVisible.value = true;

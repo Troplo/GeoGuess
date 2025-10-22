@@ -6,7 +6,7 @@
         persistent
         :fullscreen="$viewport.width < 450"
     >
-        <v-card color="#061422">
+        <v-card>
             <v-card-text id="card-text">
                 <v-row v-if="!multiplayer" justify="center">
                     <p
