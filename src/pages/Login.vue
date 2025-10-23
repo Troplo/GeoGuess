@@ -18,7 +18,7 @@ export default {
             !this.$route.query.state ||
             this.$route.query.state === 'undefined'
         ) {
-            window.href = `https://geo.troplo.com/login?code=${this.$route.query.code}&state=${this.$route.query.state}`;
+            location.href = `https://geo.troplo.com/login?code=${this.$route.query.code}&state=${this.$route.query.state}`;
             return;
         }
         await this.login(this.$route.query.code);
