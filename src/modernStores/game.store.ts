@@ -84,7 +84,7 @@ export const useGameStore = defineStore('game', () => {
         room.value = _room;
         if (currentRoomOwned.value && currentComponent.value === 'roomName') {
             currentComponent.value = 'settingsMap';
-        } else if (currentComponent.value === 'roomName') {
+        } else {
             currentComponent.value = 'playerName';
         }
 
@@ -106,7 +106,7 @@ export const useGameStore = defineStore('game', () => {
             //     name,
             // });
             const socketStore = useGameSocketStore();
-            await socketStore.emit(GameSocketClientEvent.CREATE_ROOM, {
+            socketStore.emit(GameSocketClientEvent.CREATE_ROOM, {
                 name,
             });
         } catch (e) {
