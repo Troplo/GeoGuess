@@ -320,7 +320,7 @@ const gameStore = useGameStore();
 
 const game = computed({
     get: () => {
-        if (!gameStore.room.started) return _game.value;
+        if (!gameStore.room?.started) return _game.value;
         const room = gameStore.room;
 
         return {
@@ -386,11 +386,12 @@ const game = computed({
         };
     },
     set: (val) => {
-        if (!gameStore.room.started) _game.value = val;
+        if (!gameStore.room?.started) _game.value = val;
     },
 });
 
 const summaryTexts = computed<SummaryText[]>(() => {
+    if (!gameStore.ranks?.length) return [];
     return gameStore.ranks.map((rank) => {
         return {
             playerName: rank.name,

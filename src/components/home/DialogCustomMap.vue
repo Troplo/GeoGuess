@@ -1,6 +1,6 @@
 <template>
     <v-dialog
-        :model-value="this.visibility"
+        :model-value="visibility"
         scrollable
         :fullscreen="$viewport.width < 450"
         @update:model-value="$emit('change-visibility')"
@@ -145,195 +145,180 @@
     </v-dialog>
 </template>
 
-<script>
-import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
-import { validURL } from '@/utils';
-import { download, isGeoJSONValid } from '@/utils';
-import { HOME_SET_NAME_GEOJSON } from '@/store/mutation-types';
+<script setup>
+import { ref, computed, watch, onMounted, nextTick, watchEffect } from 'vue';
+import { validURL, download, isGeoJSONValid } from '@/utils';
 import { GeoMapCustom } from '@/models/GeoMap';
 import SaveButton from '@/components/shared/SaveButton.vue';
+import { useHomeStore } from '@/modernStores/home.store';
+import { waitForGoogle } from '@/plugins/waitForGoogle.js';
 
-export default {
-    name: 'DialogCustomMap',
-    components: {
-        SaveButton,
-    },
-    props: {
-        visibility: Boolean,
-    },
-    data() {
-        return {
-            rulesUrl: [(value) => validURL(value)],
-            rulesTextArea: [(value) => this.checkIfStringGeoJsonValid(value)],
-            type: 'text',
-            file: null,
-            url: '',
-            initMap: false,
-            editMap: false,
-            loading: false,
-            loadingSave: false,
-        };
-    },
-    computed: {
-        ...mapGetters(['geoJsonString', 'isValidGeoJson', 'geoJson']),
-        ...mapState({
-            mapName: (state) => state.homeStore.map.name,
-        }),
-        placeholderGeoJson() {
-            return this.loading ? '' : geoJsonExample;
-        },
-        isSaveAllowed() {
-            return (
-                this.mapName === '' ||
-                !this.geoJson ||
-                this.isValidGeoJson === false
-            );
-        },
-    },
-    methods: {
-        ...mapActions([
-            'loadGeoJsonFromUrl',
-            'setGeoJson',
-            'setGeoJsonString',
-            'saveGeoJson',
-            'setMapLoaded',
-            'getListMapsCustoms',
-        ]),
-        ...mapMutations({
-            setMapName: HOME_SET_NAME_GEOJSON,
-        }),
-        checkIfStringGeoJsonValid(string) {
-            try {
-                return isGeoJSONValid(JSON.parse(string));
-            } catch (e) {
-                return false;
-            }
-        },
-        onChangeTextArea(e) {
-            this.setGeoJsonString(e);
-        },
+const props = defineProps({
+    visibility: Boolean,
+});
 
-        onChangeMap() {
-            this.editMap = true;
-            this.$refs.mapRef.$mapPromise.then((map) => {
-                map.data.toGeoJson((geoJson) => this.setGeoJson(geoJson));
+const homeStore = useHomeStore();
+
+const rulesUrl = [(value) => validURL(value)];
+const rulesTextArea = [(value) => checkIfStringGeoJsonValid(value)];
+const type = ref('text');
+const file = ref(null);
+const url = ref('');
+const initMap = ref(false);
+const editMap = ref(false);
+const loading = ref(false);
+const loadingSave = ref(false);
+
+const mapName = computed(() => homeStore.map.name);
+const geoJson = computed(() => homeStore.geoJson);
+const geoJsonString = computed(() => homeStore.geoJsonString);
+const isValidGeoJson = computed(() => homeStore.isValidGeoJson);
+
+const placeholderGeoJson = computed(() =>
+    loading.value ? '' : geoJsonExample
+);
+
+const isSaveAllowed = computed(() => {
+    return (
+        mapName.value === '' || !geoJson.value || isValidGeoJson.value === false
+    );
+});
+
+function checkIfStringGeoJsonValid(string) {
+    try {
+        return isGeoJSONValid(JSON.parse(string));
+    } catch {
+        return false;
+    }
+}
+
+function onChangeTextArea(e) {
+    homeStore.setGeoJsonString(e);
+}
+
+function onChangeMap() {
+    editMap.value = true;
+    mapRef.value.$mapPromise.then((map) => {
+        map.data.toGeoJson((geoJson) => homeStore.setGeoJson(geoJson));
+    });
+}
+
+function downloadGeoJson() {
+    download(
+        geoJsonString.value,
+        'geoguessMap_' + new Date().toISOString() + '.geojson',
+        'application/vnd.geo+json'
+    );
+}
+
+async function saveMap() {
+    loadingSave.value = true;
+    await homeStore.saveGeoJson();
+    loadingSave.value = false;
+}
+
+function clean() {
+    homeStore.setMap(new GeoMapCustom());
+    url.value = '';
+}
+
+const mapRef = ref(null);
+
+watch(
+    () => geoJson.value,
+    (v) => {
+        if (!mapRef.value) return;
+        if (!editMap.value) {
+            mapRef.value.$mapPromise.then((map) => {
+                let data = new google.maps.Data({
+                    map: map,
+                    style: map.data.getStyle(),
+                    controls: map.data.getControls(),
+                });
+                data.addGeoJson(v);
+
+                if (type.value === 'edit') {
+                    data.addListener('addfeature', onChangeMap);
+                    data.addListener('removefeature', onChangeMap);
+                    data.addListener('setgeometry', onChangeMap);
+                }
+
+                map.data.setMap(null);
+                map.data = data;
             });
-        },
-        downloadGeoJson() {
-            download(
-                this.geoJsonString,
-                'geoguessMap_' + new Date().toISOString() + '.geojson',
-                'application/vnd.geo+json'
-            );
-        },
-        async saveMap() {
-            this.loadingSave = true;
-            await this.saveGeoJson();
-            this.loadingSave = false;
-        },
-        clean() {
-            this.setMapLoaded(new GeoMapCustom());
-            this.url = '';
-        },
-    },
-    watch: {
-        geoJson(v) {
-            if (!this.$refs.mapRef) {
+        } else {
+            editMap.value = false;
+        }
+    }
+);
+
+watch(file, (f) => {
+    if (typeof f === 'object' && !!f.text) {
+        f.text().then((content) => {
+            homeStore.setGeoJsonString(content);
+        });
+    }
+});
+
+watch(url, (value) => {
+    homeStore.loadGeoJsonFromUrl(value);
+});
+
+watch(type, (t) => {
+    mapRef.value?.$mapPromise.then((map) => {
+        if (t === 'edit') {
+            map.data.setControls(['Point', 'Polygon']);
+            map.data.setStyle({
+                editable: true,
+                draggable: true,
+            });
+        } else {
+            map.data.setControls(null);
+            map.data.setStyle({});
+        }
+    });
+});
+
+onMounted(async () => {
+    if ('launchQueue' in window) {
+        launchQueue.setConsumer((launchParams) => {
+            if (
+                !Array.isArray(launchParams.files) ||
+                launchParams.files.length !== 1
+            )
                 return;
-            }
-            if (!this.editMap) {
-                this.$refs.mapRef.$mapPromise.then((map) => {
-                    let data = new google.maps.Data({
-                        map: map,
-                        style: map.data.getStyle(),
-                        controls: map.data.getControls(),
+            launchParams.files[0].getFile().then((f) => {
+                loading.value = true;
+                f.text()
+                    .then((content) => homeStore.setGeoJsonString(content))
+                    .finally(() => {
+                        loading.value = false;
                     });
-                    data.addGeoJson(v);
-
-                    if (this.type === 'edit') {
-                        data.addListener('addfeature', this.onChangeMap);
-                        data.addListener('removefeature', this.onChangeMap);
-                        data.addListener('setgeometry', this.onChangeMap);
-                    }
-                    map.data.setMap(null);
-                    map.data = data;
-                });
-            } else {
-                this.editMap = false;
-            }
-        },
-        file(file) {
-            if (typeof file === 'object' && !!file.text) {
-                file.text().then((content) => {
-                    this.setGeoJsonString(content);
-                });
-            }
-        },
-        url(value) {
-            this.loadGeoJsonFromUrl(value);
-        },
-        type(t) {
-            this.$refs.mapRef.$mapPromise.then((map) => {
-                if (t === 'edit') {
-                    map.data.setControls(['Point', 'Polygon']);
-                    map.data.setStyle({
-                        editable: true,
-                        draggable: true,
-                    });
-                } else {
-                    map.data.setControls(null);
-                    map.data.setStyle({});
-                }
             });
-        },
-    },
-    async mounted() {
-        await this.$gmapApiPromiseLazy();
-        if ('launchQueue' in window) {
-            launchQueue.setConsumer((launchParams) => {
-                if (
-                    !Array.isArray(launchParams.files) ||
-                    launchParams.files.length !== 1
-                ) {
-                    return;
-                }
-                launchParams.files[0].getFile().then((f) => {
-                    this.loading = true;
-                    f.text()
-                        .then((content) => {
-                            return this.setGeoJsonString(content);
-                        })
-                        .finally(() => {
-                            this.loading = false;
-                        });
-                });
+        });
+    }
+});
+
+watchEffect(async () => {
+    if (!initMap.value) {
+        await nextTick();
+        if (mapRef.value) {
+            mapRef.value.$mapPromise.then((map) => {
+                const streetViewLayer =
+                    new google.maps.StreetViewCoverageLayer();
+                streetViewLayer.setMap(map);
+                let data = new google.maps.Data({ map });
+                if (geoJson.value) data.addGeoJson(geoJson.value);
+                map.data.setMap(null);
+                map.data = data;
+                map.data.addListener('addfeature', onChangeMap);
+                map.data.addListener('removefeature', onChangeMap);
+                map.data.addListener('setgeometry', onChangeMap);
+                initMap.value = true;
             });
         }
-    },
-    updated() {
-        if (!this.initMap) {
-            this.$nextTick(() => {
-                if (this.$refs.mapRef)
-                    this.$refs.mapRef.$mapPromise.then((map) => {
-                        const streetViewLayer =
-                            new google.maps.StreetViewCoverageLayer();
-                        streetViewLayer.setMap(map);
-                        let data = new google.maps.Data({
-                            map: map,
-                        });
-                        if (this.geoJson) data.addGeoJson(this.geoJson);
-                        map.data.setMap(null);
-                        map.data = data;
-
-                        map.data.addListener('addfeature', this.onChangeMap);
-                        map.data.addListener('removefeature', this.onChangeMap);
-                        map.data.addListener('setgeometry', this.onChangeMap);
-                        this.initMap = true;
-                    });
-            });
-        }
-    },
-};
+    }
+});
 
 const geoJsonExample = `{
   "type": "FeatureCollection",
@@ -343,7 +328,7 @@ const geoJsonExample = `{
       "properties": {},
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[ [0, 0.0], [10.0, 0.0], [10, 20], [0.0, 20], [0, 0.0] ]]
+        "coordinates": [[[0,0.0],[10.0,0.0],[10,20],[0.0,20],[0,0.0]]]
       }
     },
     {
@@ -351,12 +336,13 @@ const geoJsonExample = `{
       "properties": {},
       "geometry": {
         "type": "Polygon",
-        "coordinates": [[ [0, 0.0], [10.0, 0.0], [10, 20], [0.0, 20], [0, 0.0] ]]
+        "coordinates": [[[0,0.0],[10.0,0.0],[10,20],[0.0,20],[0,0.0]]]
       }
     }
-   ]
+  ]
 }`;
 </script>
+
 <style lang="scss" scoped>
 .dialog-customs {
     background: #fffaec;

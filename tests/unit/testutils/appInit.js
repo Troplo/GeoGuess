@@ -1,13 +1,14 @@
-import * as GmapVue from 'gmap-vue';
-import Vue from 'vue';
-import VueClipboard from 'vue-clipboard2';
-import VueI18n from 'vue-i18n';
-import Router from 'vue-router';
+import { createApp, reactive } from 'vue';
+import VueClipboard from 'vue-clipboard3';
+import { createI18n } from 'vue-i18n';
+import { createRouter, createWebHistory } from 'vue-router';
+import { createStore } from 'vuex';
 import Vuetify from 'vuetify';
-import en from 'vuetify/es5/locale/en';
+import 'vuetify/styles';
+import { aliases, mdi } from 'vuetify/iconsets/mdi';
 import enLocale from '@/lang/locale/en.json';
-import Vuex from 'vuex';
 import countryNamePlugin from '/src/plugins/countryNamePlugin';
+import GmapVue from 'vue-google-maps-community-fork';
 
 global.File = class MockFile {
     constructor(parts, filename, properties) {
@@ -16,53 +17,55 @@ global.File = class MockFile {
         this.properties = properties;
     }
     text() {
-        return new Promise((resolve) => {
-            resolve(this.parts.toString());
-        });
+        return Promise.resolve(this.parts.toString());
     }
 };
 
-export default function appInit(VueInstance, useRouter = true) {
-    const updateSizes = (obj = {}) => {
-        obj.width = window.innerWidth;
-        obj.height = window.innerHeight;
-        return obj;
-    };
+export default function appInit(useRouter = true) {
+    const app = createApp({});
 
-    Object.defineProperty(Vue.prototype, '$viewport', {
-        value: Vue.observable(updateSizes()),
+    // Reactive viewport
+    const viewport = reactive({
+        width: window.innerWidth,
+        height: window.innerHeight,
     });
-    Vue.use(Vuetify);
-    Vue.use(Vuex);
-    Vue.use(VueClipboard);
-    Vue.use(GmapVue, {
+    app.config.globalProperties.$viewport = viewport;
+
+    // Plugins
+    app.use(Vuetify, {
+        icons: {
+            defaultSet: 'mdi',
+            aliases,
+            sets: { mdi },
+        },
+    });
+    app.use(createStore({}));
+    app.use(VueClipboard);
+    app.use(GmapVue, {
         load: {
             key: 'google-maps-api-key',
         },
         installComponents: true,
     });
-    Vue.use(countryNamePlugin);
+    app.use(countryNamePlugin);
 
-    if (useRouter) VueInstance.use(Router);
+    // I18n
+    const i18n = createI18n({
+        locale: 'en',
+        fallbackLocale: 'en',
+        messages: { en: enLocale },
+    });
+    app.use(i18n);
 
-    VueInstance.use(VueI18n);
-    VueInstance.use(Vuetify);
-    VueInstance.config.productionTip = false;
+    // Router
+    let router;
+    if (useRouter) {
+        router = createRouter({
+            history: createWebHistory(),
+            routes: [],
+        });
+        app.use(router);
+    }
 
-    return {
-        Vue,
-        localVue: VueInstance,
-        i18n: new VueI18n({
-            locale: 'en',
-            fallbackLocale: 'en',
-            messages: { en: enLocale },
-        }),
-        ...(useRouter && { router: new Router() }),
-        vuetify: new Vuetify({
-            lang: {
-                locales: { en },
-                current: 'en',
-            },
-        }),
-    };
+    return { app, i18n, router };
 }

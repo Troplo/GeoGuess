@@ -203,8 +203,25 @@ export const useGameSocketStore = defineStore('sockets.game', () => {
                 );
                 if (player) {
                     gameStore.room.players = gameStore.players.filter(
-                        (plyr) => plyr.playerId !== plyr.playerId
+                        (plyr) => plyr.playerId !== player.playerId
                     );
+                }
+            }
+        );
+
+        socket.value.on(
+            GameSocketServerEvent.ROOM_PLAYER_LEFT,
+            ({
+                data,
+            }: {
+                data: GameSocketEventsServer[GameSocketServerEvent.ROOM_UPDATE];
+            }) => {
+                const gameStore = useGameStore();
+                if (data?.name === gameStore.room?.name) {
+                    gameStore.room = {
+                        ...gameStore.room,
+                        ...data,
+                    };
                 }
             }
         );

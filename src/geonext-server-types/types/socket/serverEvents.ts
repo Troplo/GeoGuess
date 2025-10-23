@@ -19,6 +19,7 @@ export enum GameSocketServerEvent {
     GAME_FINISHED = 'GAME_FINISHED',
     GAME_STATE_UPDATED = 'GAME_STATE_UPDATED',
     GAME_REQUEST_STREET_VIEW_POPULATE = 'GAME_REQUEST_STREET_VIEW_POPULATE',
+    ROOM_UPDATE = 'ROOM_UPDATE',
 }
 
 export type EmptyObject = Record<PropertyKey, never>;
@@ -56,6 +57,7 @@ export interface GameSocketEventsServer {
     [GameSocketServerEvent.GAME_REQUEST_STREET_VIEW_POPULATE]: {
         round: number;
     };
+    [GameSocketServerEvent.ROOM_UPDATE]: Room;
 }
 
 export type Response<T, E = never> = { id: string } & (E extends never

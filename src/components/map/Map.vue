@@ -72,12 +72,12 @@ function putMarker(position: LatLng, isRandomLocation = false, label?: string) {
     if (isRandomLocation) {
         info.icon = {
             url: window.location.origin + '/img/icons/StreetGuessPin.svg',
-            anchor: new google.maps.Point(8, 21),
+            anchor: new google.maps.Point(12, 34),
         };
     } else {
         info.icon = {
             url: window.location.origin + '/img/icons/StreetGuessPlayer.svg',
-            anchor: new google.maps.Point(8, 21),
+            anchor: new google.maps.Point(12, 34),
         };
     }
 

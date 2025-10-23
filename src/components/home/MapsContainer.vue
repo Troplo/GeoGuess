@@ -87,27 +87,27 @@ export default {
     },
 
     computed: {
-        ...mapGetters(['maps', 'areasList']),
         mapsFiltered() {
             if (this.search === '') {
-                return this.maps;
+                return this.$home.maps;
             }
-            return this.maps.filter((map) => this.filterMethods(map));
+            return this.$home.maps.filter((map) => this.filterMethods(map));
         },
         areasFiltered() {
             if (this.search === '') {
-                return this.areasList;
+                return this.$home.areasList;
             }
-            return this.areasList.filter((area) => this.filterMethods(area));
+            return this.$home.areasList.filter((area) =>
+                this.filterMethods(area)
+            );
         },
     },
 
     mounted() {
-        this.getListMaps();
-        this.getListMapsCustoms();
+        this.$home.getListMaps();
+        this.$home.getListMapsCustoms();
     },
     methods: {
-        ...mapActions(['getListMaps', 'getListMapsCustoms']),
         filterMethods(obj) {
             return ['nameLocate', 'descriptionLocate', 'author'].some((key) =>
                 obj[key].toLowerCase().includes(this.search.toLowerCase())

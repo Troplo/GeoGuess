@@ -175,9 +175,11 @@ export default {
     },
     computed: {
         ...mapState({
-            history: (state) => state.homeStore.history,
             saving: (state) => state.authStore.saving,
         }),
+        history() {
+            return this.$home.history;
+        },
         headers() {
             return [
                 {
@@ -267,7 +269,7 @@ export default {
         },
     },
     mounted() {
-        this.loadHistory();
+        this.$home.loadHistory();
         if ('launchQueue' in window) {
             launchQueue.setConsumer((launchParams) => {
                 if (
@@ -283,7 +285,6 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['loadHistory']),
         ...mapActions('authStore', ['cloudConflict']),
         roundsPlayer(rounds, name) {
             return rounds.map((r) => r.players[name]);

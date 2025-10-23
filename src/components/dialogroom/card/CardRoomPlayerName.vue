@@ -9,7 +9,26 @@
 
         <v-card-subtitle ref="roomUrl" class="pb-0">
             <span :class="{ blur: streamerMode }">{{ roomUrl }} </span>
-            <v-icon size="small" @click="copy"> mdi-content-copy </v-icon>
+            <v-chip
+                size="x-small"
+                variant="tonal"
+                class="ml-2"
+                :color="copied ? 'green' : undefined"
+                :ripple="false"
+                icon
+                @click="copy"
+            >
+                <v-icon class="mr-1">
+                    <template v-if="!copied"> mdi-content-copy </template>
+                    <template v-else> mdi-check </template>
+                </v-icon>
+                <template v-if="!copied">
+                    {{ t('copy') }}
+                </template>
+                <template v-else>
+                    {{ t('urlCopied') }}
+                </template>
+            </v-chip>
         </v-card-subtitle>
         <v-card-text>
             <v-container>
@@ -54,7 +73,7 @@
         </v-card-text>
         <v-card-actions>
             <v-spacer />
-            <geo-btn variant="tonal" color="error" @click="cancel">
+            <geo-btn variant="tonal" color="error" @click="$emit('cancel')">
                 {{ $t('cancel') }}
             </geo-btn>
             <geo-btn
@@ -73,15 +92,14 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { useStore } from 'vuex';
 import { useGameStore } from '@/modernStores/game.store.js';
 import CardRoomMixin from './mixins/CardRoomMixin';
+import { useHomeStore } from '@/modernStores/home.store.js';
+import { useI18n } from 'vue-i18n';
 
 const gameStore = useGameStore();
 
-const store = useStore();
-
-const roomUrlRef = ref<HTMLElement | null>(null);
+const { t } = useI18n();
 
 const playerNumber = computed(() => gameStore.playerNumber);
 const roomName = computed(() => gameStore.roomName);
@@ -89,7 +107,8 @@ const players = computed(() => gameStore.players);
 const name = computed(() => gameStore.name);
 const invalidName = computed(() => gameStore.invalidName);
 
-const streamerMode = computed(() => store.state.homeStore.streamerMode);
+const homeStore = useHomeStore();
+const streamerMode = computed(() => homeStore.streamerMode);
 
 const roomUrl = computed(() => `${window.origin}/room/${roomName.value}`);
 
@@ -105,13 +124,21 @@ function setPlayerName(playerName: string) {
     gameStore.name = playerName;
 }
 
+const copied = ref(false);
 function copy() {
-    if (roomUrlRef.value) {
-        // Use the clipboard API for Vue 3 instead of this.$copyText
-        navigator.clipboard.writeText(roomUrl.value).catch((err) => {
+    // Use the clipboard API for Vue 3 instead of this.$copyText
+    navigator.clipboard
+        .writeText(roomUrl.value)
+        .catch((err) => {
             console.error('Failed to copy: ', err);
+        })
+        .then(() => {
+            copied.value = true;
         });
-    }
+
+    setTimeout(() => {
+        copied.value = false;
+    }, 5000);
 }
 
 CardRoomMixin;

@@ -185,7 +185,7 @@ const props = withDefaults(
         optimiseStreetView?: boolean;
         playerNumber?: number | null;
         playerName?: string | null;
-        placeGeoJson?: object | null;
+        geoJson?: object | null;
         multiplayer?: boolean;
         time?: number;
         difficulty?: number;
@@ -211,7 +211,7 @@ const props = withDefaults(
         optimiseStreetView: true,
         playerNumber: null,
         playerName: null,
-        placeGeoJson: null,
+        geoJson: null,
         multiplayer: false,
         time: 0,
         difficulty: 2000,
@@ -289,7 +289,7 @@ const players = computed(() => vuexStore.state.settingsStore.players);
 
 const startedAt = computed(() => {
     return (
-        gameStore.room.rounds.find(
+        gameStore.room?.rounds?.find(
             (rnd) => rnd.round === gameStore.room.currentRound
         )?.timerStart || new Date().getTime()
     );
@@ -421,16 +421,8 @@ const trueLatLng = computed(() => {
     const round = gameStore.room?.rounds.find(
         (rnd) => rnd.round === gameStore.room.currentRound
     );
-    console.log(
-        'deezer',
-        google,
-        round,
-        gameStore.room?.rounds,
-        gameStore.room.currentRound
-    );
-    if (!google || !round) return;
+    if (!('google' in window) || !round) return;
     const latLng = new google.maps.LatLng(round.latitude, round.longitude);
-    console.log(latLng, 'LATLNG');
     return latLng;
 });
 
@@ -767,7 +759,7 @@ onMounted(async () => {
                 areaParams: props.areaParams,
                 areasJson: areasJson.value,
             },
-            props.placeGeoJson,
+            props.geoJson,
             props.roundsPredefined
         );
     }

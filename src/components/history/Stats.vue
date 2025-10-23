@@ -30,9 +30,9 @@ import { getCountdownText } from '../../utils';
 export default {
     name: 'HistoryTable',
     computed: {
-        ...mapState({
-            history: (state) => state.homeStore.history,
-        }),
+        history() {
+            return this.$home.history;
+        },
         stats() {
             return {
                 totalGameTime: this.getTotalDuration(),
@@ -103,10 +103,9 @@ export default {
         },
     },
     mounted() {
-        this.loadHistory();
+        this.$home.loadHistory();
     },
     methods: {
-        ...mapActions(['loadHistory']),
         durationToText(time) {
             return getCountdownText(Math.floor(time));
         },

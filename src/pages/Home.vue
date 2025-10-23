@@ -88,7 +88,7 @@ export default {
             }
         },
         '$game.room'(val) {
-            if (val.name && !this.hasInited) {
+            if (val?.name && !this.hasInited) {
                 if (this.$route.query?.name) {
                     this.$game.setName(this.$route.query.name);
                 }

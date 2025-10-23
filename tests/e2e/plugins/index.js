@@ -9,9 +9,10 @@
 // /* eslint-disable import/no-extraneous-dependencies, global-require */
 // const webpack = require('@cypress/webpack-preprocessor')
 
-require('dotenv').config();
+import * as dotenv from 'dotenv';
+dotenv.config();
 
-module.exports = (on, config) => {
+export default (on, config) => {
     // on('file:preprocessor', webpack({
     //  webpackOptions: require('@vue/cli-service/webpack.config'),
     //  watchOptions: {}

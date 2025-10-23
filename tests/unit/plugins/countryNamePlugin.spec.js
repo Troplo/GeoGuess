@@ -1,28 +1,27 @@
-import { createLocalVue } from '@vue/test-utils';
+import { createApp } from 'vue';
 import countryNamePlugin from '/src/plugins/countryNamePlugin';
 import { describe, it, expect } from 'vitest';
 
 describe('countryNamePlugin.js', () => {
-    const factory = () => {
-        const Vue = createLocalVue();
-        Vue.use(countryNamePlugin);
-        return Vue;
-    };
-    it('$countryNameLocale should return Tunisie if french', () => {
-        const Vue = factory();
+    function factory(locale) {
+        const app = createApp({});
+        app.use(countryNamePlugin);
 
-        Vue.prototype.i18n = {
-            locale: 'fr',
+        // Mock Vue I18n instance structure
+        app.config.globalProperties.$i18n = {
+            global: { locale: { value: locale } },
         };
-        expect(Vue.prototype.$countryNameLocale('TN')).toBe('Tunisie');
+
+        return app.config.globalProperties;
+    }
+
+    it('$countryNameLocale should return Tunisie if french', () => {
+        const globals = factory('fr');
+        expect(globals.$countryNameLocale('TN')).toBe('Tunisie');
     });
 
     it('$countryNameLocale should return Tunisia if it', () => {
-        const Vue = factory();
-
-        Vue.prototype.i18n = {
-            locale: 'it',
-        };
-        expect(Vue.prototype.$countryNameLocale('TN')).toBe('Tunisia');
+        const globals = factory('it');
+        expect(globals.$countryNameLocale('TN')).toBe('Tunisia');
     });
 });

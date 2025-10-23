@@ -222,7 +222,7 @@
         "original": "StreetGuess is a modern fork of",
         "originalEnhancements": ""
     },
-    "urlCopied": "Url copied",
+    "urlCopied": "Copied!",
     "DetailsMap": {
         "moreInfo": "More information"
     },
@@ -238,6 +238,7 @@
     "OK": "OK",
     "yes": "yes",
     "no": "no",
+    "copy": "Copy",
     "AlertUpdate": {
         "label": "A new version is available. Click on the button to obtain it.",
         "btn": "Update"

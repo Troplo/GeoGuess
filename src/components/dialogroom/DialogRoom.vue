@@ -68,6 +68,6 @@ onMounted(() => {
 
 // Methods
 function cancel() {
-    gameStore.closeDialogRoom();
+    gameStore.leaveRoom();
 }
 </script>

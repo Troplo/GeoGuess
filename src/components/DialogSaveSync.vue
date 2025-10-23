@@ -164,7 +164,6 @@ export default defineComponent({
         },
     },
     methods: {
-        ...mapActions(['loadHistory']),
         ...mapActions('authStore', ['save']),
         async doSave(type) {
             if (type === 'cloud') {
@@ -172,7 +171,7 @@ export default defineComponent({
                     'history',
                     JSON.stringify(this.historyCloud)
                 );
-                this.loadHistory();
+                this.$home.loadHistory();
                 await this.save(this.historyCloud);
             } else if (type === 'local') {
                 localStorage.setItem(
@@ -181,7 +180,7 @@ export default defineComponent({
                 );
                 this.loading = true;
                 await this.save(this.historyLocal);
-                this.loadHistory();
+                this.$home.loadHistory();
             } else if (type === 'merge') {
                 let history = this.historyLocal.concat(
                     this.historyCloud.filter(
@@ -199,7 +198,7 @@ export default defineComponent({
                 localStorage.setItem('history', JSON.stringify(history));
                 this.loading = true;
                 await this.save(history);
-                this.loadHistory();
+                this.$home.loadHistory();
             }
             this.loading = false;
         },

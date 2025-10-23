@@ -21,8 +21,8 @@
                     color="white"
                     variant="text"
                     v-bind="attrs"
-                    @click="save(history)"
                     :loading="saving"
+                    @click="save($home.history)"
                 >
                     {{ $t('SyncError.btn') }}
                 </geo-btn>
@@ -88,7 +88,6 @@ export default {
         },
         ...mapState({
             syncError: (state) => state.authStore.syncError,
-            history: (state) => state.homeStore.history,
             saving: (state) => state.authStore.saving,
         }),
         useVMain() {
@@ -97,7 +96,6 @@ export default {
     },
     methods: {
         ...mapActions('authStore', ['login']),
-        ...mapActions(['loadHistory']),
         ...mapActions('authStore', ['save']),
         setUpdate(event) {
             this.registration = event.detail;
@@ -110,7 +108,7 @@ export default {
         },
         async handleCloudSync() {
             await this.login();
-            await this.loadHistory();
+            await this.$home.loadHistory();
         },
     },
 };

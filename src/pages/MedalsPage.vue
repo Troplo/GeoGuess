@@ -152,14 +152,12 @@ export default {
         },
     },
     mounted() {
-        this.loadHistory();
+        this.$home.loadHistory();
     },
     methods: {
-        ...mapActions(['loadHistory', 'loadPlaceGeoJSON']),
-        ...mapActions('settingsStore', ['setSettings']),
         async onClickRow({ osmId }) {
-            await this.loadPlaceGeoJSON({ osmId });
-            this.setSettings();
+            await this.$home.loadPlaceGeoJSON({ osmId });
+            this.$game.setSettings();
         },
         selectCountry(codeCountry) {
             const iso_a2 = codeCountry.toUpperCase();

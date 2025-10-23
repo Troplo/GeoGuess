@@ -1,6 +1,6 @@
-const { defineConfig } = require('cypress');
+import { defineConfig } from 'cypress';
 
-module.exports = defineConfig({
+export default defineConfig({
     projectId: '2fcg4n',
     fixturesFolder: 'tests/e2e/fixtures',
     screenshotsFolder: 'tests/e2e/screenshots',
@@ -8,8 +8,9 @@ module.exports = defineConfig({
     e2e: {
         // We've imported your old cypress plugins here.
         // You may want to clean this up later by importing these.
-        setupNodeEvents(on, config) {
-            return require('./tests/e2e/plugins/index.js')(on, config);
+        async setupNodeEvents(on, config) {
+            const cypressPlugin = await import('./tests/e2e/plugins/index.js');
+            return cypressPlugin.default(on, config);
         },
         baseUrl: 'http://localhost:8080/',
         specPattern: 'tests/e2e/specs/**/*.{js,jsx,ts,tsx}',

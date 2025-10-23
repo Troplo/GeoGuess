@@ -27,7 +27,7 @@
                 </div>
             </div>
             <div
-                v-if="roomName && !streamerMode"
+                v-if="roomName && !$home.streamerMode"
                 class="round-score-container room-name"
             >
                 <span class="sub-text">{{ $t('HeaderGame.room') }} : </span>
@@ -132,9 +132,6 @@ export default {
         },
     },
     computed: {
-        ...mapState({
-            streamerMode: (state) => state.homeStore.streamerMode,
-        }),
         countdownText() {
             return getCountdownText(this.remainingTime);
         },

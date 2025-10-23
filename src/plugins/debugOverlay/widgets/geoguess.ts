@@ -8,7 +8,13 @@ const quickStart = defineComponent({
         this.$game.isOpenDialogRoom = true;
         this.$game.currentComponent = 'playerName';
         this.$game.searchRoom(crypto.randomUUID());
-        this.$game.startGame();
+    },
+    watch: {
+        '$game.room'(newVal) {
+            if (newVal.config) {
+                this.$game.startGame();
+            }
+        },
     },
 });
 

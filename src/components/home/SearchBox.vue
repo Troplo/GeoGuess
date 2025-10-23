@@ -62,8 +62,8 @@ import { useRouter } from 'vue-router';
 import { useGameStore } from '@/modernStores/game.store.js';
 import DialogCustomMap from '@/components/home/DialogCustomMap.vue';
 import DialogRoom from '@/components/dialogroom/DialogRoom.vue';
-import { useStore } from 'vuex';
 import { useSessionStore } from '@/modernStores/session.store.js';
+import { useHomeStore } from '@/modernStores/home.store.js';
 
 const props = defineProps({
     dialogCustomOpen: Boolean,
@@ -74,11 +74,9 @@ const dialogCustom = ref(false);
 const gameStore = useGameStore();
 const sessionStore = useSessionStore();
 
-const vuexStore = useStore();
-
 const router = useRouter();
 
-const nbPlaceVisits = computed(() => vuexStore.getters.nbPlaceVisits);
+const nbPlaceVisits = computed(() => homeStore.nbPlaceVisits);
 
 watch(
     () => props.dialogCustomOpen,
@@ -88,12 +86,13 @@ watch(
     { immediate: true }
 );
 
+const homeStore = useHomeStore();
 onMounted(() => {
-    vuexStore.dispatch('loadHistory');
+    homeStore.loadHistory();
 });
 
 function openDialog(isSinglePlayer) {
-    gameStore.openDialogRoom(isSinglePlayer); // Pinia action
+    gameStore.openDialogRoom(isSinglePlayer);
 }
 
 function changeDialogCustom() {
@@ -134,12 +133,6 @@ function changeDialogCustom() {
             margin: auto !important;
         }
         .search-box__btns {
-            margin-top: 0;
-            flex-direction: column;
-            .v-btn {
-                width: 80%;
-                margin: 2% auto;
-            }
         }
     }
 }

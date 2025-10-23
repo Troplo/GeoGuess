@@ -78,10 +78,9 @@ export default {
         },
     },
     computed: {
-        ...mapGetters(['getMaxScoreMap']),
         maxScore() {
             if (this.type === 'map') {
-                return this.getMaxScoreMap(this.data);
+                return this.$home.getMaxScoreMap(this.data);
             }
             return undefined;
         },
@@ -90,15 +89,14 @@ export default {
         },
     },
     methods: {
-        ...mapActions(['getListMapsCustoms', 'setMapLoaded']),
         async deleteMap() {
             if (this.type === 'map' && this.data.type === GeoMapType.Custom) {
                 await this.data.delete();
-                this.getListMapsCustoms();
+                this.$home.getListMapsCustoms();
             }
         },
         async editMap() {
-            this.setMapLoaded(this.data);
+            this.$home.setMapLoaded(this.data);
             this.$router.push('/custom');
         },
     },

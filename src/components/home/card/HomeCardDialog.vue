@@ -45,9 +45,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useGameStore } from '@/modernStores/game.store.js';
+import { useHomeStore } from '@/modernStores/home.store.js';
 
-// Props
-defineProps({
+const props = defineProps({
     data: Object,
     type: {
         type: String,
@@ -55,34 +55,33 @@ defineProps({
     },
 });
 
-// Local state
 const visible = ref(false);
 
-// Pinia store
 const gameStore = useGameStore();
+const homeStore = useHomeStore();
 
-// Methods
 function setMap() {
-    if (type === 'area') {
-        gameStore.loadGeoJsonFromUrl(data.data.urlArea);
-        gameStore.setGameSettings({ areaParams: data });
+    console.log('setMap', props);
+    if (props.type === 'area') {
+        homeStore.loadGeoJsonFromUrl(props.data.data.urlArea);
+        gameStore.saveSettings({ areaParams: props.data });
     } else {
-        if (data.type === 'custom') {
-            gameStore.setMapLoaded(data);
+        if (props.data.type === 'custom') {
+            homeStore.setMap(props.data);
         } else {
-            gameStore.loadMap(data);
+            homeStore.loadMapData(props.data);
         }
     }
     visible.value = false;
 }
 
 function onClickSinglePlayer() {
-    // setMap();
+    setMap();
     gameStore.openDialogRoom(true);
 }
 
 function onClickMultiPlayer() {
-    // setMap();
+    setMap();
     gameStore.openDialogRoom(false);
 }
 </script>

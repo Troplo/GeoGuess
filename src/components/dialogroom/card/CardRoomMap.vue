@@ -16,10 +16,10 @@
                     :placeholder="$t('Home.searchBar.enterCity')"
                     bg-color="secondary"
                     rounded
-                    @update:model-value="loadPlaceGeoJSON"
+                    @update:model-value="$home.loadPlaceGeoJSON"
                 />
                 <geo-btn
-                    @click="loadPlaceGeoJSON(place)"
+                    @click="$home.loadPlaceGeoJSON(place)"
                     color="dark"
                     id="loadBtn"
                     :loading="loadingGeoJson"
@@ -59,7 +59,7 @@
                 $t('CardRoomMap.reset')
             }}</geo-btn>
             <v-spacer />
-            <geo-btn variant="tonal" color="error" @click="cancel">
+            <geo-btn variant="tonal" color="error" @click="$emit('cancel')">
                 {{ $t('cancel') }}
             </geo-btn>
             <geo-btn
@@ -77,26 +77,22 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue';
-import { useStore } from 'vuex';
 import { useGameStore } from '@/modernStores/game.store.js';
 import CardRoomMixin from './mixins/CardRoomMixin';
+import { useHomeStore } from '@/modernStores/home.store.js';
 
-// Pinia store for settings
 const gameStore = useGameStore();
 
-// Vuex store
-const store = useStore();
-
-// Refs / reactive state
 const place = ref<string>('');
 const entries = ref<any[]>([]);
 const isLoading = ref<boolean>(false);
 const search = ref<string>('');
 const mapRef = ref(null);
 
-// Computed properties
-const geoJson = computed(() => store.getters.geoJson);
-const loadingGeoJson = computed(() => store.state.homeStore.loadingGeoJson);
+const homeStore = useHomeStore();
+
+const geoJson = computed(() => homeStore.geoJson);
+const loadingGeoJson = computed(() => homeStore.loadingGeoJson);
 
 const items = computed(() =>
     entries.value.map((entry) => entry.properties.name)
@@ -113,7 +109,6 @@ const canPlayGeoJSON = computed(() => {
     );
 });
 
-// Watchers
 watch(search, async (val) => {
     if (!val) return;
 
@@ -140,8 +135,8 @@ watch(geoJson, (val) => {
     addGeoJson(val);
 });
 
-// Methods
 function addGeoJson(val: any) {
+    console.log('geojson', val.type);
     mapRef.value?.$mapPromise.then((map: google.maps.Map) => {
         map.data.setMap(null);
 
@@ -165,7 +160,7 @@ function addGeoJson(val: any) {
 
 function reset() {
     place.value = '';
-    store.dispatch('setGeoJson', null);
+    homeStore.setGeoJson(null);
 }
 
 function next() {

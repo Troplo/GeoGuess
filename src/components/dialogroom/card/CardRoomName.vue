@@ -24,7 +24,7 @@
         </v-card-text>
         <v-card-actions>
             <v-spacer />
-            <geo-btn variant="tonal" color="error" @click="cancel">
+            <geo-btn variant="tonal" color="error" @click="$emit('cancel')">
                 {{ $t('cancel') }}
             </geo-btn>
             <geo-btn
@@ -39,23 +39,19 @@
 </template>
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useStore } from 'vuex'; // For homeStore
 import { useGameStore } from '@/modernStores/game.store.js';
 import CardRoomMixin from './mixins/CardRoomMixin';
 import { storeToRefs } from 'pinia';
+import { useHomeStore } from '@/modernStores/home.store.js';
 
-// Local state
 const roomNameText = ref('');
 
-// Vuex store (homeStore)
-const vuexStore = useStore();
-const streamerMode = computed(() => vuexStore.state.homeStore.streamerMode);
+const homeStore = useHomeStore();
+const streamerMode = computed(() => homeStore.streamerMode);
 
-// Pinia store (settingsStore)
 const gameStore = useGameStore();
 const { roomErrorMessage, loadRoom, roomName } = storeToRefs(gameStore);
 
-// Computed with getter/setter
 const roomInputValue = computed({
     get() {
         return roomNameText.value;
@@ -65,13 +61,8 @@ const roomInputValue = computed({
     },
 });
 
-// Methods
 function searchRoom(value) {
     gameStore.searchRoom(value);
-}
-
-function cancel() {
-    gameStore.closeDialogRoom();
 }
 </script>
 

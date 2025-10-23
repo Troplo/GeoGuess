@@ -14,17 +14,14 @@
     </v-alert>
 </template>
 
-<script>
-import { mapActions, mapState } from 'vuex';
-export default {
-    computed: {
-        ...mapState('alertStore', ['alert']),
-    },
-    methods: {
-        ...mapActions('alertStore', ['setAlert']),
-        closeAlert(v) {
-            !v && this.setAlert(null);
-        },
-    },
-};
+<script setup lang="ts">
+import { computed } from 'vue';
+import { useAlertStore } from '@/modernStores/alert.store.js';
+
+const alertStore = useAlertStore();
+const alert = computed(() => alertStore.alert);
+
+function closeAlert() {
+    alertStore.setAlert(null);
+}
 </script>

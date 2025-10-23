@@ -22,9 +22,9 @@
                 <geo-btn id="aboutBtn" @click="aboutDialog = true">
                     <v-icon size="30"> mdi-help-circle </v-icon>
                 </geo-btn>
-                <geo-btn @click="changeStreamerMode(!streamerMode)">
+                <geo-btn @click="changeStreamerMode(!$home.streamerMode)">
                     <v-icon size="30">
-                        mdi-eye{{ streamerMode ? '-off' : '' }}
+                        mdi-eye{{ $home.streamerMode ? '-off' : '' }}
                     </v-icon>
                 </geo-btn>
                 <v-menu>
@@ -94,7 +94,9 @@
                             id="loginBtn"
                             variant="text"
                             :href="
-                                'https://privateuploader.com/oauth/' + clientId
+                                'https://www.flowinity.com/oauth/' +
+                                clientId +
+                                '?state=STREETGUESS_BETA'
                             "
                         >
                             {{ $t('Home.loginBtn') }}
@@ -154,29 +156,26 @@ export default {
             return import.meta.env.VITE_APP_TPU_CLIENT_ID;
         },
         ...mapState({
-            streamerMode: (state) => state.homeStore.streamerMode,
             loading: (state) => state.authStore.loading,
             user: (state) => state.authStore.user,
         }),
-        ...mapState('alertStore', ['alert']),
         demoMode() {
             return !!import.meta.env.VITE_APP_DEMO_MODE;
         },
         extensionHeight() {
             let height = 0;
             if (this.demoMode) height = height + 64;
-            if (this.alert) height = height + 64;
+            if (this.$alert.alert) height = height + 64;
             return height;
         },
     },
     methods: {
-        ...mapActions(['setStreamerMode']),
         logout() {
             this.$store.dispatch('authStore/logout');
             this.$store.dispatch('loadHistory');
         },
         changeStreamerMode(streamerMode) {
-            this.setStreamerMode(streamerMode);
+            this.$home.setStreamerMode(streamerMode);
         },
         switchLanguage(language) {
             this.$root.$i18n.locale = language;

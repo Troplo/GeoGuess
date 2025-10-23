@@ -324,7 +324,7 @@
         </v-card-text>
         <v-card-actions>
             <v-spacer />
-            <geo-btn variant="tonal" color="error" @click="cancel">
+            <geo-btn variant="tonal" color="error" @click="$emit('cancel')">
                 {{ $t('cancel') }}
             </geo-btn>
             <geo-btn

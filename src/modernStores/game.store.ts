@@ -12,6 +12,8 @@ import {
     RoomPlayerRound,
 } from '../geonext-server-types/classes/rooms/RoomPlayer.js';
 import { useRouter } from 'vue-router';
+import { useHomeStore } from './home.store.js';
+import bbox from '@turf/bbox';
 
 export const useGameStore = defineStore('game', () => {
     const isOpenDialogRoom = ref(false);
@@ -31,7 +33,7 @@ export const useGameStore = defineStore('game', () => {
         if (!room.value) return 0;
         if (currentRoomOwned.value) return 1;
         const sessionStore = useSessionStore();
-        const index = room.value.players.findIndex(
+        const index = players.value.findIndex(
             (plyr) => plyr.player.id === sessionStore.currentSession.playerId
         );
         if (index === -1) return 2;
@@ -61,7 +63,7 @@ export const useGameStore = defineStore('game', () => {
     });
 
     const players = computed<RoomPlayer[]>(() => {
-        if (!room.value) return [];
+        if (!room.value?.players?.length) return [];
         return room.value.players;
     });
 
@@ -140,6 +142,11 @@ export const useGameStore = defineStore('game', () => {
 
     async function saveSettings() {
         const socketStore = useGameSocketStore();
+        const homeStore = useHomeStore();
+        if (homeStore.map?.geojson) {
+            room.value.config.bboxObj = bbox(homeStore.map.geojson);
+            room.value.config.geoJson = homeStore.map.geojson;
+        }
         socketStore.emit(GameSocketClientEvent.ROOM_UPDATE_CONFIG, {
             config: room.value.config,
             roomName: room.value.name,
@@ -281,6 +288,17 @@ export const useGameStore = defineStore('game', () => {
         return scores;
     });
 
+    function leaveRoom() {
+        closeDialogRoom();
+        if (!singlePlayer.value && room.value) {
+            const socketStore = useGameSocketStore();
+            socketStore.emit(GameSocketClientEvent.ROOM_LEAVE, {
+                roomName: room.value.name,
+            });
+            room.value = null;
+        }
+    }
+
     return {
         isOpenDialogRoom,
         loadRoom,
@@ -303,6 +321,7 @@ export const useGameStore = defineStore('game', () => {
         startGame,
         commitGuess,
         setName,
+        leaveRoom,
         // COMPUTED
         currentRoomOwned,
         currentRoomPlayer,
